@@ -25,4 +25,4 @@ master ブランチに push することで heroku に自動デプロイされ�
 
 ##### 本番環境 URL
 
-[https://dashboard.heroku.com/apps/jphacks-app](https://dashboard.heroku.com/apps/jphacks-app)
+[https://jphacks-app.herokuapp.com/](https://jphacks-app.herokuapp.com/)

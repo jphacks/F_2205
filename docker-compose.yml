@@ -4,7 +4,7 @@ services:
     container_name: nuxt
     build: 
       context: './front-end'
-      dockerfile: "Dockerfile.develop"
+      dockerfile: "Dockerfile"
     ports:
       - "3000:3000"
     volumes:

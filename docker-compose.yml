@@ -2,9 +2,11 @@ version: '3'
 services:
   nuxt:
     container_name: nuxt
-    build: ./front-end
+    build: 
+      context: './front-end'
+      dockerfile: "Dockerfile.develop"
     ports:
       - "3000:3000"
     volumes:
-      - "./front-end:/var/www/html"
+      - "./front-end/nuxt-app/:/var/www/html"
     tty: true

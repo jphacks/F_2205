@@ -1,1 +1,1 @@
-web: nuxt-app
+web: nuxt start

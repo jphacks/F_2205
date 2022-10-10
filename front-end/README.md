@@ -11,3 +11,7 @@ docker-compose up -d
 ```
 docker-compose exec nuxt yarn dev
 ```
+
+## デプロイ
+
+master ブランチに push することで heroku に自動デプロイされます。

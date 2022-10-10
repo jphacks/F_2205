@@ -8,5 +8,5 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - "./front-end/nuxt-app/:/var/www/html"
+      - "./front-end:/var/www/html"
     tty: true

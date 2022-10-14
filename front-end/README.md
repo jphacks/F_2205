@@ -18,6 +18,10 @@ docker-compose exec nuxt yarn install
 docker-compose exec nuxt yarn dev
 ```
 
+## vuetifyjs ドキュメント
+
+[https://vuetifyjs.com/ja/](https://vuetifyjs.com/ja/)
+
 ## デプロイ
 
 master ブランチに push することで heroku に自動デプロイされます。  

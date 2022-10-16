@@ -6,9 +6,18 @@
         <div>
             <video id="their-video" width="400px" autoplay muted playsinline></video>
         </div>
-        <p id="my-id"></p>
-        <input id="their-id" style="background-color: #000000; color: #FFFFFF" />
-        <button id="make-call">発信</button>
+        <h3>peeer id: <span id="my-id"></span></h3>
+        <div>
+            <v-text-field
+            class="d-inline-flex pa-2"
+            id="their-id"
+            label="peer id"
+            :rules="rules"
+            hide-details="auto"
+            style="width: 50%;"
+            ></v-text-field>
+            <v-btn id="make-call" color="primary" elevation="4">発信</v-btn>
+        </div>
     </div>
 </template>
 
@@ -19,7 +28,7 @@ export default {
     layout: "test",
     data() {
         return {
-            APIKey: 'apiキー',
+            APIKey: '5152bad7-4798-40b1-986a-a7e8f164a8a3',
             selectedAudio: '',
             selectedVideo: '',
             audios: [],

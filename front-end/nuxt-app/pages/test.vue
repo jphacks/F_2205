@@ -10,7 +10,7 @@
         <div>
             <v-text-field
             class="d-inline-flex pa-2"
-            id="their-id"
+            id="room-id"
             label="peer id"
             :rules="rules"
             hide-details="auto"
@@ -74,8 +74,9 @@ export default {
 
         // 発信処理
         document.getElementById('make-call').onclick = () => {
-            const theirID = document.getElementById('their-id').value;
-            const mediaConnection = peer.call(theirID, this.localStream);
+            const roomID = document.getElementById('room-id').value;
+            const mediaConnection = peer.joinRoom(roomID, {mode: 'sfu', stream: this.localStream});
+            // const mediaConnection = peer.call(theirID, this.localStream);
             this.setEventListener(mediaConnection);
         };
 

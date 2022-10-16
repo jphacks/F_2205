@@ -10,6 +10,7 @@
     "heroku-postbuild": "npm run build"
   },
   "dependencies": {
+    "@mdi/js": "^7.0.96",
     "core-js": "^3.25.3",
     "nuxt": "^2.15.8",
     "skyway-js": "^4.4.5",

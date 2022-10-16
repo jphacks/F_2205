@@ -18,14 +18,36 @@
             <v-btn id="make-call" color="primary" elevation="4">Create Room</v-btn>
             <v-btn id="end-call" color="primary" elevation="4">切断</v-btn>
         </div>
+
+        <!-- btnコンポーネント -->
+        <Btn text="部屋を作る" color="orange" :clickedfn="this.test" />
+        <!-- btnコンポーネント -->
+
+        <!-- VideoStateコンポーネント -->
+        <VideoState />
+        <!-- VideoStateコンポーネント -->
+        
+        <!-- headerコンポーネント -->
+        <Header />
+        <!-- headerコンポーネント -->
+
     </div>
 </template>
 
 <script>
 import Peer from 'skyway-js'
 
+import Btn from '~/components/presentational/atoms/btn';
+import Header from '~/components/presentational/organisms/header';
+import VideoState from '~/components/presentational/organisms/videoState';
+
 export default {
     layout: "test",
+    components: {
+        Btn,
+        Header,
+        VideoState
+    },
     data() {
         return {
             APIKey: '5152bad7-4798-40b1-986a-a7e8f164a8a3',
@@ -71,6 +93,10 @@ export default {
             console.log(peerId)
             const videoDom = document.getElementById(peerId);
             videoDom.remove();
+        },
+
+        test: function() {
+            console.log('aaa');  
         }
     },
     

@@ -1,28 +1,28 @@
 <template>
     <div>
-        <div>
-            <video id="my-video" width="400px" autoplay muted playsinline></video>
-        </div>
-        <div>
-            <video id="their-video" width="400px" autoplay muted playsinline></video>
-        </div>
+        <section id="video-wrap"> 
+            <div>
+                <video id="my-video" width="400px" autoplay muted playsinline></video>
+            </div>
+        </section>
         <h3>peeer id: <span id="my-id"></span></h3>
         <div>
             <v-text-field
             class="d-inline-flex pa-2"
-            id="room-id"
-            label="peer id"
+            id="room-name"
+            label="Room Name"
             :rules="rules"
             hide-details="auto"
             style="width: 50%;"
             ></v-text-field>
-            <v-btn id="make-call" color="primary" elevation="4">発信</v-btn>
+            <v-btn id="make-call" color="primary" elevation="4">Create Room</v-btn>
         </div>
     </div>
 </template>
 
 <script>
 import Peer from 'skyway-js'
+import { log } from 'util';
 
 export default {
     layout: "test",
@@ -43,10 +43,18 @@ export default {
         setEventListener: function(mediaConnection) {
             mediaConnection.on('stream', stream => {
                 // video要素にカメラ映像をセットして再生
+                this.addVideo(stream)
                 const videoElm = document.getElementById('their-video')
                 videoElm.srcObject = stream;
                 videoElm.play();
             });
+        },
+        addVideo: function(stream) {
+            const videoDom = document.createElement('video');
+            videoDom.setAttribute('id', stream.id);
+            videoDom.srcObject = stream;
+            // videoDom.play();
+            document.getElementById('video-wrap').append(videoDom);
         }
     },
     
@@ -72,11 +80,10 @@ export default {
             document.getElementById('my-id').textContent = peer.id;
         });
 
-        // 発信処理
+        // グループ参加
         document.getElementById('make-call').onclick = () => {
             const roomID = document.getElementById('room-id').value;
             const mediaConnection = peer.joinRoom(roomID, {mode: 'sfu', stream: this.localStream});
-            // const mediaConnection = peer.call(theirID, this.localStream);
             this.setEventListener(mediaConnection);
         };
 

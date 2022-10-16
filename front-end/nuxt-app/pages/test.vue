@@ -16,13 +16,13 @@
             style="width: 50%;"
             ></v-text-field>
             <v-btn id="make-call" color="primary" elevation="4">Create Room</v-btn>
+            <v-btn id="end-call" color="primary" elevation="4">切断</v-btn>
         </div>
     </div>
 </template>
 
 <script>
 import Peer from 'skyway-js'
-import { log } from 'util';
 
 export default {
     layout: "test",
@@ -44,17 +44,33 @@ export default {
             mediaConnection.on('stream', stream => {
                 // video要素にカメラ映像をセットして再生
                 this.addVideo(stream)
-                const videoElm = document.getElementById('their-video')
+                const videoElm = document.getElementById(stream.id)
                 videoElm.srcObject = stream;
-                videoElm.play();
+                // videoElm.play();
+            });
+
+            //ルームメンバーが退出したときに発火
+            mediaConnection.on('peerLeave', peerId => {
+                this.removeVideo(peerId);
+            });
+
+            //何らかのエラーが発生した場合に発火
+            peer.on('error', err => {
+                alert(err.message);
             });
         },
+
         addVideo: function(stream) {
             const videoDom = document.createElement('video');
-            videoDom.setAttribute('id', stream.id);
+            videoDom.setAttribute('id', stream.peerId);
             videoDom.srcObject = stream;
-            // videoDom.play();
+            videoDom.play();
             document.getElementById('video-wrap').append(videoDom);
+        },
+        removeVideo: function(peerId) {
+            console.log(peerId)
+            const videoDom = document.getElementById(peerId);
+            videoDom.remove();
         }
     },
     
@@ -80,27 +96,23 @@ export default {
             document.getElementById('my-id').textContent = peer.id;
         });
 
-        // グループ参加
+        //グループ参加
         document.getElementById('make-call').onclick = () => {
-            const roomID = document.getElementById('room-id').value;
-            const mediaConnection = peer.joinRoom(roomID, {mode: 'sfu', stream: this.localStream});
+            const roomName = document.getElementById('room-name').value;
+            const mediaConnection = peer.joinRoom(roomName, {mode: 'sfu', stream: this.localStream});
             this.setEventListener(mediaConnection);
+        };
+
+        //退出
+        document.getElementById('end-call').onclick = () => {
+            peer.destroy();
+            alert('退出しました');
         };
 
         //着信処理(相手から接続要求が来たタイミングで発生)
         peer.on('call', mediaConnection => {
             mediaConnection.answer(this.localStream);
             this.setEventListener(mediaConnection);
-        });
-
-        //Peer(相手)との接続が切れた際に発火
-        peer.on('close', () => {
-            alert('通信が切断しました。');
-        });
-
-        //何らかのエラーが発生した場合に発火
-        peer.on('error', err => {
-            alert(err.message);
         });
     }
 };

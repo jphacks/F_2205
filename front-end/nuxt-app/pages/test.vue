@@ -1,5 +1,11 @@
 <template>
     <div>
+        <v-app-bar
+        color="white"
+        elevation="10"
+        class="header"
+        >
+        </v-app-bar>
         <section id="video-wrap"> 
             <div>
                 <video id="my-video" width="400px" autoplay muted playsinline></video>

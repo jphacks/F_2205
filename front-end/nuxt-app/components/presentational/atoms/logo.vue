@@ -2,7 +2,7 @@
     <span>のみぱら<img src="~/assets/img/beer.png" /></span>
 </template>
 
-<style scoped>
+<style lang="scss">
 span {
     display: flex;
     align-items: center;

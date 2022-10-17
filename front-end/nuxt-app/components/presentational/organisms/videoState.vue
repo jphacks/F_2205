@@ -23,7 +23,7 @@
         </div>
 
         <div class="video-state-leaving-btn">
-            <Btn text="退出" color="red" />
+            <Btn text="退出" color="red" :clickedfn="leavingFn" />
         </div>
     </v-card>
 </template>
@@ -32,6 +32,7 @@
 import Btn from '~/components/presentational/atoms/btn';
 
 export default {
+    props: ['leavingFn'],
     components: {
         Btn
     },

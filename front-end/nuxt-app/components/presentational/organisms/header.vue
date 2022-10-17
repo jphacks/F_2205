@@ -1,7 +1,7 @@
 <template>
     <v-app-bar
     color="white"
-    elevation="4"
+    elevation="10"
     class="header"
     >
         <v-toolbar-title><Logo /></v-toolbar-title>

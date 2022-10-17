@@ -10,7 +10,8 @@
     "heroku-postbuild": "npm run build"
   },
   "dependencies": {
-    "@mdi/js": "^7.0.96",
+    "@nuxtjs/eslint-module": "^3.1.0",
+    "@nuxtjs/stylelint-module": "^4.1.0",
     "core-js": "^3.25.3",
     "nuxt": "^2.15.8",
     "skyway-js": "^4.4.5",
@@ -20,6 +21,13 @@
     "vuetify": "^2.6.10"
   },
   "devDependencies": {
-    "@nuxtjs/vuetify": "^1.12.3"
+    "@nuxtjs/vuetify": "^1.12.3",
+    "eslint": "^8.25.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.7.1",
+    "sass": "^1.55.0",
+    "sass-loader": "^10.2.0",
+    "stylelint": "^14.14.0",
+    "stylelint-config-prettier": "^9.0.3"
   }
 }

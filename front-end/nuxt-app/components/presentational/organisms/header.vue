@@ -18,9 +18,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 .header {
     color: #ff9800 !important;
-    border-bottom: solid 6px #ff9800 !important;
 }
 </style>

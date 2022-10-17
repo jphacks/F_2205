@@ -38,16 +38,19 @@ export default {
 }
 </script>
 
-<style scoped>
-.video-state-icon {
-    text-align: center;
-    width: 100%;
-    transform: translateX(5%);
-}
-.video-state-icon-avatar {
-    box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .2)
-}
-.video-state-leaving-btn {
-    width: 10%;
+<style lang="scss">
+.video-state {
+    &-icon {
+        text-align: center;
+        width: 100%;
+        transform: translateX(5%);
+
+        &-avatar {
+            box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, .2)
+        }
+    }
+    &-leaving-btn {
+        width: 10%;
+    }
 }
 </style>

@@ -1,9 +1,7 @@
 <template>
     <section>
-        <section id="video-wrap"> 
-            <div>
-                <video id="my-video" width="400px" autoplay muted playsinline></video>
-            </div>
+        <section id="video-wrap" class="video"> 
+            <video id="my-video" class="video-individual" autoplay muted playsinline></video>
         </section>
         
         <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
@@ -73,6 +71,7 @@ export default {
         addVideo: function(stream) {
             const videoDom = document.createElement('video');
             videoDom.setAttribute('id', stream.peerId);
+            videoDom.classList.add('video-individual')
             videoDom.srcObject = stream;
             videoDom.play();
             document.getElementById('video-wrap').append(videoDom);
@@ -121,3 +120,16 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+.video {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+
+    &-individual {
+        width: 45%;
+    }
+}
+</style>

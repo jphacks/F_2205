@@ -90,9 +90,23 @@ export default {
             this.$router.push('/room/prepare');
         }
 
+        //ビデオ設定(解像度を落とす)
+        let constraints = {
+            video: {},
+            audio: true
+        };
+        constraints.video.width = {
+            min: 320,
+            max: 320
+        };
+        constraints.video.height = {
+            min: 240,
+            max: 240 
+        };
+
         try {
             // カメラ映像取得
-            const stream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
             document.getElementById('my-video').srcObject = stream;
             this.localStream = stream;
         } catch(error) {

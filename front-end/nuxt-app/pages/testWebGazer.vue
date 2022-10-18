@@ -1,0 +1,41 @@
+<template>
+  <v-row justify="center" align="center">
+    <v-col cols="12" sm="8" md="6">
+      <v-card class="logo py-4 d-flex justify-center">
+        <NuxtLogo />
+        <VuetifyLogo />
+      </v-card>
+      <v-card>
+        <v-card-title class="headline"> Welcome to the Vuetify + Nuxt.js template </v-card-title>
+        <div>Hello:{{ hello }}</div>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" nuxt to="/inspire"> Continue </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
+</template>
+
+<script>
+import webgazer from 'webgazer';
+
+export default {
+  name: 'IndexPage',
+  data() {
+    return {
+      cart: [],
+      premium: false,
+      hello: 'hello'
+    };
+  },
+
+  mounted: async function () {
+    webgazer
+      .setGazeListener((data, clock) => {
+        console.log(data, clock);
+      })
+      .begin();
+  }
+};
+</script>

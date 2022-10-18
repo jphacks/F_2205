@@ -7,7 +7,10 @@
       </v-card>
       <v-card>
         <v-card-title class="headline"> Welcome to the Vuetify + Nuxt.js template </v-card-title>
-        <div>Hello:{{ hello }}</div>
+        <div>x: {{ xprediction }}</div>
+        <div>y: {{ yprediction }}</div>
+        <div>tracker: {{ currentTracker }}</div>
+        <div>regression: {{ currentRegression }}</div>
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary" nuxt to="/inspire"> Continue </v-btn>
@@ -22,20 +25,36 @@ import webgazer from 'webgazer';
 
 export default {
   name: 'IndexPage',
+  layout: 'testWebGazer',
   data() {
     return {
       cart: [],
       premium: false,
-      hello: 'hello'
+      hello: 'hello',
+      webgatherData: '',
+      webgatherClock: '',
+      xprediction: '',
+      yprediction: '',
+      tracker: '',
+      regression: ''
     };
   },
 
   mounted: async function () {
-    webgazer
-      .setGazeListener((data, clock) => {
-        console.log(data, clock);
-      })
-      .begin();
+    webgazer.setRegression('ridge').setTracker('clmtrackr').begin();
+    webgazer.applyKalmanFilter(true).setGazeListener((data, clock) => {
+      this.xprediction = data.x;
+      this.yprediction = data.y;
+    });
+  },
+
+  computed: {
+    currentTracker() {
+      return (this.tracker = webgazer.getTracker().name);
+    },
+    currentRegression() {
+      return (this.regression = webgazer.getRegression()[0].name);
+    }
   }
 };
 </script>

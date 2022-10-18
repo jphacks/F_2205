@@ -151,13 +151,21 @@ export default {
       .showVideo(false)
       .showPredictionPoints(true)
       .setGazeListener((gaze, clock) => {
+        if (gaze == null) {
+          return;
+        }
+
         const x = gaze.x;
         const y = gaze.y;
 
-        const elementUnderMouse = document.elementFromPoint(x, y);
+        const elementUnderGaze = document.elementFromPoint(x, y);
 
-        if (elementUnderMouse.tagName == 'VIDEO') {
-          this.focusThisVideo(elementUnderMouse.id);
+        if (elementUnderGaze === null) {
+          return;
+        }
+
+        if (elementUnderGaze.tagName == 'VIDEO') {
+          this.focusThisVideo(elementUnderGaze.id);
         }
       })
       .begin();

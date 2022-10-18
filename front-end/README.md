@@ -26,6 +26,7 @@ docker-compose exec nuxt yarn dev
 
 master ブランチに push することで heroku に自動デプロイされます。  
 /front-end/nuxt-app 配下のファイルが heroku にデプロイされます。(back-end のプログラムは含みません)
+デプロイテスト
 
 ##### 本番環境 URL
 

@@ -160,7 +160,7 @@ export default {
 
         const elementUnderGaze = document.elementFromPoint(x, y);
 
-        if (elementUnderGaze.tagName == null) {
+        if (elementUnderGaze === null) {
           return;
         }
 

@@ -39,7 +39,6 @@ export default {
                 this.addVideo(stream)
                 const videoElm = document.getElementById(stream.id)
                 videoElm.srcObject = stream;
-                // videoElm.play();
             });
 
             //ルームメンバーが退出したときに発火
@@ -81,6 +80,21 @@ export default {
             const videoDom = document.getElementById(peerId);
             videoDom.remove();
         },
+
+        focusThisVideo: function(id) {
+            //クリックされたビデオをフォーカスする(自分のビデオ以外)
+            const videoId = id;
+            if (videoId == 'my-video') {
+                console.log('my-video');
+                return
+            }
+
+            const videoDom = document.getElementById(videoId);
+            const myVideoDom = document.getElementById('my-video');
+            videoDom.classList.add('video-individual-focus')
+            myVideoDom.classList.add('video-individual-focus')
+            videoDom.volume = 0.1;
+        }
     },
 
     mounted: async function() {
@@ -117,6 +131,18 @@ export default {
             key: this.APIKey,
             debug: 3,
         });
+
+        //マウスのクリックした場所のエレメントを取得
+        document.body.onclick = (e) => {
+            const x = e.pageX;
+            const y = e.pageY;
+            
+            const elementUnderMouse = document.elementFromPoint(x, y);
+
+            if (elementUnderMouse.tagName == 'VIDEO') {
+                this.focusThisVideo(elementUnderMouse.id);
+            }
+        }
     }
 }
 </script>
@@ -130,6 +156,10 @@ export default {
 
     &-individual {
         width: 45%;
+
+        &-focus {
+            border: solid 3px red;
+        }
     }
 }
 </style>

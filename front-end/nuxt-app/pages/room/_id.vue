@@ -151,6 +151,10 @@ export default {
       .showVideo(false)
       .showPredictionPoints(true)
       .setGazeListener((gaze, clock) => {
+        if (gaze == null) {
+          return;
+        }
+
         const x = gaze.x;
         const y = gaze.y;
 

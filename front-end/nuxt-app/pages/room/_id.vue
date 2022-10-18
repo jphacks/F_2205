@@ -18,6 +18,8 @@ import Peer from 'skyway-js';
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
 
+import webgazer from 'webgazer';
+
 export default {
   components: {
     VideoState,
@@ -179,7 +181,7 @@ export default {
       debug: 3
     });
 
-    //視線の場所からフォーカス
+    //クリックからフォーカス
     document.body.onclick = (e) => {
       const x = e.pageX;
       const y = e.pageY;
@@ -190,6 +192,22 @@ export default {
         this.focusThisVideoLineOfSight(elementUnderMouse.id);
       }
     };
+
+    //視線からフォーカス
+    webgazer
+      .showVideo(false)
+      .showPredictionPoints(true)
+      .setGazeListener((gaze, clock) => {
+        const x = gaze.x;
+        const y = gaze.y;
+
+        const elementUnderMouse = document.elementFromPoint(x, y);
+
+        if (elementUnderMouse.tagName == 'VIDEO') {
+          this.focusThisVideoLineOfSight(elementUnderMouse.id);
+        }
+      })
+      .begin();
   }
 };
 </script>

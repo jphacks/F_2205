@@ -66,7 +66,6 @@ export default {
             calltoid: ''
         }
     },
-
     methods: {
         setEventListener: function(mediaConnection) {
             mediaConnection.on('stream', stream => {

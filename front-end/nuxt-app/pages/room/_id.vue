@@ -95,10 +95,10 @@ export default {
       //存在するビデオ要素を取得
       const videos = document.querySelectorAll('.video-individual');
 
-      for (let video in videos) {
+      for (let video of videos) {
         //音量設定
         if (video.id == myVideoDom.id) {
-          tgVideoDom.volume = 1;
+          continue;
         }
 
         if (video.id == tgVideoDom.id) {
@@ -187,35 +187,34 @@ export default {
       const y = e.pageY;
 
       const elementUnderMouse = document.elementFromPoint(x, y);
-
       if (elementUnderMouse.tagName == 'VIDEO') {
         this.focusThisVideoLineOfSight(elementUnderMouse.id);
       }
     };
 
     //視線からフォーカス
-    webgazer
-      .showVideo(false)
-      .showPredictionPoints(true)
-      .setGazeListener((gaze, clock) => {
-        if (gaze == null) {
-          return;
-        }
+    // webgazer
+    //   .showVideo(false)
+    //   .showPredictionPoints(true)
+    //   .setGazeListener((gaze, clock) => {
+    //     if (gaze == null) {
+    //       return;
+    //     }
 
-        const x = gaze.x;
-        const y = gaze.y;
+    //     const x = gaze.x;
+    //     const y = gaze.y;
 
-        const elementUnderGaze = document.elementFromPoint(x, y);
+    //     const elementUnderGaze = document.elementFromPoint(x, y);
 
-        if (elementUnderGaze === null) {
-          return;
-        }
+    //     if (elementUnderGaze === null) {
+    //       return;
+    //     }
 
-        if (elementUnderMouse.tagName == 'VIDEO') {
-          this.focusThisVideoLineOfSight(elementUnderMouse.id);
-        }
-      })
-      .begin();
+    //     if (elementUnderMouse.tagName == 'VIDEO') {
+    //       this.focusThisVideoLineOfSight(elementUnderMouse.id);
+    //     }
+    //   })
+    //   .begin();
   }
 };
 </script>

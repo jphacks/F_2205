@@ -211,8 +211,8 @@ export default {
           return;
         }
 
-        if (elementUnderMouse.tagName == 'VIDEO') {
-          this.focusThisVideoLineOfSight(elementUnderMouse.id);
+        if (elementUnderGaze.tagName == 'VIDEO') {
+          this.focusThisVideoLineOfSight(elementUnderGaze.id);
         }
       })
       .begin();

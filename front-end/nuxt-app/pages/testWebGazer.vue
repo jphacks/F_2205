@@ -1,10 +1,55 @@
 <template>
   <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card class="logo py-4 d-flex justify-center">
-        <NuxtLogo />
-        <VuetifyLogo />
-      </v-card>
+    <v-col cols="12" sm="8" md="10">
+      <div>
+        <v-row>
+          <v-col class="mx-2" cols="12">
+            <p>Normal</p>
+          </v-col>
+          <v-col cols="12" sm="3">
+            <v-btn class="mx-2" fab dark x-small color="purple lighten-4">
+              <v-icon dark> mdi-android </v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="12" sm="3">
+            <v-btn class="mx-2" fab dark x-small color="purple lighten-3">
+              <v-icon dark> mdi-android </v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="12" sm="3">
+            <v-btn class="mx-2" fab dark x-small color="purple lighten-2">
+              <v-icon dark> mdi-android </v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="12" sm="3">
+            <v-btn class="mx-2" fab dark x-small color="purple lighten-1">
+              <v-icon dark> mdi-android </v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="3">
+            <v-btn class="mx-2" fab dark x-small color="pink">
+              <v-icon dark> mdi-heart </v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="12" sm="3">
+            <v-btn class="mx-2" fab dark x-small color="pink">
+              <v-icon dark> mdi-heart </v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="12" sm="3">
+            <v-btn class="mx-2" fab dark x-small color="pink">
+              <v-icon dark> mdi-heart </v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="12" sm="3">
+            <v-btn class="mx-2" fab dark x-small color="pink">
+              <v-icon dark> mdi-heart </v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </div>
       <v-card>
         <v-card-title class="headline"> Welcome to the Vuetify + Nuxt.js template </v-card-title>
         <div>x: {{ xprediction }}</div>
@@ -13,7 +58,8 @@
         <div>regression: {{ currentRegression }}</div>
         <v-card-actions>
           <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire"> Continue </v-btn>
+          <v-btn color="primary" nuxt to="/inspire" @click="stopWebgather"> Continue </v-btn>
+          <v-btn color="primary" @click="stopWebgather">stopWebgazer</v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -41,11 +87,11 @@ export default {
   },
 
   mounted: async function () {
-    webgazer.setRegression('ridge').setTracker('clmtrackr').begin();
-    webgazer.applyKalmanFilter(true).setGazeListener((data, clock) => {
-      this.xprediction = data.x;
-      this.yprediction = data.y;
-    });
+    // webgazer.setRegression('ridge').setTracker('clmtrackr').begin();
+    // webgazer.applyKalmanFilter(true).setGazeListener((data, clock) => {
+    //   this.xprediction = data.x;
+    //   this.yprediction = data.y;
+    // });
   },
 
   computed: {
@@ -54,6 +100,12 @@ export default {
     },
     currentRegression() {
       return (this.regression = webgazer.getRegression()[0].name);
+    }
+  },
+  methods: {
+    stopWebgather() {
+      webgazer.end();
+      console.log('stop');
     }
   }
 };

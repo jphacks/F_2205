@@ -102,11 +102,11 @@ export default {
         }
 
         if (video.id == tgVideoDom.id) {
-          tgVideoDom.volume = 1;
-          tgVideoDom.classList.add('video-individual-focus');
+          video.volume = 1;
+          video.classList.add('video-individual-focus');
         } else {
-          tgVideoDom.volume = 0.07;
-          tgVideoDom.classList.remove('video-individual-focus');
+          video.volume = 0.07;
+          video.classList.remove('video-individual-focus');
         }
       }
     },
@@ -185,6 +185,8 @@ export default {
     document.body.onclick = (e) => {
       const x = e.pageX;
       const y = e.pageY;
+
+      console.log('click: ' + x + ' | ' + y);
 
       const elementUnderMouse = document.elementFromPoint(x, y);
       if (elementUnderMouse.tagName == 'VIDEO') {

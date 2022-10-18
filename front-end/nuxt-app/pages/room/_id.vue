@@ -30,7 +30,8 @@ export default {
     return {
       APIKey: '5152bad7-4798-40b1-986a-a7e8f164a8a3',
       localStream: null,
-      peer: null
+      peer: null,
+      sameGroup: []
     };
   },
 
@@ -83,7 +84,34 @@ export default {
       videoDom.remove();
     },
 
-    focusThisVideo: function (id) {
+    focusThisVideoLineOfSight: function (id) {
+      //視線からビデオをフォーカスする(自分のビデオ以外)
+      if (id == 'my-video') return;
+
+      const myVideoDom = document.getElementById('my-video');
+      const tgVideoDom = document.getElementById(id);
+      myVideoDom.classList.add('video-individual-focus');
+
+      //存在するビデオ要素を取得
+      const videos = document.querySelectorAll('.video-individual');
+
+      for (let video of videos) {
+        //音量設定
+        if (video.id == myVideoDom.id) {
+          continue;
+        }
+
+        if (video.id == tgVideoDom.id) {
+          video.volume = 1;
+          video.classList.add('video-individual-focus');
+        } else {
+          video.volume = 0.07;
+          video.classList.remove('video-individual-focus');
+        }
+      }
+    },
+
+    focusThisVideoClick: function (id) {
       //クリックされたビデオをフォーカスする(自分のビデオ以外)
       const videoId = id;
       if (videoId == 'my-video') {
@@ -95,7 +123,26 @@ export default {
       const myVideoDom = document.getElementById('my-video');
       videoDom.classList.add('video-individual-focus');
       myVideoDom.classList.add('video-individual-focus');
-      videoDom.volume = 0.1;
+
+      //自分と同一グループに追加する
+      this.sameGroup.push(videoId);
+
+      //存在するビデオ要素を取得
+      const videos = document.querySelectorAll('.video-individual');
+
+      for (let video in videos) {
+        let flag = this.sameGroup.find((element) => {
+          return element == video;
+        });
+
+        if (flag) {
+          //自グループ
+          videoDom.volume = 1;
+        } else {
+          //自グループ以外
+          videoDom.volume = 0.07;
+        }
+      }
     }
   },
 
@@ -134,30 +181,39 @@ export default {
       debug: 3
     });
 
-    //マウスのクリックした場所のエレメントを取得
+    //クリックからフォーカス
     document.body.onclick = (e) => {
       const x = e.pageX;
       const y = e.pageY;
 
-      const elementUnderMouse = document.elementFromPoint(x, y);
+      console.log('click: ' + x + ' | ' + y);
 
+      const elementUnderMouse = document.elementFromPoint(x, y);
       if (elementUnderMouse.tagName == 'VIDEO') {
-        this.focusThisVideo(elementUnderMouse.id);
+        this.focusThisVideoLineOfSight(elementUnderMouse.id);
       }
     };
 
-    //視線移動を行った場所のエレメントを取得
+    //視線からフォーカス
     webgazer
       .showVideo(false)
       .showPredictionPoints(true)
       .setGazeListener((gaze, clock) => {
+        if (gaze == null) {
+          return;
+        }
+
         const x = gaze.x;
         const y = gaze.y;
 
-        const elementUnderMouse = document.elementFromPoint(x, y);
+        const elementUnderGaze = document.elementFromPoint(x, y);
 
-        if (elementUnderMouse.tagName == 'VIDEO') {
-          this.focusThisVideo(elementUnderMouse.id);
+        if (elementUnderGaze === null) {
+          return;
+        }
+
+        if (elementUnderGaze.tagName == 'VIDEO') {
+          this.focusThisVideoLineOfSight(elementUnderGaze.id);
         }
       })
       .begin();

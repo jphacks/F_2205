@@ -6,26 +6,10 @@
           <v-col class="mx-2" cols="12">
             <p>Normal</p>
           </v-col>
-          <v-col cols="12" sm="3">
-            <v-btn class="mx-2" fab dark x-small color="purple lighten-4">
-              <v-icon dark> mdi-android </v-icon>
-            </v-btn>
-          </v-col>
-          <v-col cols="12" sm="3">
-            <v-btn class="mx-2" fab dark x-small color="purple lighten-3">
-              <v-icon dark> mdi-android </v-icon>
-            </v-btn>
-          </v-col>
-          <v-col cols="12" sm="3">
-            <v-btn class="mx-2" fab dark x-small color="purple lighten-2">
-              <v-icon dark> mdi-android </v-icon>
-            </v-btn>
-          </v-col>
-          <v-col cols="12" sm="3">
-            <v-btn class="mx-2" fab dark x-small color="purple lighten-1">
-              <v-icon dark> mdi-android </v-icon>
-            </v-btn>
-          </v-col>
+          <ClickAdjustBtn />
+          <ClickAdjustBtn />
+          <ClickAdjustBtn />
+          <ClickAdjustBtn />
         </v-row>
         <v-row>
           <v-col cols="12" sm="3">
@@ -68,10 +52,14 @@
 
 <script>
 import webgazer from 'webgazer';
+import ClickAdjustBtn from '~/components/adjustWebgazer/atoms/clickAdjustBtn';
 
 export default {
   name: 'IndexPage',
   layout: 'testWebGazer',
+  components: {
+    ClickAdjustBtn
+  },
   data() {
     return {
       cart: [],

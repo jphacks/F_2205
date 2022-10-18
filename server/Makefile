@@ -15,7 +15,7 @@ DOCKER_COMPOSE_BASE        := $(DOCKER_FILE_DIR)/docker-compose.base.yml
 DOCKER_COMPOSE_DEV_DB      := $(DOCKER_FILE_DIR)/docker-compose.dev.db.yml
 DOCKER_COMPOSE_DEV_SERVER  := $(DOCKER_FILE_DIR)/docker-compose.dev.server.yml
 DOCKER_EXEC                := docker exec -it
-DB_CONTAINER_NAME          := f_2205-server
+DB_CONTAINER_NAME          := f_2205-db
 
 # dir
 SRC_DIR := ./src

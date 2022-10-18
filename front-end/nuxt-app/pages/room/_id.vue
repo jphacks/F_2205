@@ -193,28 +193,28 @@ export default {
     };
 
     //視線からフォーカス
-    // webgazer
-    //   .showVideo(false)
-    //   .showPredictionPoints(true)
-    //   .setGazeListener((gaze, clock) => {
-    //     if (gaze == null) {
-    //       return;
-    //     }
+    webgazer
+      .showVideo(false)
+      .showPredictionPoints(true)
+      .setGazeListener((gaze, clock) => {
+        if (gaze == null) {
+          return;
+        }
 
-    //     const x = gaze.x;
-    //     const y = gaze.y;
+        const x = gaze.x;
+        const y = gaze.y;
 
-    //     const elementUnderGaze = document.elementFromPoint(x, y);
+        const elementUnderGaze = document.elementFromPoint(x, y);
 
-    //     if (elementUnderGaze === null) {
-    //       return;
-    //     }
+        if (elementUnderGaze === null) {
+          return;
+        }
 
-    //     if (elementUnderMouse.tagName == 'VIDEO') {
-    //       this.focusThisVideoLineOfSight(elementUnderMouse.id);
-    //     }
-    //   })
-    //   .begin();
+        if (elementUnderMouse.tagName == 'VIDEO') {
+          this.focusThisVideoLineOfSight(elementUnderMouse.id);
+        }
+      })
+      .begin();
   }
 };
 </script>

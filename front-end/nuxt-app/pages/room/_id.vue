@@ -331,6 +331,7 @@ body {
   &-individual {
     width: 100%;
     height: 100%;
+    border-radius: 80px;
 
     &-focus {
       border: solid 5px orange;

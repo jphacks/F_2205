@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" sm="3">
+  <v-col cols="12" sm="1">
     <v-btn class="mx-2" fab dark :color="buttonLightenString" @click="subButtonLiten">
       <v-icon dark> mdi-android </v-icon>
     </v-btn>
@@ -10,7 +10,6 @@
 .v-btn:before {
   opacity: 0 !important;
 }
-
 .v-ripple__container {
   opacity: 0 !important;
 }

@@ -2,21 +2,21 @@
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="10" class="adjustCanvus">
       <v-row justify="space-between" align="center" class="buttons">
-        <ClickAdjustBtn />
-        <ClickAdjustBtn />
-        <ClickAdjustBtn />
-        <ClickAdjustBtn />
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
       </v-row>
       <v-row justify="space-between" align="center" class="buttons">
-        <ClickAdjustBtn />
-        <ClickAdjustBtn />
-        <ClickAdjustBtn />
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        <v-col cols="12" sm="5">{{ adjustPoint }}</v-col>
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
       </v-row>
       <v-row justify="space-between" align="center" class="buttons">
-        <ClickAdjustBtn />
-        <ClickAdjustBtn />
-        <ClickAdjustBtn />
-        <ClickAdjustBtn />
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
       </v-row>
       <!-- <v-card>
         <v-card-title class="headline"> Welcome to the Vuetify + Nuxt.js template </v-card-title>
@@ -63,7 +63,8 @@ export default {
       xprediction: '',
       yprediction: '',
       tracker: '',
-      regression: ''
+      regression: '',
+      adjustPoint: 0
     };
   },
 
@@ -87,6 +88,9 @@ export default {
     stopWebgather() {
       webgazer.end();
       console.log('stop');
+    },
+    adjustPosition() {
+      this.adjustPoint = this.adjustPoint + 1;
     }
   }
 };

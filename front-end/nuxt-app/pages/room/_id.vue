@@ -61,6 +61,7 @@ export default {
       const roomName = this.$route.params.id;
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
       this.setSkywayEventListener(mediaConnection);
+      this.beginEstimateGaze();
     },
 
     roomLeaving: function () {
@@ -68,6 +69,7 @@ export default {
       this.peer.destroy();
       alert('退出しました');
       this.$router.push('/room/prepare');
+      this.endEstimateGaze();
     },
 
     addVideo: function (stream) {
@@ -82,6 +84,39 @@ export default {
       console.log(peerId);
       const videoDom = document.getElementById(peerId);
       videoDom.remove();
+    },
+
+    beginEstimateGaze: function () {
+      //視線からフォーカス
+      webgazer
+        .showVideo(false)
+        .showPredictionPoints(true)
+        .setGazeListener((gaze, clock) => {
+          if (gaze == null) {
+            return;
+          }
+
+          const x = gaze.x;
+          const y = gaze.y;
+
+          const elementUnderGaze = document.elementFromPoint(x, y);
+
+          if (elementUnderGaze === null) return;
+
+          if (elementUnderGaze.tagName == 'VIDEO') {
+            this.focusThisVideoLineOfSight(elementUnderGaze.id);
+          }
+        })
+        .begin();
+    },
+
+    endEstimateGaze: function () {
+      console.log('endEstimateGaze');
+      webgazer.clearGazeListener().pause().end();
+
+      // webgazerをendしても視線予測のポインターが消えないため、直接Elementを削除
+      const gazeDotEl = document.getElementById('webgazerGazeDot');
+      gazeDotEl.remove();
     },
 
     focusThisVideoLineOfSight: function (id) {
@@ -192,30 +227,6 @@ export default {
         this.focusThisVideoLineOfSight(elementUnderMouse.id);
       }
     };
-
-    //視線からフォーカス
-    webgazer
-      .showVideo(false)
-      .showPredictionPoints(true)
-      .setGazeListener((gaze, clock) => {
-        if (gaze == null) {
-          return;
-        }
-
-        const x = gaze.x;
-        const y = gaze.y;
-
-        const elementUnderGaze = document.elementFromPoint(x, y);
-
-        if (elementUnderGaze === null) {
-          return;
-        }
-
-        if (elementUnderGaze.tagName == 'VIDEO') {
-          this.focusThisVideoLineOfSight(elementUnderGaze.id);
-        }
-      })
-      .begin();
   }
 };
 </script>

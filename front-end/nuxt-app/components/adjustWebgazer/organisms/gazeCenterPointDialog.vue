@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="this.isOpenDialog" persistent max-width="290">
+    <v-dialog v-model="this.isOpenDialog" persistent max-width="390">
       <v-card>
         <v-card-title class="text-h5">細かな設定をします</v-card-title>
         <v-card-text> センターのマーカーを5秒間見つめてください </v-card-text>

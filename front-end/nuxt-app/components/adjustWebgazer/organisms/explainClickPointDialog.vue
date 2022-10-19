@@ -1,6 +1,6 @@
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" persistent max-width="290">
+    <v-dialog v-model="dialog" persistent max-width="490">
       <v-card>
         <v-card-title class="text-h5">まずマウスクリックによって大まかな視線の位置を決定します</v-card-title>
         <v-card-text>

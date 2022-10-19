@@ -30,6 +30,7 @@ export default {
         this.buttonLightenString = `purple lighten-${this.buttonLighten}`;
       } else if (this.buttonLighten === 0) {
         this.buttonLighten = this.buttonLighten - 1;
+        this.buttonLightenString = 'amber';
         this.$emit('add-adjustpoint');
       }
     }

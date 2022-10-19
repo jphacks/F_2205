@@ -1,13 +1,14 @@
-FROM golang:1.18.3
+FROM golang:1.17.0-alpine
 
-
-# enviroment
-ENV ENVIROMENT=PRODUCTION
-ENV PORT=8080
-ENV REDIS_URL=https://f-2205-redis-chhumpv4gq-an.a.run.app:6379
+RUN apk update && apk add git
 
 WORKDIR /go/src/github.com/jphacks/F_2205/server/src
-
 COPY . .
+
+EXPOSE 8080
+
+ENV ENVIROMENT PRODUCTION
+ENV PORT 8080
+ENV REDIS_URL https://f-2205-redis-chhumpv4gq-an.a.run.app:6379
 
 CMD [ "go", "run", "." ]

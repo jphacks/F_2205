@@ -1,13 +1,6 @@
 <template>
   <v-app light>
-  <div>
-    <!-- ヘッダー -->
-    <Header />
-    <!-- ヘッダー -->
-  </div>
-
     <nuxt />
-
   </v-app>
 </template>
 
@@ -17,6 +10,6 @@ import Header from '~/components/presentational/organisms/header';
 export default {
   components: {
     Header
-  },
-}
+  }
+};
 </script>

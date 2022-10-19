@@ -1,13 +1,14 @@
 <template>
   <section>
+    <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
     <section id="video-wrap" class="video">
       <video id="my-video" class="video-individual" autoplay muted playsinline></video>
     </section>
 
-    <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
-
     <!-- ビデオステータスバー -->
-    <VideoState :leavingFn="this.roomLeaving" />
+    <div class="status-bar">
+      <VideoState :leavingFn="this.roomLeaving" />
+    </div>
     <!-- ビデオステータスバー -->
   </section>
 </template>
@@ -31,14 +32,15 @@ export default {
       APIKey: '5152bad7-4798-40b1-986a-a7e8f164a8a3',
       localStream: null,
       peer: null,
-      sameGroup: []
+      sameGroup: [],
+      roomMemberNum: 1
     };
   },
 
   methods: {
     setSkywayEventListener: function (mediaConnection) {
       mediaConnection.on('stream', (stream) => {
-        // video要素にカメラ映像をセットして再生
+        //video要素にカメラ映像をセットして再生
         this.addVideo(stream);
         const videoElm = document.getElementById(stream.id);
         videoElm.srcObject = stream;
@@ -77,11 +79,44 @@ export default {
       videoDom.srcObject = stream;
       videoDom.play();
       document.getElementById('video-wrap').append(videoDom);
+
+      //ルームメンバー人数追加
+      this.roomMemberNum++;
+
+      //ビデオのリサイズ
+      this.videoResize();
     },
     removeVideo: function (peerId) {
       console.log(peerId);
       const videoDom = document.getElementById(peerId);
       videoDom.remove();
+
+      //ルームメンバー人数減少
+      this.roomMemberNum--;
+
+      //ビデオのリサイズ
+      this.videoResize();
+    },
+    videoResize: function () {
+      //ビデオのリサイズ
+      const videos = document.querySelectorAll('.video-individual');
+
+      for (let video of videos) {
+        switch (this.roomMemberNum) {
+          case 1:
+            video.style.width = '100%';
+            break;
+          case 2:
+            video.style.width = '45%';
+            break;
+          case 3:
+            video.style.width = '30%';
+            break;
+          default:
+            video.style.width = '30%';
+            break;
+        }
+      }
     },
 
     focusThisVideoLineOfSight: function (id) {
@@ -223,17 +258,27 @@ export default {
 
 <style lang="scss">
 .video {
+  width: 100vw;
+  height: calc(100vh - 72px);
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
 
   &-individual {
-    width: 45%;
+    width: 100%;
+    height: 100%;
 
     &-focus {
       border: solid 3px red;
     }
   }
+}
+
+.status-bar {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
 }
 </style>

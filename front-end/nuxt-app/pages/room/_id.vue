@@ -75,6 +75,7 @@ export default {
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
       this.setSkywayEventListener(mediaConnection);
       document.querySelector('body').classList.remove('modal-open');
+      this.beginEstimateGaze();
     },
 
     roomLeaving: function () {
@@ -82,6 +83,7 @@ export default {
       this.peer.destroy();
       alert('退出しました');
       this.$router.push('/room/prepare');
+      this.endEstimateGaze();
     },
 
     addVideo: function (stream) {
@@ -133,6 +135,49 @@ export default {
             break;
         }
       }
+    },
+
+    beginEstimateGaze: function () {
+      //視線からフォーカス
+      webgazer
+        .showVideo(false)
+        .showPredictionPoints(true)
+        .setGazeListener((gaze, clock) => {
+          if (gaze == null) {
+            return;
+          }
+
+          const x = gaze.x;
+          const y = gaze.y;
+
+          const elementUnderGaze = document.elementFromPoint(x, y);
+
+          if (elementUnderGaze === null) return;
+
+          if (elementUnderGaze.tagName == 'VIDEO') {
+            this.focusThisVideoLineOfSight(elementUnderGaze.id);
+          }
+        })
+        .begin();
+    },
+
+    endEstimateGaze: function () {
+      console.log('endEstimateGaze');
+      webgazer.clearGazeListener().end();
+
+      // webgazerをendしても視線予測のポインターが消えないため、直接Elementを削除
+      const gazeDotEl = document.getElementById('webgazerGazeDot');
+      gazeDotEl.remove();
+    },
+
+    pauseEstimateGaze: function () {
+      console.log('pauseEstimateGaze');
+      webgazer.pause();
+    },
+
+    resumeEstimateGaze: function () {
+      console.log('resumeEstimateGaze');
+      webgazer.resume();
     },
 
     focusThisVideoLineOfSight: function (id) {
@@ -247,29 +292,12 @@ export default {
       }
     };
 
-    //視線からフォーカス
-    webgazer
-      .showVideo(false)
-      .showPredictionPoints(true)
-      .setGazeListener((gaze, clock) => {
-        if (gaze == null) {
-          return;
-        }
-
-        const x = gaze.x;
-        const y = gaze.y;
-
-        const elementUnderGaze = document.elementFromPoint(x, y);
-
-        if (elementUnderGaze === null) {
-          return;
-        }
-
-        if (elementUnderMouse.tagName == 'VIDEO') {
-          this.focusThisVideoLineOfSight(elementUnderMouse.id);
-        }
-      })
-      .begin();
+    window.onpopstate = function () {
+      console.log('webgazer is finish beacause browser back');
+      webgazer.clearGazeListener().end();
+      const gazeDotEl = document.getElementById('webgazerGazeDot');
+      gazeDotEl.remove();
+    };
   }
 };
 </script>

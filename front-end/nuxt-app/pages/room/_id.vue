@@ -119,6 +119,16 @@ export default {
       gazeDotEl.remove();
     },
 
+    pauseEstimateGaze: function () {
+      console.log('pauseEstimateGaze');
+      webgazer.pause();
+    },
+
+    resumeEstimateGaze: function () {
+      console.log('resumeEstimateGaze');
+      webgazer.resume();
+    },
+
     focusThisVideoLineOfSight: function (id) {
       //視線からビデオをフォーカスする(自分のビデオ以外)
       if (id == 'my-video') return;

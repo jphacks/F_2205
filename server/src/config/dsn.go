@@ -7,6 +7,10 @@ import (
 
 // DSNはdataSourceNameを返します、もし必須の環境変数が設定されてなかった場合はerrorを返します
 func DSN() (string, error) {
+	if os.Getenv("ENVIROMENT") == "PRODUCTION" {
+		return os.Getenv("POSTGRES_URL"), nil
+	}
+
 	// DBの環境変数
 	dbHost := os.Getenv("POSTGRES_HOST")
 	dbPort := os.Getenv("POSTGRES_PORT")

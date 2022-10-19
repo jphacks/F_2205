@@ -1,0 +1,13 @@
+FROM golang:1.18.3
+
+
+# enviroment
+ENV ENVIROMENT=PRODUCTION
+ENV PORT=8080
+ENV REDIS_URL=https://f-2205-redis-chhumpv4gq-an.a.run.app:6379
+
+WORKDIR /go/src/github.com/jphacks/F_2205/server/src
+
+COPY . .
+
+CMD [ "go", "run", "." ]

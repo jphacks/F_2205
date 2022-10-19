@@ -10,3 +10,8 @@ services:
     container_name: f_2205-db
     restart: always
     tty: true
+
+  redis:
+    container_name: f_2205-redis
+    restart: always
+    tty: true

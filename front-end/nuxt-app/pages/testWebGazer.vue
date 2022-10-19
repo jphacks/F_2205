@@ -9,7 +9,7 @@
       </v-row>
       <v-row justify="space-between" align="center" class="buttons">
         <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <v-col cols="12" sm="5" v-if="adjustPoint > 2">{{ adjustPoint }}</v-col>
+        <ClickAdjustBtn @add-adjustpoint="adjustPosition" v-if="adjustPoint > 2" />
         <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
       </v-row>
       <v-row justify="space-between" align="center" class="buttons">
@@ -31,6 +31,7 @@
         </v-card-actions>
       </v-card> -->
       <ExplainClickPointDialog />
+      <GazeCenterPointDialog :isOpenDialog="this.isGazeCenterPointDialog" @close-dialog="closeGazeCenterPointDialog" />
     </v-col>
   </v-row>
 </template>
@@ -48,13 +49,15 @@
 import webgazer from 'webgazer';
 import ClickAdjustBtn from '~/components/adjustWebgazer/atoms/clickAdjustBtn';
 import ExplainClickPointDialog from '~/components/adjustWebgazer/organisms/explainClickPointDialog';
+import GazeCenterPointDialog from '~/components/adjustWebgazer/organisms/gazeCenterPointDialog';
 
 export default {
   name: 'IndexPage',
   layout: 'testWebGazer',
   components: {
     ClickAdjustBtn,
-    ExplainClickPointDialog
+    ExplainClickPointDialog,
+    GazeCenterPointDialog
   },
   data() {
     return {
@@ -67,7 +70,8 @@ export default {
       yprediction: '',
       tracker: '',
       regression: '',
-      adjustPoint: 0
+      adjustPoint: 0,
+      isGazeCenterPointDialog: false
     };
   },
 
@@ -78,7 +82,6 @@ export default {
     //   this.yprediction = data.y;
     // });
   },
-
   computed: {
     currentTracker() {
       return (this.tracker = webgazer.getTracker().name);
@@ -94,6 +97,12 @@ export default {
     },
     adjustPosition() {
       this.adjustPoint = this.adjustPoint + 1;
+      if (this.adjustPoint === 3) {
+        this.isGazeCenterPointDialog = true;
+      }
+    },
+    closeGazeCenterPointDialog() {
+      this.isGazeCenterPointDialog = false;
     }
   }
 };

@@ -1,8 +1,15 @@
 package config
 
-import "github.com/jphacks/F_2205/server/src/utils/helper"
+import (
+	"log"
+	"os"
+)
 
-// GetRedisUrlはredisの接続先情報を取得します
+// GetRedisUrlはredisの接続先情報を取得します、もし見つからなかった場合はアプリを終了します
 func GetRedisUrl() string {
-	return helper.GetEnvOrDefault("REDIS_URL", "f_2205-redis:6379")
+	redisUrl := os.Getenv("REDIS_URL")
+	if redisUrl == "" {
+		log.Fatal("error: REDIS_URL not found")
+	}
+	return redisUrl
 }

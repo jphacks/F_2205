@@ -22,7 +22,7 @@ COPY --from=build /docker-gs-ping /docker-gs-ping
 # enviroment
 ENV ENVIROMENT PRODUCTION
 ENV PORT 8080
-ENV REDIS_URL https://f-2205-redis-chhumpv4gq-an.a.run.app:6379
+ENV REDIS_URL f-2205-redis-chhumpv4gq-an.a.run.app:6379
 
 EXPOSE 8080
 

@@ -38,15 +38,15 @@ func (r *RoomRepository) CreateRoom(room *entity.Room) (*entity.Room, error) {
 // entityのroomのデータをやり取りするオブジェクトです
 // またDTOとは、Data Transfer Objectの略です
 type roomDTO struct {
-	Id     int    `db:"id"`
-	Name   string `db:"name"`
+	Id   int    `db:"id"`
+	Name string `db:"name"`
 }
 
 // roomEntityToDTOはroomのentityをdtoに変えます
 func roomEntityToDTO(room *entity.Room) roomDTO {
 	return roomDTO{
-		Id:     room.Id,
-		Name:   room.Name,
+		Id:   room.Id,
+		Name: room.Name,
 	}
 }
 
@@ -55,8 +55,8 @@ func roomDTOsToEntities(dtos []roomDTO) entity.Rooms {
 	rooms := entity.Rooms{}
 	for _, dto := range dtos {
 		rooms = append(rooms, &entity.Room{
-			Id:     dto.Id,
-			Name:   dto.Name,
+			Id:   dto.Id,
+			Name: dto.Name,
 		})
 	}
 	return rooms
@@ -65,7 +65,7 @@ func roomDTOsToEntities(dtos []roomDTO) entity.Rooms {
 // roomDTOtoEntityはroomのdtoをentityに変えます
 func roomDTOtoEntity(dto roomDTO) *entity.Room {
 	return &entity.Room{
-		Id:     dto.Id,
-		Name:   dto.Name,
+		Id:   dto.Id,
+		Name: dto.Name,
 	}
 }

@@ -8,13 +8,13 @@ import (
 )
 
 func main() {
-	conn, err := database.NewConn()
+	dbConn, err := database.NewConn()
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer func() {
-		err := conn.DB.Close()
+		err := dbConn.DB.Close()
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -25,7 +25,8 @@ func main() {
 	r.SetMiddleware()
 
 	r.Health()
-	r.NewRoomRouter(conn)
+	r.NewRoomRouter(dbConn)
+	r.NewPubsubRouter()
 
 	// Routerの起動
 	r.Serve()

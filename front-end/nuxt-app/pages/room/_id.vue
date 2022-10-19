@@ -372,7 +372,7 @@ body {
     max-width: 500px;
     top: 50%;
     left: 50%;
-    transform: translate(-50%);
+    transform: translate(-50%, -50%);
     background-color: #fff;
     border: solid 5px orange;
     border-radius: 8px;

@@ -6,13 +6,13 @@ import (
 )
 
 // DSNはdataSourceNameを返します、もし必須の環境変数が設定されてなかった場合はerrorを返します
-func DSN() (string,error) {
+func DSN() (string, error) {
 	// DBの環境変数
-	dbHost      := os.Getenv("POSTGRES_HOST")
-	dbPort      := os.Getenv("POSTGRES_PORT")
-	dbUser      := os.Getenv("POSTGRES_USER")
-	dbPassword  := os.Getenv("POSTGRES_PASSWORD")
-	dbName      := os.Getenv("POSTGRES_DB")
+	dbHost := os.Getenv("POSTGRES_HOST")
+	dbPort := os.Getenv("POSTGRES_PORT")
+	dbUser := os.Getenv("POSTGRES_USER")
+	dbPassword := os.Getenv("POSTGRES_PASSWORD")
+	dbName := os.Getenv("POSTGRES_DB")
 
 	if dbUser == "" || dbPassword == "" || dbHost == "" || dbPort == "" || dbName == "" {
 		return "", fmt.Errorf("ERROR : required environment variable not found")
@@ -24,5 +24,5 @@ func DSN() (string,error) {
 		dbHost,
 		dbPort,
 		dbName,
-	),nil
+	), nil
 }

@@ -5,9 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/jphacks/F_2205/server/src/infrastructure/redis"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
+	"github.com/jphacks/F_2205/server/src/infrastructure/redis"
 )
 
 var upgrader = websocket.Upgrader{
@@ -22,7 +22,7 @@ var upgrader = websocket.Upgrader{
 // 空のコンテキストを生成
 var ctx = context.Background()
 
-func PubSubHandler(ctx *gin.Context){
+func PubSubHandler(ctx *gin.Context) {
 	roomId := ctx.Query("room")
 	pubsub(ctx.Writer, ctx.Request, roomId)
 }

@@ -5,8 +5,8 @@ import (
 
 	"github.com/jphacks/F_2205/server/src/config"
 
-	_ "github.com/lib/pq"
 	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 // ConnはDBとの接続情報をもつ構造体です

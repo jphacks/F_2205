@@ -8,4 +8,3 @@ func (r Router) NewPubsubRouter() {
 	g := r.engine.Group("ws")
 	g.GET("/room/:roomId", pubsub.PubSubHandler)
 }
-

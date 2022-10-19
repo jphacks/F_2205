@@ -112,7 +112,7 @@ export default {
 
     endEstimateGaze: function () {
       console.log('endEstimateGaze');
-      webgazer.clearGazeListener().pause().end();
+      webgazer.clearGazeListener().end();
 
       // webgazerをendしても視線予測のポインターが消えないため、直接Elementを削除
       const gazeDotEl = document.getElementById('webgazerGazeDot');
@@ -236,6 +236,13 @@ export default {
       if (elementUnderMouse.tagName == 'VIDEO') {
         this.focusThisVideoLineOfSight(elementUnderMouse.id);
       }
+    };
+
+    window.onpopstate = function () {
+      console.log('webgazer is finish beacause browser back');
+      webgazer.clearGazeListener().end();
+      const gazeDotEl = document.getElementById('webgazerGazeDot');
+      gazeDotEl.remove();
     };
   }
 };

@@ -1,6 +1,5 @@
 <template>
   <section>
-    <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
     <section id="video-wrap" class="video">
       <video id="my-video" class="video-individual" autoplay muted playsinline></video>
     </section>
@@ -10,6 +9,18 @@
       <VideoState :leavingFn="this.roomLeaving" />
     </div>
     <!-- ビデオステータスバー -->
+
+    <!-- モーダルウィンドウ -->
+    <section class="modal-window">
+      <div class="modal-window-back"></div>
+      <div class="modal-window-front">
+        <h3>部屋に接続する</h3>
+        <div class="modal-window-front_btn-wrap">
+          <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
+        </div>
+      </div>
+    </section>
+    <!-- モーダルウィンドウ -->
   </section>
 </template>
 
@@ -63,6 +74,7 @@ export default {
       const roomName = this.$route.params.id;
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
       this.setSkywayEventListener(mediaConnection);
+      document.querySelector('body').classList.remove('modal-open');
     },
 
     roomLeaving: function () {
@@ -191,6 +203,8 @@ export default {
       this.$router.push('/room/prepare');
     }
 
+    document.querySelector('body').classList.add('modal-open');
+
     //ビデオ設定(解像度を落とす)
     let constraints = {
       video: {},
@@ -291,7 +305,7 @@ body {
     height: 100%;
 
     &-focus {
-      border: solid 3px red;
+      border: solid 5px orange;
     }
   }
 }
@@ -301,5 +315,46 @@ body {
   position: fixed;
   left: 0;
   bottom: 0;
+}
+
+.modal-open {
+  & .modal-window {
+    display: block;
+  }
+}
+
+.modal-window {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  &-back {
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0.7;
+  }
+  &-front {
+    width: 50%;
+    padding: 50px 0;
+    position: fixed;
+    text-align: center;
+    max-width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%);
+    background-color: #fff;
+    border: solid 5px orange;
+    border-radius: 8px;
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+
+    &_btn-wrap {
+      margin: 20px 0 0;
+      text-align: center;
+    }
+  }
 }
 </style>

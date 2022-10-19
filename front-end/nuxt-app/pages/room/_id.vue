@@ -105,15 +105,19 @@ export default {
         switch (this.roomMemberNum) {
           case 1:
             video.style.width = '100%';
+            video.style.height = '100%';
             break;
           case 2:
             video.style.width = '45%';
+            video.style.height = 'auto';
             break;
           case 3:
-            video.style.width = '30%';
+            video.style.width = '32%';
+            video.style.height = 'auto';
             break;
           default:
-            video.style.width = '30%';
+            video.style.width = '32%';
+            video.style.height = 'auto';
             break;
         }
       }
@@ -257,13 +261,30 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  -ms-overflow-style: none !important; /* IE, Edge 対応 */
+  scrollbar-width: none !important; /* Firefox 対応 */
+  &::-webkit-scrollbar {
+    /* Chrome, Safari 対応 */
+    display: none !important;
+  }
+}
+
 .video {
   width: 100vw;
+  padding: 10px 0;
   height: calc(100vh - 72px);
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+  overflow-y: scroll;
+  -ms-overflow-style: none !important; /* IE, Edge 対応 */
+  scrollbar-width: none !important; /* Firefox 対応 */
+  &::-webkit-scrollbar {
+    /* Chrome, Safari 対応 */
+    display: none !important;
+  }
 
   &-individual {
     width: 100%;

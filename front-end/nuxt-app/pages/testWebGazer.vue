@@ -9,7 +9,7 @@
       </v-row>
       <v-row justify="space-between" align="center" class="buttons">
         <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <v-col cols="12" sm="5">{{ adjustPoint }}</v-col>
+        <v-col cols="12" sm="5" v-if="adjustPoint > 2">{{ adjustPoint }}</v-col>
         <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
       </v-row>
       <v-row justify="space-between" align="center" class="buttons">
@@ -30,6 +30,7 @@
           <v-btn color="primary" @click="stopWebgather">stopWebgazer</v-btn>
         </v-card-actions>
       </v-card> -->
+      <ExplainClickPointDialog />
     </v-col>
   </v-row>
 </template>
@@ -46,12 +47,14 @@
 <script>
 import webgazer from 'webgazer';
 import ClickAdjustBtn from '~/components/adjustWebgazer/atoms/clickAdjustBtn';
+import ExplainClickPointDialog from '~/components/adjustWebgazer/organisms/explainClickPointDialog';
 
 export default {
   name: 'IndexPage',
   layout: 'testWebGazer',
   components: {
-    ClickAdjustBtn
+    ClickAdjustBtn,
+    ExplainClickPointDialog
   },
   data() {
     return {

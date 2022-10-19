@@ -140,18 +140,18 @@ export default {
       //存在するビデオ要素を取得
       const videos = document.querySelectorAll('.video-individual');
 
-      for (let video in videos) {
+      for (let video of videos) {
         //音量設定
         if (video.id == myVideoDom.id) {
-          tgVideoDom.volume = 1;
+          continue;
         }
 
         if (video.id == tgVideoDom.id) {
-          tgVideoDom.volume = 1;
-          tgVideoDom.classList.add('video-individual-focus');
+          video.volume = 1;
+          video.classList.add('video-individual-focus');
         } else {
-          tgVideoDom.volume = 0.07;
-          tgVideoDom.classList.remove('video-individual-focus');
+          video.volume = 0.07;
+          video.classList.remove('video-individual-focus');
         }
       }
     },
@@ -231,8 +231,9 @@ export default {
       const x = e.pageX;
       const y = e.pageY;
 
-      const elementUnderMouse = document.elementFromPoint(x, y);
+      console.log('click: ' + x + ' | ' + y);
 
+      const elementUnderMouse = document.elementFromPoint(x, y);
       if (elementUnderMouse.tagName == 'VIDEO') {
         this.focusThisVideoLineOfSight(elementUnderMouse.id);
       }

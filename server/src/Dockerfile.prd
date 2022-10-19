@@ -1,14 +1,31 @@
-FROM golang:1.17.0-alpine
+## Build
+FROM golang:1.17-buster AS build
 
-RUN apk update && apk add git
+# enviroment
+ENV ENVIROMENT=PRODUCTION
+ENV PORT=8080
+ENV REDIS_URL=https://f-2205-redis-chhumpv4gq-an.a.run.app:6379
 
 WORKDIR /go/src/github.com/jphacks/F_2205/server/src
+
+COPY go.mod ./
+COPY go.sum ./
+
+RUN go mod download
+
 COPY . .
+
+RUN go build -o /docker-gs-ping
+
+## Deploy
+FROM gcr.io/distroless/base-debian10
+
+WORKDIR /
+
+COPY --from=build /docker-gs-ping /docker-gs-ping
 
 EXPOSE 8080
 
-ENV ENVIROMENT PRODUCTION
-ENV PORT 8080
-ENV REDIS_URL https://f-2205-redis-chhumpv4gq-an.a.run.app:6379
+USER nonroot:nonroot
 
-CMD [ "go", "run", "." ]
+ENTRYPOINT ["/docker-gs-ping"]

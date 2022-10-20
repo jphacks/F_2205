@@ -328,6 +328,7 @@ body {
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+  background-color: #d3be9a;
   overflow-y: scroll;
   -ms-overflow-style: none !important; /* IE, Edge 対応 */
   scrollbar-width: none !important; /* Firefox 対応 */

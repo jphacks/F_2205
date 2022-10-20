@@ -2,7 +2,7 @@
   <div class="gazerContainer">
     <v-app-bar color="deep-purple accent-4" dense dark>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      <v-toolbar-title>Page title</v-toolbar-title>
+      <v-toolbar-title>MinNomi</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-menu left bottom :close-on-content-click="true">
         <template v-slot:activator="{ on, attrs }">
@@ -41,24 +41,28 @@
     <v-row justify="center" align="center" class="adjustFieldContainer">
       <v-col cols="12" sm="8" md="10" class="adjustCanvus">
         <v-row justify="space-between" align="center" class="buttons">
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
         </v-row>
         <v-row justify="space-between" align="center" class="buttons">
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
           <v-col cols="12" sm="1">
-            <ClickAdjustBtn @add-adjustpoint="adjustPosition" v-if="adjustPoint > 2" />
-            <v-col cols="12" sm="1" class="centerLabel">{{ storePredictionPoint }}</v-col>
+            <ClickAdjustBtn
+              @add-adjustpoint="adjustPosition"
+              v-if="adjustPoint > 2"
+              :isExplainClickPoint="this.isExplainClickPointDialog"
+            />
+            <v-col cols="12" sm="1" class="centerLabel">{{ storePredictionPoint }}{{ adjustPoint }}</v-col>
           </v-col>
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
         </v-row>
         <v-row justify="space-between" align="center" class="buttons">
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
         </v-row>
         <!-- <v-card>
         <v-card-title class="headline"> Welcome to the Vuetify + Nuxt.js template </v-card-title>
@@ -100,7 +104,7 @@
   height: 33%;
 }
 .adjustCanvus {
-  height: 80%;
+  height: 100%;
 }
 .centerLabel {
   padding-left: 27px;
@@ -203,6 +207,7 @@ export default {
     },
     readjustPosition() {
       this.isExplainClickPointDialog = true;
+      this.adjustPoint = 0;
     }
   }
 };

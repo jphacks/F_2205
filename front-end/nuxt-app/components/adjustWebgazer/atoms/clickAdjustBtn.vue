@@ -17,11 +17,20 @@
 
 <script>
 export default {
+  props: ['isExplainClickPoint'],
   data() {
     return {
       buttonLighten: 5,
       buttonLightenString: 'purple lighten-3'
     };
+  },
+  watch: {
+    isExplainClickPoint: function (newIsExplainClickPoint, oldIsExplainClickPoint) {
+      if (newIsExplainClickPoint) {
+        this.buttonLighten = 5;
+        this.buttonLightenString = 'purple lighten-3';
+      }
+    }
   },
   methods: {
     subButtonLiten() {

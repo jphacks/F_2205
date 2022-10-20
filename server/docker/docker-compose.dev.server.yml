@@ -18,4 +18,3 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - TZ=${TZ}
       - PORT=${PORT}
-      - REDIS_URL=${REDIS_URL}

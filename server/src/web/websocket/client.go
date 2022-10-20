@@ -30,7 +30,7 @@ func readPump(c *entity.Client, focusUC *usecase.FocusUseCase) {
 		// ここで処理をまってるっぽい
 		if err := c.Conn.ReadJSON(&e); err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				log.Printf("Error : %v", err)
 			}
 			break
 		}

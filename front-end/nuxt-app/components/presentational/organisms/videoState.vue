@@ -9,6 +9,13 @@
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
           <v-icon color="black">mdi-camera</v-icon>
         </v-avatar>
+
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-btn color="transparent" height="56" @click.native="gazeEstimatingFn">
+            <v-icon color="black" v-if="isEnableGazeEstimating">mdi-eye-outline</v-icon>
+            <v-icon color="black" v-else>mdi-eye-off-outline</v-icon>
+          </v-btn>
+        </v-avatar>
       </div>
 
       <div>
@@ -22,7 +29,7 @@
 import Btn from '~/components/presentational/atoms/btn';
 
 export default {
-  props: ['leavingFn'],
+  props: ['leavingFn', 'isEnableGazeEstimating', 'gazeEstimatingFn'],
   components: {
     Btn
   }

@@ -6,7 +6,11 @@
 
     <!-- ビデオステータスバー -->
     <div class="status-bar">
-      <VideoState :leavingFn="this.roomLeaving" />
+      <VideoState
+        :leavingFn="this.roomLeaving"
+        :gazeEstimatingFn="this.swtichEstimateGaze"
+        :isEnableGazeEstimating="this.isEnableGazeEstimating"
+      />
     </div>
     <!-- ビデオステータスバー -->
 
@@ -44,7 +48,9 @@ export default {
       localStream: null,
       peer: null,
       sameGroup: [],
-      roomMemberNum: 1
+      roomMemberNum: 1,
+      isVisibleSwitchButton: false,
+      isEnableGazeEstimating: true
     };
   },
 
@@ -76,6 +82,7 @@ export default {
       this.setSkywayEventListener(mediaConnection);
       document.querySelector('body').classList.remove('modal-open');
       this.beginEstimateGaze();
+      this.isVisibleSwitchButton = true;
     },
 
     roomLeaving: function () {
@@ -84,6 +91,7 @@ export default {
       alert('退出しました');
       this.$router.push('/room/prepare');
       this.endEstimateGaze();
+      this.isVisibleSwitchButton = false;
     },
 
     addVideo: function (stream) {
@@ -172,12 +180,16 @@ export default {
 
     pauseEstimateGaze: function () {
       console.log('pauseEstimateGaze');
-      webgazer.pause();
+      webgazer.showPredictionPoints(false).pause();
     },
 
     resumeEstimateGaze: function () {
       console.log('resumeEstimateGaze');
-      webgazer.resume();
+      webgazer.showPredictionPoints(true).resume();
+    },
+
+    swtichEstimateGaze: function () {
+      this.isEnableGazeEstimating = !this.isEnableGazeEstimating;
     },
 
     focusThisVideoLineOfSight: function (id) {
@@ -298,6 +310,12 @@ export default {
       const gazeDotEl = document.getElementById('webgazerGazeDot');
       gazeDotEl.remove();
     };
+  },
+  watch: {
+    isEnableGazeEstimating: function (isResumeButton) {
+      console.log('isResumeButton', isResumeButton);
+      isResumeButton ? this.resumeEstimateGaze() : this.pauseEstimateGaze();
+    }
   }
 };
 </script>

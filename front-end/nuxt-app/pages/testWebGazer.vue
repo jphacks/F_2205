@@ -122,6 +122,7 @@ import ClickAdjustBtn from '~/components/adjustWebgazer/atoms/clickAdjustBtn';
 import ExplainClickPointDialog from '~/components/adjustWebgazer/organisms/explainClickPointDialog';
 import GazeCenterPointDialog from '~/components/adjustWebgazer/organisms/gazeCenterPointDialog';
 import LearningResultDialog from '~/components/adjustWebgazer/organisms/learningResultDialog';
+import calculatePrecision from '~/components/adjustWebgazer/script/precision_calculation';
 
 export default {
   name: 'IndexPage',
@@ -147,7 +148,9 @@ export default {
       isExplainClickPointDialog: true,
       isGazeCenterPointDialog: false,
       isLearningResultDialog: false,
-      isStartStorePredictionPoint: false
+      isStartStorePredictionPoint: false,
+      screenWidth: window.innerWidth,
+      screenHeight: window.innerHeight
     };
   },
 
@@ -184,6 +187,7 @@ export default {
     },
     adjustPosition() {
       this.adjustPoint = this.adjustPoint + 1;
+      calculatePrecision(this.screenHeight, this.screenWidth);
       if (this.adjustPoint === 3) {
         this.isGazeCenterPointDialog = true;
       }

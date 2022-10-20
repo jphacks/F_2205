@@ -27,7 +27,6 @@ func main() {
 
 	r.Health()
 	// r.NewRoomRouter(dbConn)
-	// r.NewPubsubRouter()
 
 	hub := websocket.NewHub()
 	go hub.Run()

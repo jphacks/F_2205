@@ -1,27 +1,66 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="10" class="adjustCanvus">
-      <v-row justify="space-between" align="center" class="buttons">
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-      </v-row>
-      <v-row justify="space-between" align="center" class="buttons">
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <v-col cols="12" sm="1">
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" v-if="adjustPoint > 2" />
-          <v-col cols="12" sm="1" class="centerLabel">{{ storePredictionPoint }}</v-col>
-        </v-col>
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-      </v-row>
-      <v-row justify="space-between" align="center" class="buttons">
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-      </v-row>
-      <!-- <v-card>
+  <div class="gazerContainer">
+    <v-app-bar color="deep-purple accent-4" dense dark>
+      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <v-toolbar-title>Page title</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-menu left bottom :close-on-content-click="true">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon v-bind="attrs" v-on="on">
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item>
+            <v-list-item-icon>
+              <v-icon>mdi-eye-check</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>現在の精度: **%</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item class="readjustButton" @click="readjustPosition">
+            <v-list-item-icon>
+              <v-icon>mdi-crosshairs</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title> もう一度調整する </v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item class="readjustButton">
+            <v-list-item-icon>
+              <v-icon>mdi-close</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>閉じる</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </v-app-bar>
+    <v-row justify="center" align="center" class="adjustFieldContainer">
+      <v-col cols="12" sm="8" md="10" class="adjustCanvus">
+        <v-row justify="space-between" align="center" class="buttons">
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        </v-row>
+        <v-row justify="space-between" align="center" class="buttons">
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <v-col cols="12" sm="1">
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" v-if="adjustPoint > 2" />
+            <v-col cols="12" sm="1" class="centerLabel">{{ storePredictionPoint }}</v-col>
+          </v-col>
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        </v-row>
+        <v-row justify="space-between" align="center" class="buttons">
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
+        </v-row>
+        <!-- <v-card>
         <v-card-title class="headline"> Welcome to the Vuetify + Nuxt.js template </v-card-title>
         <div>x: {{ xprediction }}</div>
         <div>y: {{ yprediction }}</div>
@@ -33,20 +72,30 @@
           <v-btn color="primary" @click="stopWebgather">stopWebgazer</v-btn>
         </v-card-actions>
       </v-card> -->
-      <ExplainClickPointDialog />
-      <GazeCenterPointDialog
-        :isOpenGazeCenterPointDialog="this.isGazeCenterPointDialog"
-        @close-gazecenterpointdialog="closeGazeCenterPointDialog"
-      />
-      <LearningResultDialog
-        :isOpenLearningResultDialog="this.isLearningResultDialog"
-        @close-learningresultdialog="closeLearningResultDialog"
-      />
-    </v-col>
-  </v-row>
+        <ExplainClickPointDialog
+          :isOpenExplainClickPointDialog="this.isExplainClickPointDialog"
+          @close-explain-click-pointDialog="closeExplainClickPointDialog"
+        />
+        <GazeCenterPointDialog
+          :isOpenGazeCenterPointDialog="this.isGazeCenterPointDialog"
+          @close-gazecenterpointdialog="closeGazeCenterPointDialog"
+        />
+        <LearningResultDialog
+          :isOpenLearningResultDialog="this.isLearningResultDialog"
+          @close-learningresultdialog="closeLearningResultDialog"
+        />
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <style lang="scss">
+.gazerContainer {
+  height: 100%;
+}
+.adjustFieldContainer {
+  height: 100%;
+}
 .buttons {
   height: 33%;
 }
@@ -55,6 +104,11 @@
 }
 .centerLabel {
   padding-left: 27px;
+}
+.readjustButton {
+  &:hover {
+    cursor: pointer;
+  }
 }
 </style>
 
@@ -86,6 +140,7 @@ export default {
       tracker: '',
       regression: '',
       adjustPoint: 0,
+      isExplainClickPointDialog: true,
       isGazeCenterPointDialog: false,
       isLearningResultDialog: false,
       isStartStorePredictionPoint: false
@@ -142,6 +197,12 @@ export default {
     },
     closeLearningResultDialog() {
       this.isLearningResultDialog = false;
+    },
+    closeExplainClickPointDialog() {
+      this.isExplainClickPointDialog = false;
+    },
+    readjustPosition() {
+      this.isExplainClickPointDialog = true;
     }
   }
 };

@@ -57,15 +57,15 @@ func (h *RoomHandler) CreateRoom(ctx *gin.Context) {
 
 // roomJsonはroomの情報をJSONにバインドするための構造体です
 type roomJson struct {
-	Id     int    `json:"id"`
-	Name   string `json:"name"`
+	Id   int    `json:"id"`
+	Name string `json:"name"`
 }
 
 // roomEntityToJsonはentity.RoomをroomJson型に変換します
 func roomEntityToJson(room *entity.Room) *roomJson {
 	return &roomJson{
-		Id:     room.Id,
-		Name:   room.Name,
+		Id:   room.Id,
+		Name: room.Name,
 	}
 }
 
@@ -81,7 +81,7 @@ func roomEntityListToJson(rooms entity.Rooms) []*roomJson {
 // roomJsonToEntityはroomJson型のオブジェクトをentity.Roomに変換します
 func roomJsonToEntity(roomJson *roomJson) *entity.Room {
 	return &entity.Room{
-		Id:     roomJson.Id,
-		Name:   roomJson.Name,
+		Id:   roomJson.Id,
+		Name: roomJson.Name,
 	}
 }

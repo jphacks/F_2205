@@ -46,7 +46,7 @@ func readPump(c *entity.Client, focusUC *usecase.FocusUseCase) {
 				log.Println("Error : ", err)
 			}
 		case entity.DelFocus:
-			if err:=focusUC.DelFocus(c.Hub.RoomId,e.Info); err != nil {
+			if err := focusUC.DelFocus(c.Hub.RoomId, e.Info); err != nil {
 				log.Println("Error : ", err)
 			}
 		default:

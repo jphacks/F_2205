@@ -48,7 +48,7 @@ func (r *FocusRepository) SetFocus(roomId entity.RoomId, from entity.Name, to en
 	if !ok {
 		return fmt.Errorf("FocusRepository.SetFocus Error : hub not found")
 	}
-	
+
 	// TODO すでにfocusしあっているか確認する処理を追加する
 	for _, member := range h.Focus.Members {
 		if member.Name == from {
@@ -76,7 +76,7 @@ func (r *FocusRepository) DelFocus(roomId entity.RoomId, from entity.Name, to en
 	for _, member := range h.Focus.Members {
 		if member.Name == from {
 			// FromさんのConnectからToさんを削除
-			for i,connect := range member.Connects {
+			for i, connect := range member.Connects {
 				if connect.Name == to {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
@@ -86,7 +86,7 @@ func (r *FocusRepository) DelFocus(roomId entity.RoomId, from entity.Name, to en
 			}
 		} else if member.Name == to {
 			// ToさんのConnectからFromさんを削除
-			for i,connect := range member.Connects {
+			for i, connect := range member.Connects {
 				if connect.Name == from {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]

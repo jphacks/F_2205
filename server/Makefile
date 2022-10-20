@@ -30,14 +30,12 @@ RM:=rm -rf
 up: ## docker環境を立ち上げる
 	$(ENV_LOCAL) docker-compose \
 	-f $(DOCKER_COMPOSE_BASE) \
-	-f $(DOCKER_COMPOSE_DEV_DB) \
 	-f $(DOCKER_COMPOSE_DEV_SERVER) up
 
 .PHONY: down
 down: ## dockerイメージを削除し、docker環境を閉じる
 	docker-compose \
 	-f $(DOCKER_COMPOSE_BASE) \
-	-f $(DOCKER_COMPOSE_DEV_DB) \
 	-f $(DOCKER_COMPOSE_DEV_SERVER) down \
 	--rmi all --volumes --remove-orphans
 

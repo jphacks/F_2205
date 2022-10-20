@@ -5,8 +5,3 @@ services:
     container_name: f_2205-server
     restart: always
     tty: true
-
-  db:
-    container_name: f_2205-db
-    restart: always
-    tty: true

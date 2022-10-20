@@ -30,14 +30,12 @@ RM:=rm -rf
 up: ## docker環境を立ち上げる
 	$(ENV_LOCAL) docker-compose \
 	-f $(DOCKER_COMPOSE_BASE) \
-	-f $(DOCKER_COMPOSE_DEV_DB) \
 	-f $(DOCKER_COMPOSE_DEV_SERVER) up
 
 .PHONY: down
 down: ## dockerイメージを削除し、docker環境を閉じる
 	docker-compose \
 	-f $(DOCKER_COMPOSE_BASE) \
-	-f $(DOCKER_COMPOSE_DEV_DB) \
 	-f $(DOCKER_COMPOSE_DEV_SERVER) down \
 	--rmi all --volumes --remove-orphans
 
@@ -62,6 +60,10 @@ attach-db: ## dockerのdbコンテナにアクセスする
 .PHONY: lint
 lint: ## goのコードを整形する
 	cd $(SRC_DIR) && gofmt -l -w .
+
+.PHONY: deploy
+deploy: ## cloud run にdeployする
+	cd src && gcloud run deploy f-2205-server --source=. --region=asia-east1 --project=serious-timer-366017 --set-env-vars=ENVIROMENT=PRODUCTION --port=8080 --allow-unauthenticated
 
 .PHONY: help
 help: ## コマンドの一覧を標示する

@@ -1,5 +1,8 @@
-# deploy command
+# Server
 
-```
-gcloud run deploy f-2205-server --source=. --region=asia-east1 --project=serious-timer-366017 --set-env-vars=ENVIROMENT=PRODUCTION --port=8080 --allow-unauthenticated
-```
+## API仕様書
+
+APIについてまとめてあります
+
+API仕様書は[こちら](./doc/api.md)から
+

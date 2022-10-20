@@ -20,22 +20,52 @@ window.onload = function () {
         if (!conn) {
             return false;
         }
-        if (!msg.value) {
-            return false;
-        }
-        conn.send(msg.value);
-        msg.value = "";
+        // const data = {
+        //     type:"DEL_ALL_FOCUS",
+        //     info:{
+        //         from:"hoge1",
+        //     }
+        // }
+        // const data = {
+        //     type:"DEL_FOCUS",
+        //     info:{
+        //         from:"hoge1",
+        //         to:"hoge11",
+        //     }
+        // }
+        // const data = {
+        //     type:"SET_FOCUS",
+        //     info:{
+        //         from:"hoge1",
+        //         to:"hoge11",
+        //     }
+        // }
+        // const data = {
+        //     type:"NEW_MEMBER",
+        //     info:{
+        //         from:"hoge11",
+        //     }
+        // }
+        // const data = {
+        //     type:"NEW_MEMBER",
+        //     info:{
+        //         from:"hoge1",
+        //     }
+        // }
+        console.log(data)
+        conn.send(JSON.stringify(data));
         return false;
     };
 
     if (window["WebSocket"]) {
-        conn = new WebSocket("wss://f-2205-go-cache-chhumpv4gq-an.a.run.app/ws");
+        conn = new WebSocket("ws://localhost:8080/ws/hoge");
         conn.onclose = function (evt) {
             var item = document.createElement("div");
             item.innerHTML = "<b>Connection closed.</b>";
             appendLog(item);
         };
         conn.onmessage = function (evt) {
+            console.log("###",JSON.parse(evt.data))
             var messages = evt.data.split('\n');
             for (var i = 0; i < messages.length; i++) {
                 var item = document.createElement("div");

@@ -3,7 +3,7 @@ package entity
 type Name string
 
 type Member struct {
-	Name Name `json:"name"`
+	Name     Name `json:"name"`
 	Connects []*Connect
 }
 

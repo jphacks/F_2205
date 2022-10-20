@@ -28,7 +28,7 @@ func readPump(c *entity.Client, focusUC *usecase.FocusUseCase) {
 	for {
 		e := entity.Event{}
 		// ここで処理をまってるっぽい
-		if err:=c.Conn.ReadJSON(&e);err!=nil{
+		if err := c.Conn.ReadJSON(&e); err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
 			}
@@ -36,17 +36,17 @@ func readPump(c *entity.Client, focusUC *usecase.FocusUseCase) {
 		}
 
 		// Eventのタイプによって処理を切り替える
-		switch e.Type{
+		switch e.Type {
 		case entity.NewMember:
-			if err:= focusUC.NewMember(c.Hub.RoomId,e.Info);err!=nil{
-				log.Println("Error : ",err)
+			if err := focusUC.NewMember(c.Hub.RoomId, e.Info); err != nil {
+				log.Println("Error : ", err)
 			}
 			e.Focus.Members = c.Hub.Focus.Members
 		case entity.SetFocus:
 			// FromさんがToさんをFocusする
 			// ToさんのconnectsとFromさんもconnectsにお互いを追加する
-			if err:= focusUC.SetFocus(c.Hub.RoomId,e.Info);err!=nil{
-				log.Println("Error : ",err)
+			if err := focusUC.SetFocus(c.Hub.RoomId, e.Info); err != nil {
+				log.Println("Error : ", err)
 			}
 			e.Focus.Members = c.Hub.Focus.Members
 		default:
@@ -73,7 +73,7 @@ func writePump(c *entity.Client) {
 				return
 			}
 
-			if err:=c.Conn.WriteJSON(s);err!=nil{
+			if err := c.Conn.WriteJSON(s); err != nil {
 				log.Println("Error : write json failed")
 			}
 
@@ -86,10 +86,10 @@ func writePump(c *entity.Client) {
 	}
 }
 
-func ServeWs(hub *entity.Hub, w http.ResponseWriter, r *http.Request,focusUC *usecase.FocusUseCase) {
+func ServeWs(hub *entity.Hub, w http.ResponseWriter, r *http.Request, focusUC *usecase.FocusUseCase) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println("Error : ",err)
+		log.Println("Error : ", err)
 		return
 	}
 
@@ -97,5 +97,5 @@ func ServeWs(hub *entity.Hub, w http.ResponseWriter, r *http.Request,focusUC *us
 	client.Hub.Register <- client
 
 	go writePump(client)
-	go readPump(client,focusUC)
+	go readPump(client, focusUC)
 }

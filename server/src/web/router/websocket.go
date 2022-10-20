@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jphacks/F_2205/server/src/domain/entity"
-	"github.com/jphacks/F_2205/server/src/infrastructure/persistance"
 	"github.com/jphacks/F_2205/server/src/infrastructure/hub"
+	"github.com/jphacks/F_2205/server/src/infrastructure/persistance"
 	"github.com/jphacks/F_2205/server/src/usecase"
 	"github.com/jphacks/F_2205/server/src/web/websocket"
 )
@@ -21,8 +21,8 @@ func (r Router) Ws() {
 
 	// TODO handler内でhubsを使っているのおかしい
 	r.engine.GET("/ws/:room", func(ctx *gin.Context) {
-		log.Println("HUB",hubs)
-		roomId:= (entity.RoomId)(ctx.Param("room"))
+		log.Println("HUB", hubs)
+		roomId := (entity.RoomId)(ctx.Param("room"))
 
 		var h *entity.Hub
 		// hubsに登録されているか確認
@@ -38,6 +38,6 @@ func (r Router) Ws() {
 			(*hubs)[roomId] = h
 			go h.Run()
 		}
-		websocket.ServeWs(h, ctx.Writer,ctx.Request,focusUC)
+		websocket.ServeWs(h, ctx.Writer, ctx.Request, focusUC)
 	})
 }

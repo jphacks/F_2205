@@ -26,20 +26,20 @@ func (r *FocusRepository) NewMember(roomId entity.RoomId, newMemberName entity.N
 		return fmt.Errorf("FocusRepository.NewMember Error : hub not found")
 	}
 
-	for _,member := range h.Focus.Members {
+	for _, member := range h.Focus.Members {
 		if member.Name == newMemberName {
 			return fmt.Errorf("FocusRepository.NewMember Error : userName already exist")
 		}
 	}
 
 	h.Focus.Members = append(
-		h.Focus.Members, 
+		h.Focus.Members,
 		&entity.Member{
-			Name: newMemberName,
+			Name:     newMemberName,
 			Connects: []*entity.Connect{},
 		},
 	)
-	log.Println("hub menbers",h.Focus.Members)
+	log.Println("hub menbers", h.Focus.Members)
 	return nil
 }
 
@@ -50,17 +50,17 @@ func (r *FocusRepository) SetFocus(roomId entity.RoomId, from entity.Name, to en
 	}
 
 	members := h.Focus.Members
-	for _,member := range members {
-		if member.Name == from{
+	for _, member := range members {
+		if member.Name == from {
 			// FromさんのConnectにToさんを追加
 			member.Connects = append(
-				member.Connects, 
+				member.Connects,
 				&entity.Connect{Name: to},
 			)
-		}else if member.Name == to{
+		} else if member.Name == to {
 			// ToさんのConnectにFromさんを追加
 			member.Connects = append(
-				member.Connects, 
+				member.Connects,
 				&entity.Connect{Name: from},
 			)
 		}

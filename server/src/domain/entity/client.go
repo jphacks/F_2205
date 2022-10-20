@@ -10,5 +10,3 @@ type Client struct {
 	Send   chan *Event // Buffered channel of outbound messages.
 	RoomId RoomId
 }
-
-

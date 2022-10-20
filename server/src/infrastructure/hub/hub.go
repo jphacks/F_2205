@@ -11,6 +11,6 @@ func NewHub(roomId entity.RoomId) *entity.Hub {
 		Unregister: make(chan *entity.Client),
 		Clients:    make(map[*entity.Client]bool),
 		Focus:      &entity.Focus{},
-		RoomId: roomId,
+		RoomId:     roomId,
 	}
 }

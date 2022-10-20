@@ -1,6 +1,8 @@
 package router
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 	"github.com/jphacks/F_2205/server/src/infrastructure/hub"
@@ -34,5 +36,18 @@ func (r Router) Ws() {
 			go h.Run()
 		}
 		websocket.ServeWs(h, ctx.Writer, ctx.Request, focusUC)
+	})
+
+	r.engine.DELETE("/ws/:room", func(ctx *gin.Context) {
+		roomId := (entity.RoomId)(ctx.Param("room"))
+
+		if _, ok := (*hubs)[roomId]; !ok {
+			// 登録されていなかったら
+			ctx.JSON(http.StatusOK,gin.H{"error":"room not found"})
+			return
+		}
+		// 登録されていたら部屋を削除
+		delete(*hubs,roomId)
+		ctx.JSON(http.StatusOK,gin.H{"ok":"delete room successful"})
 	})
 }

@@ -46,11 +46,11 @@ func (r *FocusRepository) NewMember(roomId entity.RoomId, newMemberName entity.N
 func (r *FocusRepository) SetFocus(roomId entity.RoomId, from entity.Name, to entity.Name) error {
 	h, ok := (*r.Hubs)[roomId]
 	if !ok {
-		return fmt.Errorf("FocusRepository.NewMember Error : hub not found")
+		return fmt.Errorf("FocusRepository.SetFocus Error : hub not found")
 	}
-
-	members := h.Focus.Members
-	for _, member := range members {
+	
+	// TODO すでにfocusしあっているか確認する処理を追加する
+	for _, member := range h.Focus.Members {
 		if member.Name == from {
 			// FromさんのConnectにToさんを追加
 			member.Connects = append(
@@ -63,6 +63,37 @@ func (r *FocusRepository) SetFocus(roomId entity.RoomId, from entity.Name, to en
 				member.Connects,
 				&entity.Connect{Name: from},
 			)
+		}
+	}
+	return nil
+}
+
+func (r *FocusRepository) DelFocus(roomId entity.RoomId, from entity.Name, to entity.Name) error {
+	h, ok := (*r.Hubs)[roomId]
+	if !ok {
+		return fmt.Errorf("FocusRepository.DelFocus Error : hub not found")
+	}
+	for _, member := range h.Focus.Members {
+		if member.Name == from {
+			// FromさんのConnectからToさんを削除
+			for i,connect := range member.Connects {
+				if connect.Name == to {
+					// 削除
+					member.Connects[i] = member.Connects[len(member.Connects)-1]
+					member.Connects[len(member.Connects)-1] = nil
+					member.Connects = member.Connects[:len(member.Connects)-1]
+				}
+			}
+		} else if member.Name == to {
+			// ToさんのConnectからFromさんを削除
+			for i,connect := range member.Connects {
+				if connect.Name == from {
+					// 削除
+					member.Connects[i] = member.Connects[len(member.Connects)-1]
+					member.Connects[len(member.Connects)-1] = nil
+					member.Connects = member.Connects[:len(member.Connects)-1]
+				}
+			}
 		}
 	}
 	return nil

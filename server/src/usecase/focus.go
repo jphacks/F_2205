@@ -32,6 +32,8 @@ func (u *FocusUseCase) NewMember(roomId entity.RoomId, info entity.Info) error {
 	return u.focusRepo.NewMember(roomId, newMemberName)
 }
 
+// FromさんがToさんをFocusする
+// ToさんのconnectsとFromさんもconnectsにお互いを追加する
 func (u *FocusUseCase) SetFocus(roomId entity.RoomId, info entity.Info) error {
 	from := info.From
 	to := info.To
@@ -39,4 +41,13 @@ func (u *FocusUseCase) SetFocus(roomId entity.RoomId, info entity.Info) error {
 		return fmt.Errorf("FocusUseCase.SetFocus Error : from and to is required")
 	}
 	return u.focusRepo.SetFocus(roomId, from, to)
+}
+
+func (u *FocusUseCase) DelFocus(roomId entity.RoomId, info entity.Info) error {
+	from := info.From
+	to := info.To
+	if from == "" || to == "" {
+		return fmt.Errorf("FocusUseCase.DelFocus Error : from and to is required")
+	}
+	return u.focusRepo.DelFocus(roomId, from, to)
 }

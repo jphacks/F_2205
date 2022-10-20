@@ -10,5 +10,6 @@ type Event struct {
 
 const (
 	NewMember EventType = "NEW_MEMBER" //新しいmemberをmembers配列に追加する
-	SetFocus  EventType = "SET_FOCUS"  //Focusをセットする
+	SetFocus  EventType = "SET_FOCUS"  //from と toをつなげる
+	DelFocus  EventType = "DEL_FOCUS" //from と toを解除する
 )

@@ -41,17 +41,20 @@ func readPump(c *entity.Client, focusUC *usecase.FocusUseCase) {
 			if err := focusUC.NewMember(c.Hub.RoomId, e.Info); err != nil {
 				log.Println("Error : ", err)
 			}
-			e.Focus.Members = c.Hub.Focus.Members
 		case entity.SetFocus:
-			// FromさんがToさんをFocusする
-			// ToさんのconnectsとFromさんもconnectsにお互いを追加する
 			if err := focusUC.SetFocus(c.Hub.RoomId, e.Info); err != nil {
 				log.Println("Error : ", err)
 			}
-			e.Focus.Members = c.Hub.Focus.Members
+		case entity.DelFocus:
+			if err:=focusUC.DelFocus(c.Hub.RoomId,e.Info); err != nil {
+				log.Println("Error : ", err)
+			}
 		default:
 			log.Println("Error : not matched type")
 		}
+
+		// 最新のHubの状態を書き込む
+		e.Focus.Members = c.Hub.Focus.Members
 		c.Hub.Broadcast <- &e
 	}
 }

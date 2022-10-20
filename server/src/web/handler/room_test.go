@@ -60,11 +60,10 @@ func (h *RoomUsecaseMock) CreateRoom(room *entity.Room) (*entity.Room, error) {
 	return testCreateRoom, nil
 }
 
-
 // ここでテストデータの用意をします
 var (
 	testCreateRoom *entity.Room = &entity.Room{
-		Id:     0,
-		Name:   "hoge",
+		Id:   0,
+		Name: "hoge",
 	}
 )

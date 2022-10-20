@@ -14,6 +14,7 @@ DOCKER_FILE_DIR            := ./docker
 DOCKER_COMPOSE_BASE        := $(DOCKER_FILE_DIR)/docker-compose.base.yml
 DOCKER_COMPOSE_DEV_DB      := $(DOCKER_FILE_DIR)/docker-compose.dev.db.yml
 DOCKER_COMPOSE_DEV_SERVER  := $(DOCKER_FILE_DIR)/docker-compose.dev.server.yml
+DOCKER_COMPOSE_DEV_REDIS   := $(DOCKER_FILE_DIR)/docker-compose.dev.redis.yml
 DOCKER_EXEC                := docker exec -it
 DB_CONTAINER_NAME          := f_2205-db
 
@@ -31,14 +32,16 @@ up: ## docker環境を立ち上げる
 	$(ENV_LOCAL) docker-compose \
 	-f $(DOCKER_COMPOSE_BASE) \
 	-f $(DOCKER_COMPOSE_DEV_DB) \
-	-f $(DOCKER_COMPOSE_DEV_SERVER) up
+	-f $(DOCKER_COMPOSE_DEV_SERVER) \
+	-f $(DOCKER_COMPOSE_DEV_REDIS) up
 
 .PHONY: down
 down: ## dockerイメージを削除し、docker環境を閉じる
 	docker-compose \
 	-f $(DOCKER_COMPOSE_BASE) \
 	-f $(DOCKER_COMPOSE_DEV_DB) \
-	-f $(DOCKER_COMPOSE_DEV_SERVER) down \
+	-f $(DOCKER_COMPOSE_DEV_SERVER) \
+	-f $(DOCKER_COMPOSE_DEV_REDIS) down \
 	--rmi all --volumes --remove-orphans
 
 .PHONY: fclean

@@ -1,13 +1,15 @@
 <template>
-  <v-card class="video-state pa-2 d-flex align-center" color="orange lighten-3" tile>
-    <div class="video-state-icon">
-      <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
-        <v-icon color="black">mdi-microphone</v-icon>
-      </v-avatar>
+  <v-card class="video-state" color="orange lighten-3" tile>
+    <div class="video-state-inner pa-2 d-flex align-center">
+      <div class="video-state-icon">
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-icon color="black">mdi-microphone</v-icon>
+        </v-avatar>
 
-      <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
-        <v-icon color="black">mdi-camera</v-icon>
-      </v-avatar>
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-icon color="black">mdi-camera</v-icon>
+        </v-avatar>
+      </div>
 
       <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
         <v-btn color="transparent" height="56" @click.native="gazeEstimatingFn">
@@ -15,10 +17,10 @@
           <v-icon color="black" v-else>mdi-eye-off-outline</v-icon>
         </v-btn>
       </v-avatar>
-    </div>
 
-    <div class="video-state-leaving-btn">
-      <Btn text="退出" color="red" :clickedfn="leavingFn" />
+      <div>
+        <Btn text="退出" color="red" :clickedfn="leavingFn" />
+      </div>
     </div>
   </v-card>
 </template>
@@ -36,6 +38,10 @@ export default {
 
 <style lang="scss">
 .video-state {
+  &-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+  }
   &-icon {
     text-align: center;
     width: 100%;
@@ -44,9 +50,6 @@ export default {
     &-avatar {
       box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, 0.2);
     }
-  }
-  &-leaving-btn {
-    width: 10%;
   }
 }
 </style>

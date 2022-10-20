@@ -4,15 +4,27 @@
       <video id="my-video" class="video-individual" autoplay muted playsinline></video>
     </section>
 
-    <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
+    <!-- ビデオステータスバー -->
+    <div class="status-bar">
+      <VideoState
+        :leavingFn="this.roomLeaving"
+        :gazeEstimatingFn="this.swtichEstimateGaze"
+        :isEnableGazeEstimating="this.isEnableGazeEstimating"
+      />
+    </div>
+    <!-- ビデオステータスバー -->
 
-    <!-- ビデオステータスバー -->
-    <VideoState
-      :leavingFn="this.roomLeaving"
-      :gazeEstimatingFn="this.swtichEstimateGaze"
-      :isEnableGazeEstimating="this.isEnableGazeEstimating"
-    />
-    <!-- ビデオステータスバー -->
+    <!-- モーダルウィンドウ -->
+    <section class="modal-window">
+      <div class="modal-window-back"></div>
+      <div class="modal-window-front">
+        <h3>部屋に接続する</h3>
+        <div class="modal-window-front_btn-wrap">
+          <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
+        </div>
+      </div>
+    </section>
+    <!-- モーダルウィンドウ -->
   </section>
 </template>
 
@@ -36,6 +48,7 @@ export default {
       localStream: null,
       peer: null,
       sameGroup: [],
+      roomMemberNum: 1,
       isVisibleSwitchButton: false,
       isEnableGazeEstimating: true
     };
@@ -44,7 +57,7 @@ export default {
   methods: {
     setSkywayEventListener: function (mediaConnection) {
       mediaConnection.on('stream', (stream) => {
-        // video要素にカメラ映像をセットして再生
+        //video要素にカメラ映像をセットして再生
         this.addVideo(stream);
         const videoElm = document.getElementById(stream.id);
         videoElm.srcObject = stream;
@@ -67,6 +80,7 @@ export default {
       const roomName = this.$route.params.id;
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
       this.setSkywayEventListener(mediaConnection);
+      document.querySelector('body').classList.remove('modal-open');
       this.beginEstimateGaze();
       this.isVisibleSwitchButton = true;
     },
@@ -87,11 +101,48 @@ export default {
       videoDom.srcObject = stream;
       videoDom.play();
       document.getElementById('video-wrap').append(videoDom);
+
+      //ルームメンバー人数追加
+      this.roomMemberNum++;
+
+      //ビデオのリサイズ
+      this.videoResize();
     },
     removeVideo: function (peerId) {
       console.log(peerId);
       const videoDom = document.getElementById(peerId);
       videoDom.remove();
+
+      //ルームメンバー人数減少
+      this.roomMemberNum--;
+
+      //ビデオのリサイズ
+      this.videoResize();
+    },
+    videoResize: function () {
+      //ビデオのリサイズ
+      const videos = document.querySelectorAll('.video-individual');
+
+      for (let video of videos) {
+        switch (this.roomMemberNum) {
+          case 1:
+            video.style.width = '100%';
+            video.style.height = '100%';
+            break;
+          case 2:
+            video.style.width = '45%';
+            video.style.height = 'auto';
+            break;
+          case 3:
+            video.style.width = '32%';
+            video.style.height = 'auto';
+            break;
+          default:
+            video.style.width = '32%';
+            video.style.height = 'auto';
+            break;
+        }
+      }
     },
 
     beginEstimateGaze: function () {
@@ -209,6 +260,8 @@ export default {
       this.$router.push('/room/prepare');
     }
 
+    document.querySelector('body').classList.add('modal-open');
+
     //ビデオ設定(解像度を落とす)
     let constraints = {
       video: {},
@@ -268,17 +321,86 @@ export default {
 </script>
 
 <style lang="scss">
+body {
+  -ms-overflow-style: none !important; /* IE, Edge 対応 */
+  scrollbar-width: none !important; /* Firefox 対応 */
+  &::-webkit-scrollbar {
+    /* Chrome, Safari 対応 */
+    display: none !important;
+  }
+}
+
 .video {
+  width: 100vw;
+  padding: 10px 0;
+  height: calc(100vh - 72px);
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+  overflow-y: scroll;
+  -ms-overflow-style: none !important; /* IE, Edge 対応 */
+  scrollbar-width: none !important; /* Firefox 対応 */
+  &::-webkit-scrollbar {
+    /* Chrome, Safari 対応 */
+    display: none !important;
+  }
 
   &-individual {
-    width: 45%;
+    width: 100%;
+    height: 100%;
+    border-radius: 80px;
 
     &-focus {
-      border: solid 3px red;
+      border: solid 5px orange;
+    }
+  }
+}
+
+.status-bar {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+
+.modal-open {
+  & .modal-window {
+    display: block;
+  }
+}
+
+.modal-window {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  &-back {
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0.7;
+  }
+  &-front {
+    width: 50%;
+    padding: 50px 0;
+    position: fixed;
+    text-align: center;
+    max-width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: solid 5px orange;
+    border-radius: 8px;
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+
+    &_btn-wrap {
+      margin: 20px 0 0;
+      text-align: center;
     }
   }
 }

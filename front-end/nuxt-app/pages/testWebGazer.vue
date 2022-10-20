@@ -2,7 +2,7 @@
   <div class="gazerContainer">
     <v-app-bar color="deep-purple accent-4" dense dark>
       <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      <v-toolbar-title>MinNomi</v-toolbar-title>
+      <v-toolbar-title>NomiPara</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-menu left bottom :close-on-content-click="true">
         <template v-slot:activator="{ on, attrs }">
@@ -16,7 +16,7 @@
               <v-icon>mdi-eye-check</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>現在の精度: **%</v-list-item-title>
+              <v-list-item-title>現在の精度:{{ this.recisionMeasurement }}%</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item class="readjustButton" @click="readjustPosition">
@@ -41,7 +41,7 @@
     <v-row justify="center" align="center" class="adjustFieldContainer">
       <v-col cols="12" sm="8" md="10" class="adjustCanvus">
         <v-row justify="space-between" align="center" class="buttons">
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          <v-col cols="12" sm="1"></v-col>
           <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
           <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
           <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
@@ -51,7 +51,7 @@
           <v-col cols="12" sm="1">
             <ClickAdjustBtn
               @add-adjustpoint="adjustPosition"
-              v-if="adjustPoint > 2"
+              v-if="adjustPoint > 8"
               :isExplainClickPoint="this.isExplainClickPointDialog"
             />
             <v-col cols="12" sm="1" class="centerLabel">{{ storePredictionPoint }}{{ adjustPoint }}</v-col>
@@ -65,11 +65,6 @@
           <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
         </v-row>
         <!-- <v-card>
-        <v-card-title class="headline"> Welcome to the Vuetify + Nuxt.js template </v-card-title>
-        <div>x: {{ xprediction }}</div>
-        <div>y: {{ yprediction }}</div>
-        <div>tracker: {{ currentTracker }}</div>
-        <div>regression: {{ currentRegression }}</div>
         <v-card-actions>
           <v-spacer />
           <v-btn color="primary" nuxt to="/inspire" @click="stopWebgather"> Continue </v-btn>
@@ -86,6 +81,7 @@
         />
         <LearningResultDialog
           :isOpenLearningResultDialog="this.isLearningResultDialog"
+          :recisionMeasurement="this.recisionMeasurement"
           @close-learningresultdialog="closeLearningResultDialog"
         />
       </v-col>
@@ -135,9 +131,6 @@ export default {
   },
   data() {
     return {
-      cart: [],
-      premium: false,
-      hello: 'hello',
       webgatherData: '',
       webgatherClock: '',
       xprediction: '',
@@ -150,16 +143,19 @@ export default {
       isLearningResultDialog: false,
       isStartStorePredictionPoint: false,
       screenWidth: window.innerWidth,
-      screenHeight: window.innerHeight
+      screenHeight: window.innerHeight,
+      precisionMeasurement: ''
     };
   },
 
   mounted: async function () {
-    // webgazer.setRegression('ridge').setTracker('clmtrackr').begin();
-    // webgazer.applyKalmanFilter(true).setGazeListener((data, clock) => {
-    //   this.xprediction = data.x;
-    //   this.yprediction = data.y;
-    // });
+    webgazer.setRegression('ridge').setTracker('clmtrackr').begin();
+    webgazer.applyKalmanFilter(true).setGazeListener((data, clock) => {
+      // this.xprediction = data.x;
+      // this.yprediction = data.y;
+    });
+
+    // webgazer.showVideoPreview(true).showPredictionPoints(true).applyKalmanFilter(true);
   },
   computed: {
     currentTracker() {
@@ -171,7 +167,15 @@ export default {
     storePredictionPoint() {
       if (this.isStartStorePredictionPoint) {
         console.log('storePredictionPoint');
+        // webgazer.params.storingPoints = true;
+
         this.sleep(5000).then(() => {
+          // webgazer.params.storingPoints = false;
+          var pastData = webgazer.getStoredPoints();
+          this.precisionMeasurement = calculatePrecision(pastData, this.screenHeight, this.screenWidth);
+
+          console.log(this.precisionMeasurement);
+
           this.isLearningResultDialog = true;
           this.isStartStorePredictionPoint = false;
           return 'success';
@@ -187,8 +191,7 @@ export default {
     },
     adjustPosition() {
       this.adjustPoint = this.adjustPoint + 1;
-      calculatePrecision(this.screenHeight, this.screenWidth);
-      if (this.adjustPoint === 3) {
+      if (this.adjustPoint === 10) {
         this.isGazeCenterPointDialog = true;
       }
     },
@@ -210,8 +213,13 @@ export default {
       this.isExplainClickPointDialog = false;
     },
     readjustPosition() {
+      webgazer.pause();
+
+      webgazer.clearData();
       this.isExplainClickPointDialog = true;
       this.adjustPoint = 0;
+
+      webgazer.resume();
     }
   }
 };

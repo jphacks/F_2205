@@ -19,7 +19,7 @@ function calculatePrecision(past50Array,screenHeight,screenWeight){
 }
 
 function calculatePrecisionPercentages(precisionPercentages, windowHeight, x50, y50, staringPointX, staringPointY) {
-    for (x = 0; x < 50; x++) {
+    for (let x = 0; x < 50; x++) {
       // Calculate distance between each prediction and staring point
       var xDiff = staringPointX - x50[x];
       var yDiff = staringPointY - y50[x];
@@ -46,7 +46,7 @@ function calculatePrecisionPercentages(precisionPercentages, windowHeight, x50, 
    */
   function calculateAverage(precisionPercentages) {
     var precision = 0;
-    for (x = 0; x < 50; x++) {
+    for (let x = 0; x < 50; x++) {
       precision += precisionPercentages[x];
     }
     precision = precision / 50;

@@ -1,6 +1,6 @@
 <template>
   <v-col cols="12" sm="1">
-    <v-btn class="mx-2" fab dark :color="buttonLightenString" @click="subButtonLiten">
+    <v-btn class="mx-2" small fab dark :color="buttonLightenString" @click="subButtonLiten">
       <v-icon dark> mdi-android </v-icon>
     </v-btn>
   </v-col>

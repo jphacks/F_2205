@@ -16,7 +16,7 @@ type Router struct {
 
 // NewRouterは新しいRouterを初期化し構造体のポインタを返します
 func NewRouter() *Router {
-	e := gin.New()
+	e := gin.Default()
 	return &Router{
 		engine: e,
 	}
@@ -29,9 +29,6 @@ func (r *Router) Serve() {
 
 // NewMiddlewareはmiddlewareを用意します
 func (r *Router) SetMiddleware() {
-	r.engine.Use(gin.Logger())
-	r.engine.Use(gin.Recovery())
-
 	r.engine.Use(cors.New(cors.Config{
 	// アクセスを許可したいアクセス元
 	AllowOrigins: []string{

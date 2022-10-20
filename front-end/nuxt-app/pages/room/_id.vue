@@ -7,7 +7,11 @@
     <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
 
     <!-- ビデオステータスバー -->
-    <VideoState :leavingFn="this.roomLeaving" />
+    <VideoState
+      :leavingFn="this.roomLeaving"
+      :gazeEstimatingFn="this.swtichEstimateGaze"
+      :isEnableGazeEstimating="this.isEnableGazeEstimating"
+    />
     <!-- ビデオステータスバー -->
   </section>
 </template>
@@ -31,7 +35,9 @@ export default {
       APIKey: '5152bad7-4798-40b1-986a-a7e8f164a8a3',
       localStream: null,
       peer: null,
-      sameGroup: []
+      sameGroup: [],
+      isVisibleSwitchButton: false,
+      isEnableGazeEstimating: true
     };
   },
 
@@ -62,6 +68,7 @@ export default {
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
       this.setSkywayEventListener(mediaConnection);
       this.beginEstimateGaze();
+      this.isVisibleSwitchButton = true;
     },
 
     roomLeaving: function () {
@@ -70,6 +77,7 @@ export default {
       alert('退出しました');
       this.$router.push('/room/prepare');
       this.endEstimateGaze();
+      this.isVisibleSwitchButton = false;
     },
 
     addVideo: function (stream) {
@@ -121,12 +129,16 @@ export default {
 
     pauseEstimateGaze: function () {
       console.log('pauseEstimateGaze');
-      webgazer.pause();
+      webgazer.showPredictionPoints(false).pause();
     },
 
     resumeEstimateGaze: function () {
       console.log('resumeEstimateGaze');
-      webgazer.resume();
+      webgazer.showPredictionPoints(true).resume();
+    },
+
+    swtichEstimateGaze: function () {
+      this.isEnableGazeEstimating = !this.isEnableGazeEstimating;
     },
 
     focusThisVideoLineOfSight: function (id) {
@@ -245,6 +257,12 @@ export default {
       const gazeDotEl = document.getElementById('webgazerGazeDot');
       gazeDotEl.remove();
     };
+  },
+  watch: {
+    isEnableGazeEstimating: function (isResumeButton) {
+      console.log('isResumeButton', isResumeButton);
+      isResumeButton ? this.resumeEstimateGaze() : this.pauseEstimateGaze();
+    }
   }
 };
 </script>

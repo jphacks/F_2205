@@ -10,6 +10,7 @@
         :leavingFn="this.roomLeaving"
         :gazeEstimatingFn="this.swtichEstimateGaze"
         :isEnableGazeEstimating="this.isEnableGazeEstimating"
+        :focusThisVideoAllLiftFn="this.focusThisVideoAllLift"
       />
     </div>
     <!-- ビデオステータスバー -->

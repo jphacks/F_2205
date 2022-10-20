@@ -3,6 +3,10 @@
     <div class="video-state-inner pa-2 d-flex align-center">
       <div class="video-state-icon">
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-icon color="black" @click.native="focusThisVideoAllLiftFn">mdi-account-group </v-icon>
+        </v-avatar>
+
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
           <v-icon color="black">mdi-microphone</v-icon>
         </v-avatar>
 
@@ -29,7 +33,7 @@
 import Btn from '~/components/presentational/atoms/btn';
 
 export default {
-  props: ['leavingFn', 'isEnableGazeEstimating', 'gazeEstimatingFn'],
+  props: ['leavingFn', 'isEnableGazeEstimating', 'gazeEstimatingFn', 'focusThisVideoAllLiftFn'],
   components: {
     Btn
   }

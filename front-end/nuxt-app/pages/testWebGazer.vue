@@ -9,7 +9,10 @@
       </v-row>
       <v-row justify="space-between" align="center" class="buttons">
         <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
-        <ClickAdjustBtn @add-adjustpoint="adjustPosition" v-if="adjustPoint > 2" />
+        <v-col cols="12" sm="1">
+          <ClickAdjustBtn @add-adjustpoint="adjustPosition" v-if="adjustPoint > 2" />
+          <v-col cols="12" sm="1" class="centerLabel">{{ storePredictionPoint }}</v-col>
+        </v-col>
         <ClickAdjustBtn @add-adjustpoint="adjustPosition" />
       </v-row>
       <v-row justify="space-between" align="center" class="buttons">
@@ -31,7 +34,14 @@
         </v-card-actions>
       </v-card> -->
       <ExplainClickPointDialog />
-      <GazeCenterPointDialog :isOpenDialog="this.isGazeCenterPointDialog" @close-dialog="closeGazeCenterPointDialog" />
+      <GazeCenterPointDialog
+        :isOpenGazeCenterPointDialog="this.isGazeCenterPointDialog"
+        @close-gazecenterpointdialog="closeGazeCenterPointDialog"
+      />
+      <LearningResultDialog
+        :isOpenLearningResultDialog="this.isLearningResultDialog"
+        @close-learningresultdialog="closeLearningResultDialog"
+      />
     </v-col>
   </v-row>
 </template>
@@ -43,6 +53,9 @@
 .adjustCanvus {
   height: 80%;
 }
+.centerLabel {
+  padding-left: 27px;
+}
 </style>
 
 <script>
@@ -50,6 +63,7 @@ import webgazer from 'webgazer';
 import ClickAdjustBtn from '~/components/adjustWebgazer/atoms/clickAdjustBtn';
 import ExplainClickPointDialog from '~/components/adjustWebgazer/organisms/explainClickPointDialog';
 import GazeCenterPointDialog from '~/components/adjustWebgazer/organisms/gazeCenterPointDialog';
+import LearningResultDialog from '~/components/adjustWebgazer/organisms/learningResultDialog';
 
 export default {
   name: 'IndexPage',
@@ -57,7 +71,8 @@ export default {
   components: {
     ClickAdjustBtn,
     ExplainClickPointDialog,
-    GazeCenterPointDialog
+    GazeCenterPointDialog,
+    LearningResultDialog
   },
   data() {
     return {
@@ -71,7 +86,9 @@ export default {
       tracker: '',
       regression: '',
       adjustPoint: 0,
-      isGazeCenterPointDialog: false
+      isGazeCenterPointDialog: false,
+      isLearningResultDialog: false,
+      isStartStorePredictionPoint: false
     };
   },
 
@@ -88,6 +105,17 @@ export default {
     },
     currentRegression() {
       return (this.regression = webgazer.getRegression()[0].name);
+    },
+    storePredictionPoint() {
+      if (this.isStartStorePredictionPoint) {
+        console.log('storePredictionPoint');
+        this.sleep(5000).then(() => {
+          this.isLearningResultDialog = true;
+          this.isStartStorePredictionPoint = false;
+          return 'success';
+        });
+      }
+      return 'center';
     }
   },
   methods: {
@@ -101,8 +129,19 @@ export default {
         this.isGazeCenterPointDialog = true;
       }
     },
+    sleep(time) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve();
+        }, time);
+      });
+    },
     closeGazeCenterPointDialog() {
       this.isGazeCenterPointDialog = false;
+      this.isStartStorePredictionPoint = true;
+    },
+    closeLearningResultDialog() {
+      this.isLearningResultDialog = false;
     }
   }
 };

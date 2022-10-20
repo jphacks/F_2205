@@ -81,7 +81,7 @@
         />
         <LearningResultDialog
           :isOpenLearningResultDialog="this.isLearningResultDialog"
-          :recisionMeasurement="this.recisionMeasurement"
+          :recisionMeasurement="this.precisionMeasurement"
           @close-learningresultdialog="closeLearningResultDialog"
         />
       </v-col>
@@ -155,6 +155,15 @@ export default {
       // this.yprediction = data.y;
     });
 
+    var setup = function () {
+      //Set up the main canvas. The main canvas is used to calibrate the webgazer.
+      var canvas = document.getElementById('plotting_canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      canvas.style.position = 'fixed';
+    };
+    setup();
+
     // webgazer.showVideoPreview(true).showPredictionPoints(true).applyKalmanFilter(true);
   },
   computed: {
@@ -166,15 +175,20 @@ export default {
     },
     storePredictionPoint() {
       if (this.isStartStorePredictionPoint) {
+        var canvas = document.getElementById('plotting_canvas');
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
         console.log('storePredictionPoint');
-        // webgazer.params.storingPoints = true;
+        webgazer.params.storingPoints = true;
 
         this.sleep(5000).then(() => {
-          // webgazer.params.storingPoints = false;
+          webgazer.params.storingPoints = false;
           var pastData = webgazer.getStoredPoints();
           this.precisionMeasurement = calculatePrecision(pastData, this.screenHeight, this.screenWidth);
 
-          console.log(this.precisionMeasurement);
+          console.log(pastData, this.precisionMeasurement);
+
+          var canvas = document.getElementById('plotting_canvas');
+          canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 
           this.isLearningResultDialog = true;
           this.isStartStorePredictionPoint = false;

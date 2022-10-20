@@ -63,7 +63,7 @@ lint: ## goのコードを整形する
 
 .PHONY: deploy
 deploy: ## cloud run にdeployする
-	gcloud run deploy f-2205-server --source=. --region=asia-east1 --project=serious-timer-366017 --set-env-vars=ENVIROMENT=PRODUCTION --port=8080 --allow-unauthenticated
+	cd src && gcloud run deploy f-2205-server --source=. --region=asia-east1 --project=serious-timer-366017 --set-env-vars=ENVIROMENT=PRODUCTION --port=8080 --allow-unauthenticated
 
 .PHONY: help
 help: ## コマンドの一覧を標示する

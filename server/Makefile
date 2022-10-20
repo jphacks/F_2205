@@ -61,6 +61,10 @@ attach-db: ## dockerのdbコンテナにアクセスする
 lint: ## goのコードを整形する
 	cd $(SRC_DIR) && gofmt -l -w .
 
+.PHONY: deploy
+deploy: ## cloud run にdeployする
+	gcloud run deploy f-2205-server --source=. --region=asia-east1 --project=serious-timer-366017 --set-env-vars=ENVIROMENT=PRODUCTION --port=8080 --allow-unauthenticated
+
 .PHONY: help
 help: ## コマンドの一覧を標示する
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \

@@ -6,4 +6,5 @@ type IFocusRepository interface {
 	NewMember(roomId entity.RoomId, newMemberName entity.Name) error
 	SetFocus(roomId entity.RoomId, from entity.Name, to entity.Name) error
 	DelFocus(roomId entity.RoomId, from entity.Name, to entity.Name) error
+	DelAllFocus(roomId entity.RoomId, from entity.Name) error 
 }

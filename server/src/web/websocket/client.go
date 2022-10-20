@@ -49,6 +49,10 @@ func readPump(c *entity.Client, focusUC *usecase.FocusUseCase) {
 			if err := focusUC.DelFocus(c.Hub.RoomId, e.Info); err != nil {
 				log.Println("Error : ", err)
 			}
+		case entity.DelAllFocus:
+			if err := focusUC.DelAllFocus(c.Hub.RoomId, e.Info); err != nil {
+				log.Println("Error : ", err)
+			}
 		default:
 			log.Println("Error : not matched type")
 		}

@@ -84,6 +84,10 @@ export default {
       document.querySelector('body').classList.remove('modal-open');
       this.beginEstimateGaze();
       this.isVisibleSwitchButton = true;
+
+      //人数制限チェック
+      setTimeout(this.roomMemberNumCheck, 5000);
+      setInterval(this.roomMemberNumCheck, 60000);
     },
 
     roomLeaving: function () {
@@ -214,7 +218,7 @@ export default {
           video.volume = 1;
           video.classList.add('video-individual-focus');
         } else {
-          video.volume = 0.09;
+          video.volume = 0.15;
           video.classList.remove('video-individual-focus');
         }
       }
@@ -228,6 +232,17 @@ export default {
         video.volume = 1;
         video.classList.remove('video-individual-focus');
       }
+    },
+    roomMemberNumCheck: function () {
+      //部屋の最大人数のチェック
+      const roomMaxmemberNum = 18;
+
+      console.log('check room member num');
+      if (this.roomMemberNum > roomMaxmemberNum) {
+        console.log('forced exit');
+        this.roomLeaving();
+      }
+      console.log('ok');
     }
   },
 

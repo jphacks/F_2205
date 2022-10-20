@@ -49,15 +49,26 @@ func (r *FocusRepository) SetFocus(roomId entity.RoomId, from entity.Name, to en
 		return fmt.Errorf("FocusRepository.SetFocus Error : hub not found")
 	}
 
-	// TODO すでにfocusしあっているか確認する処理を追加する
 	for _, member := range h.Focus.Members {
 		if member.Name == from {
+			for _, connect := range member.Connects {
+				if connect.Name == to {
+					return fmt.Errorf("FocusRepository.SetFocus Error : already connected")
+				}
+			}
+
 			// FromさんのConnectにToさんを追加
 			member.Connects = append(
 				member.Connects,
 				&entity.Connect{Name: to},
 			)
 		} else if member.Name == to {
+			for _, connect := range member.Connects {
+				if connect.Name == to {
+					return fmt.Errorf("FocusRepository.SetFocus Error : already connected")
+				}
+			}
+
 			// ToさんのConnectにFromさんを追加
 			member.Connects = append(
 				member.Connects,

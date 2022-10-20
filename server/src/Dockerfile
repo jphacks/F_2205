@@ -1,7 +1,26 @@
-FROM golang:1.18.3
+## Build
+FROM golang:1.17-buster AS build
 
 WORKDIR /go/src/github.com/jphacks/F_2205/server/src
 
+COPY go.mod ./
+COPY go.sum ./
+
+RUN go mod download
+
 COPY . .
 
-CMD [ "go", "run", "." ]
+RUN go build -o /docker-gs-ping
+
+## Deploy
+FROM gcr.io/distroless/base-debian10
+
+WORKDIR /
+
+COPY --from=build /docker-gs-ping /docker-gs-ping
+
+EXPOSE 8080
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/docker-gs-ping"]

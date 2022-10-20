@@ -143,7 +143,7 @@ export default {
           if (elementUnderGaze === null) return;
 
           if (elementUnderGaze.tagName == 'VIDEO') {
-            this.focusThisVideoLineOfSight(elementUnderGaze.id);
+            this.focusThisVideo(elementUnderGaze.id);
           }
         })
         .begin();
@@ -168,7 +168,7 @@ export default {
       webgazer.resume();
     },
 
-    focusThisVideoLineOfSight: function (id) {
+    focusThisVideo: function (id) {
       //視線からビデオをフォーカスする(自分のビデオ以外)
       if (id == 'my-video') return;
 
@@ -189,43 +189,19 @@ export default {
           video.volume = 1;
           video.classList.add('video-individual-focus');
         } else {
-          video.volume = 0.07;
+          video.volume = 0.09;
           video.classList.remove('video-individual-focus');
         }
       }
     },
-
-    focusThisVideoClick: function (id) {
-      //クリックされたビデオをフォーカスする(自分のビデオ以外)
-      const videoId = id;
-      if (videoId == 'my-video') {
-        console.log('my-video');
-        return;
-      }
-
-      const videoDom = document.getElementById(videoId);
-      const myVideoDom = document.getElementById('my-video');
-      videoDom.classList.add('video-individual-focus');
-      myVideoDom.classList.add('video-individual-focus');
-
-      //自分と同一グループに追加する
-      this.sameGroup.push(videoId);
-
-      //存在するビデオ要素を取得
+    focusThisVideoAllLift: function () {
+      //フォーカスを全解除
       const videos = document.querySelectorAll('.video-individual');
 
-      for (let video in videos) {
-        let flag = this.sameGroup.find((element) => {
-          return element == video;
-        });
-
-        if (flag) {
-          //自グループ
-          videoDom.volume = 1;
-        } else {
-          //自グループ以外
-          videoDom.volume = 0.07;
-        }
+      for (let video of videos) {
+        //音量設定
+        video.volume = 1;
+        video.classList.remove('video-individual-focus');
       }
     }
   },
@@ -270,11 +246,9 @@ export default {
       const x = e.pageX;
       const y = e.pageY;
 
-      console.log('click: ' + x + ' | ' + y);
-
       const elementUnderMouse = document.elementFromPoint(x, y);
       if (elementUnderMouse.tagName == 'VIDEO') {
-        this.focusThisVideoLineOfSight(elementUnderMouse.id);
+        this.focusThisVideo(elementUnderMouse.id);
       }
     };
 

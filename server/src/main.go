@@ -4,6 +4,7 @@ import (
 	// "log"
 
 	// "github.com/jphacks/F_2205/server/src/infrastructure/database"
+	"github.com/jphacks/F_2205/server/src/web/websocket"
 	"github.com/jphacks/F_2205/server/src/web/router"
 )
 
@@ -27,6 +28,10 @@ func main() {
 	r.Health()
 	// r.NewRoomRouter(dbConn)
 	r.NewPubsubRouter()
+
+	hub := websocket.NewHub()
+	go hub.Run()
+	r.Ws(hub)
 
 	// Routerの起動
 	r.Serve()

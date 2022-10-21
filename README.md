@@ -150,7 +150,7 @@ https://jphacks-app.herokuapp.com/room/prepare
 
 ### アーキテクチャ
 
-<img src="https://user-images.githubusercontent.com/70263039/197279031-46a86707-334e-4378-81b0-dc9f1986902d.png" width="600px" />
+<img src="https://user-images.githubusercontent.com/70263039/197279527-6e4a8def-e689-4a02-abe8-03ee3c84ea56.png" width="600px" />
 
 
 ### 活用した技術

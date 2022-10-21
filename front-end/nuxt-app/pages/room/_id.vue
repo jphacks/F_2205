@@ -11,6 +11,10 @@
         :gazeEstimatingFn="this.swtichEstimateGaze"
         :isEnableGazeEstimating="this.isEnableGazeEstimating"
         :focusThisVideoAllLiftFn="this.focusThisVideoAllLift"
+        :videoMuteFn="this.videoMute"
+        :audioMuteFn="this.audioMute"
+        :myVideoStatus="this.myVideoStatus"
+        :myAudioStatus="this.myAudioStatus"
       />
     </div>
     <!-- ビデオステータスバー -->
@@ -55,7 +59,9 @@ export default {
       isVisibleSwitchButton: false,
       isEnableGazeEstimating: false,
       isFirstGazeEstimating: true,
-      elementUnderGazeCount: 0
+      elementUnderGazeCount: 0,
+      myVideoStatus: true,
+      myAudioStatus: true
     };
   },
 
@@ -381,6 +387,24 @@ export default {
         this.roomLeaving();
       }
       console.log('ok');
+    },
+    videoMute: function () {
+      //画面をミュート
+      if (this.myVideoStatus) {
+        this.localStream.getVideoTracks()[0].enabled = false;
+      } else {
+        this.localStream.getVideoTracks()[0].enabled = true;
+      }
+      this.myVideoStatus = !this.myVideoStatus;
+    },
+    audioMute: function () {
+      //音声をミュート
+      if (this.myVideoStatus) {
+        this.localStream.getAudioTracks()[0].enabled = false;
+      } else {
+        this.localStream.getAudioTracks()[0].enabled = true;
+      }
+      this.myAudioStatus = !this.myAudioStatus;
     }
   },
 

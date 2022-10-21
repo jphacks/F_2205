@@ -7,11 +7,13 @@
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
-          <v-icon color="black">mdi-microphone</v-icon>
+          <v-icon color="black" @click.native="audioMuteFn" v-if="myAudioStatus">mdi-microphone</v-icon>
+          <v-icon color="red" @click.native="audioMuteFn" v-if="!myAudioStatus">mdi-microphone-off</v-icon>
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
-          <v-icon color="black">mdi-camera</v-icon>
+          <v-icon color="black" @click.native="videoMuteFn" v-if="myVideoStatus">mdi-camera</v-icon>
+          <v-icon color="red" @click.native="videoMuteFn" v-if="!myVideoStatus">mdi-camera-off</v-icon>
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
@@ -33,7 +35,16 @@
 import Btn from '~/components/presentational/atoms/btn';
 
 export default {
-  props: ['leavingFn', 'isEnableGazeEstimating', 'gazeEstimatingFn', 'focusThisVideoAllLiftFn'],
+  props: [
+    'leavingFn',
+    'isEnableGazeEstimating',
+    'gazeEstimatingFn',
+    'focusThisVideoAllLiftFn',
+    'videoMuteFn',
+    'audioMuteFn',
+    'myAudioStatus',
+    'myVideoStatus'
+  ],
   components: {
     Btn
   }
@@ -53,6 +64,10 @@ export default {
 
     &-avatar {
       box-shadow: 2px 4px 6px 0 rgba(0, 0, 0, 0.2);
+      &:hover {
+        cursor: pointer;
+        opacity: 0.9;
+      }
     }
   }
 }

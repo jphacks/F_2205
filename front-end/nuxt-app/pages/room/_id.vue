@@ -304,6 +304,8 @@ export default {
         }
       };
       this.websocketConn.send(JSON.stringify(data));
+
+      console.log('focusThisVideo: ' + JSON.stringify(data));
     },
     focusThisVideoAllLift: function () {
       //フォーカスを全解除

@@ -6,6 +6,7 @@ import (
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 	"github.com/jphacks/F_2205/server/src/domain/repository"
+	"github.com/jphacks/F_2205/server/src/infrastructure/hub"
 )
 
 var _ repository.IFocusRepository = &FocusRepository{}
@@ -133,5 +134,30 @@ func (r *FocusRepository) DelAllFocus(roomId entity.RoomId, from entity.Name) er
 			}
 		}
 	}
+	return nil
+}
+
+func (r *FocusRepository) GetOrRegisterHub(roomId entity.RoomId) *entity.Hub {
+	var h *entity.Hub
+
+	if found, ok := (*r.Hubs)[roomId]; ok {
+		// 登録されていたら既存のものを利用
+		h = found
+	} else {
+		// 登録されていなかったら新しく用意する
+		h = hub.NewHub(roomId)
+		(*r.Hubs)[roomId] = h
+		go h.Run()
+	}
+	return h
+}
+
+func (r *FocusRepository) CheckHubExists(roomId entity.RoomId) error {
+	if _, ok := (*r.Hubs)[roomId]; !ok {
+		// 登録されていなかったら
+		return fmt.Errorf("FocusRepository.CheckHubExists Error : room not found")
+	}
+	// 登録されていたら部屋を削除
+	delete(*r.Hubs,roomId)
 	return nil
 }

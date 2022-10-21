@@ -14,3 +14,7 @@ func NewHub(roomId entity.RoomId) *entity.Hub {
 		RoomId:     roomId,
 	}
 }
+
+func NewHubs() *entity.Hubs {
+	return &entity.Hubs{}
+}

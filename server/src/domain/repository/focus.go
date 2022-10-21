@@ -7,4 +7,6 @@ type IFocusRepository interface {
 	SetFocus(roomId entity.RoomId, from entity.Name, to entity.Name) error
 	DelFocus(roomId entity.RoomId, from entity.Name, to entity.Name) error
 	DelAllFocus(roomId entity.RoomId, from entity.Name) error 
+	GetOrRegisterHub(roomId entity.RoomId) *entity.Hub
+	CheckHubExists(roomId entity.RoomId) error
 }

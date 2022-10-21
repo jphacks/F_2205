@@ -11,7 +11,7 @@ func main() {
 
 	// Routerの登録
 	r.Health()
-	r.Ws()
+	r.WsFocus()
 
 	// Routerの起動
 	r.Serve()

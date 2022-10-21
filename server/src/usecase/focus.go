@@ -18,6 +18,8 @@ type IFocusUseCase interface {
 	SetFocus(roomId entity.RoomId, info entity.Info) error
 	DelFocus(roomId entity.RoomId, info entity.Info) error
 	DelAllFocus(roomId entity.RoomId, info entity.Info) error
+	GetOrRegisterHub(roomId entity.RoomId) *entity.Hub
+	CheckHubExists(roomId entity.RoomId) error
 }
 
 func NewFocusUseCase(r repository.IFocusRepository) *FocusUseCase {
@@ -60,4 +62,12 @@ func (u *FocusUseCase) DelAllFocus(roomId entity.RoomId, info entity.Info) error
 		return fmt.Errorf("FocusUseCase.DelAllFocus Error : from is required")
 	}
 	return u.focusRepo.DelAllFocus(roomId, from)
+}
+
+func (u *FocusUseCase) GetOrRegisterHub(roomId entity.RoomId) *entity.Hub {
+	return u.focusRepo.GetOrRegisterHub(roomId)
+}
+
+func (u *FocusUseCase) CheckHubExists(roomId entity.RoomId) error {
+	return u.focusRepo.CheckHubExists(roomId)
 }

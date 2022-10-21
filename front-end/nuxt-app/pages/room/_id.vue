@@ -83,7 +83,15 @@ export default {
         //-------------------------------------------------------------------------//
         //引数のメンバーをフォーカスしてそれ以外を除外
         const doFocus = (focusMemberData) => {
-          if (focusMemberData.length == 0) return;
+          if (focusMemberData.length == 0) {
+            const videos = document.querySelectorAll('.video-individual');
+
+            for (let video of videos) {
+              //音量設定
+              video.volume = 1;
+            }
+            return;
+          }
 
           document.querySelector('#my-video').classList.add('video-individual-focus');
 

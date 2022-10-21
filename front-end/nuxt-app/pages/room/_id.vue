@@ -399,7 +399,7 @@ export default {
     },
     audioMute: function () {
       //音声をミュート
-      if (this.myVideoStatus) {
+      if (this.myAudioStatus) {
         this.localStream.getAudioTracks()[0].enabled = false;
       } else {
         this.localStream.getAudioTracks()[0].enabled = true;

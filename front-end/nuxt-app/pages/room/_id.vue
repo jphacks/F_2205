@@ -53,7 +53,8 @@ export default {
       websocketConn: null,
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
-      isEnableGazeEstimating: true
+      isEnableGazeEstimating: false,
+      isFirstGazeEstimating: true
     };
   },
 
@@ -63,27 +64,51 @@ export default {
         console.log('websocket connection');
       };
       websocketConn.onmessage = function (evt) {
-        //フォーカスしてくれた人のPeerID
-        const tgPeerID = 'hogehoge';
+        //フォーカス処理
 
-        console.log(evt);
+        const unfocusedVolume = 0.15;
 
-        // const videos = document.querySelectorAll('.video-individual');
+        //-------------------------------------------------------------------------//
+        //フォーカス全解除&音量下げ
+        const focusThisVideoAllLift = () => {
+          const videos = document.querySelectorAll('.video-individual');
 
-        // for (let video of videos) {
-        //   document.getElementById(video).classList.remove('video-individual-focus');
-        //   tgPeerID.volume = 1;
-        // }
+          for (let video of videos) {
+            //音量設定
+            video.volume = unfocusedVolume;
+            video.classList.remove('video-individual-focus');
+          }
+        };
+        //-------------------------------------------------------------------------//
+        //-------------------------------------------------------------------------//
+        //引数のメンバーをフォーカスしてそれ以外を除外
+        const doFocus = (focusMemberData) => {
+          if (focusMemberData.length == 0) return;
 
-        if (True) {
-          //強制フォーカス
-          document.getElementById(tgPeerID).classList.add('video-individual-focus');
-          tgPeerID.volume = 1;
-        }
-        if (True) {
-          //強制フォーカス解除
-          document.getElementById(tgPeerID).classList.remove('video-individual-focus');
-          tgPeerID.volume = this.unfocusedVolume;
+          document.querySelector('#my-video').classList.add('video-individual-focus');
+
+          for (let tgMemberData of focusMemberData) {
+            let videoDom = document.getElementById(tgMemberData.name);
+            videoDom.classList.add('video-individual-focus');
+            videoDom.volume = 1;
+          }
+        };
+        //-------------------------------------------------------------------------//
+
+        const data = JSON.parse(evt.data);
+        const myPeerId = document.querySelector('#my-video').getAttribute('name');
+
+        if (data.type != 'SET_FOCUS' && data.type != 'DEL_ALL_FOCUS') return;
+
+        focusThisVideoAllLift();
+
+        const memberDatas = data.focus.members;
+
+        for (let memberData of memberDatas) {
+          if (memberData.name == myPeerId) {
+            //引数のメンバーをフォーカスしてそれ以外を除外
+            doFocus(memberData.Connects);
+          }
         }
       };
       websocketConn.onclose = function (evt) {
@@ -99,6 +124,10 @@ export default {
         this.addVideo(stream);
         const videoElm = document.getElementById(stream.id);
         videoElm.srcObject = stream;
+      });
+
+      mediaConnection.on('open', () => {
+        document.querySelector('#my-video').setAttribute('name', this.peer.id);
       });
 
       //ルームメンバーが退出したときに発火
@@ -119,22 +148,20 @@ export default {
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
       this.setSkywayEventListener(mediaConnection);
       document.querySelector('body').classList.remove('modal-open');
-      this.beginEstimateGaze();
       this.isVisibleSwitchButton = true;
 
       //人数制限チェック
       setTimeout(this.roomMemberNumCheck, 5000);
       setInterval(this.roomMemberNumCheck, 60000);
 
-      //websocket roomにmemberを新規追加する
       const data = {
         type: 'NEW_MEMBER',
         info: {
-          from: this.peer
+          from: `${this.peer.id}`
         }
       };
 
-      this.websocketConn.send(data);
+      this.websocketConn.send(JSON.stringify(data));
     },
 
     roomLeaving: async function () {
@@ -248,6 +275,8 @@ export default {
       // webgazerをendしても視線予測のポインターが消えないため、直接Elementを削除
       const gazeDotEl = document.getElementById('webgazerGazeDot');
       gazeDotEl.remove();
+
+      this.isFirstGazeEstimating = false;
     },
 
     pauseEstimateGaze: function () {
@@ -265,33 +294,30 @@ export default {
     },
 
     focusThisVideo: function (id) {
-      //視線からビデオをフォーカスする(自分のビデオ以外)
+      //ビデオをフォーカスする(自分のビデオ以外)
       if (id == 'my-video') return;
 
-      const myVideoDom = document.getElementById('my-video');
-      const tgVideoDom = document.getElementById(id);
-      myVideoDom.classList.add('video-individual-focus');
-
-      //存在するビデオ要素を取得
-      const videos = document.querySelectorAll('.video-individual');
-
-      for (let video of videos) {
-        //音量設定
-        if (video.id == myVideoDom.id) {
-          continue;
+      //websocket ユーザー同士を接続状態にする
+      const data = {
+        type: 'SET_FOCUS',
+        info: {
+          from: `${this.peer.id}`,
+          to: `${id}`
         }
-
-        if (video.id == tgVideoDom.id) {
-          video.volume = 1;
-          video.classList.add('video-individual-focus');
-        } else {
-          video.volume = this.unfocusedVolume;
-          video.classList.remove('video-individual-focus');
-        }
-      }
+      };
+      this.websocketConn.send(JSON.stringify(data));
     },
     focusThisVideoAllLift: function () {
       //フォーカスを全解除
+
+      const data = {
+        type: 'DEL_ALL_FOCUS',
+        info: {
+          from: `${this.peer.id}`
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
+
       const videos = document.querySelectorAll('.video-individual');
 
       for (let video of videos) {
@@ -376,7 +402,18 @@ export default {
   watch: {
     isEnableGazeEstimating: function (isResumeButton) {
       console.log('isResumeButton', isResumeButton);
-      isResumeButton ? this.resumeEstimateGaze() : this.pauseEstimateGaze();
+      if (isResumeButton) {
+        if (this.isFirstGazeEstimating) {
+          console.log('First begin gaze estimation');
+          this.beginEstimateGaze();
+          this.isFirstGazeEstimating = false;
+          return;
+        }
+
+        this.resumeEstimateGaze();
+      } else {
+        this.pauseEstimateGaze();
+      }
     }
   }
 };

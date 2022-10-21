@@ -44,8 +44,10 @@
 
 ### 注力したこと（こだわり等）
 
--
--
+- 自然な会話を追求するため、視線トラッキングを用いて話したい人を選択する機能を実装
+  - ◆ 相手に視線を送って会話を行うことが可能！
+- 視線トラッキングの精度向上のため、キャリブレーション機能を実装
+  - ◆ 参加者の個人差を考慮して正確な視線トラッキングを行うことが可能！
 
 ## 開発技術
 
@@ -80,5 +82,6 @@
 
 #### 製品に取り入れた研究内容（データ・ソフトウェアなど）（※アカデミック部門の場合のみ提出必須）
 
--
--
+- [WebGazer: Scalable Webcam Eye Tracking Using User Interactions](https://cs.brown.edu/people/apapouts/papers/ijcai2016webgazer.pdf)
+- [MediaPipe Facemesh](https://google.github.io/mediapipe/solutions/face_mesh.html)
+- [WebGazer (GitHub)](https://github.com/brownhci/WebGazer)

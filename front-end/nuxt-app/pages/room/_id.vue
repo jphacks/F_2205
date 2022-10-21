@@ -275,7 +275,7 @@ export default {
             // TODO: 試験的にカウントを10以上に設定, 後ほど適切な値・実装方法に変える
             if (this.elementUnderGazeCount > 10) {
               console.log('elementUnderGazeCount is 10 count');
-              this.focusThisVideo(elementUnderGaze.id);
+              this.focusThisVideoLineOfSight(elementUnderGaze.id);
             }
           } else {
             this.elementUnderGazeCount = 0;
@@ -335,6 +335,20 @@ export default {
         };
         this.websocketConn.send(JSON.stringify(data));
       }
+    },
+    focusThisVideoLineOfSight: function (id) {
+      //ビデオをフォーカスする(自分のビデオ以外)(視線で)
+      if (id == 'my-video') return;
+
+      //websocket ユーザー同士を接続状態にする
+      const data = {
+        type: 'SET_FOCUS',
+        info: {
+          from: `${this.peer.id}`,
+          to: `${id}`
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
     },
     focusThisVideoAllLift: function () {
       //フォーカスを全解除

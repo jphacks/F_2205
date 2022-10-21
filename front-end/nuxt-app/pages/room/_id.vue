@@ -31,6 +31,7 @@
 
 <script>
 import Peer from 'skyway-js';
+import axios from 'axios';
 
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
@@ -127,9 +128,23 @@ export default {
       this.websocketConn.send(data);
     },
 
-    roomLeaving: function () {
+    roomLeaving: async function () {
       //ルーム退出
       this.peer.destroy();
+
+      //websocket そのユーザーの持っている接続状態を解除する
+      if (this.roomMemberNum != 1) {
+        const data = {
+          type: 'DEL_ALL_FOCUS',
+          info: {
+            from: this.peer
+          }
+        };
+
+        this.websocketConn.send(data);
+      } else {
+        await axios.delete('https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
+      }
 
       //websocketの接続を切断(正常終了)
       this.websocketConn.close(1000, 'normal amputation websocket');

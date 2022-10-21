@@ -22,6 +22,7 @@ func(r *Router) cors() {
 		AllowMethods: []string{
 			"POST",
 			"GET",
+			"DELETE",
 			"OPTIONS",
 		},
 		// 許可したいHTTPリクエストヘッダ

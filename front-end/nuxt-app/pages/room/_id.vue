@@ -66,6 +66,15 @@ export default {
         //フォーカスしてくれた人のPeerID
         const tgPeerID = 'hogehoge';
 
+        console.log(evt);
+
+        // const videos = document.querySelectorAll('.video-individual');
+
+        // for (let video of videos) {
+        //   document.getElementById(video).classList.remove('video-individual-focus');
+        //   tgPeerID.volume = 1;
+        // }
+
         if (True) {
           //強制フォーカス
           document.getElementById(tgPeerID).classList.add('video-individual-focus');
@@ -105,7 +114,7 @@ export default {
 
     roomConnection: function () {
       //ルーム作成 or ルーム参加
-      console.log(this.peer);
+      console.log('my peer id: ' + this.peer.id);
       const roomName = this.$route.params.id;
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
       this.setSkywayEventListener(mediaConnection);
@@ -143,13 +152,16 @@ export default {
 
         this.websocketConn.send(data);
       } else {
-        await axios.delete('https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
+        const response = await axios.delete(
+          'https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id
+        );
+        console.log(response);
       }
+
+      alert('退出しました');
 
       //websocketの接続を切断(正常終了)
       this.websocketConn.close(1000, 'normal amputation websocket');
-
-      alert('退出しました');
 
       //リダイレクト
       this.$router.push('/room/prepare');
@@ -340,7 +352,7 @@ export default {
     //Peer作成
     this.peer = new Peer({
       key: this.APIKey,
-      debug: 3
+      debug: 1
     });
 
     //クリックからフォーカス

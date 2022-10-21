@@ -31,6 +31,7 @@
 
 <script>
 import Peer from 'skyway-js';
+import axios from 'axios';
 
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
@@ -115,14 +116,44 @@ export default {
       //人数制限チェック
       setTimeout(this.roomMemberNumCheck, 5000);
       setInterval(this.roomMemberNumCheck, 60000);
+
+      //websocket roomにmemberを新規追加する
+      const data = {
+        type: 'NEW_MEMBER',
+        info: {
+          from: this.peer
+        }
+      };
+
+      this.websocketConn.send(data);
     },
 
-    roomLeaving: function () {
+    roomLeaving: async function () {
       //ルーム退出
       this.peer.destroy();
+
+      //websocket そのユーザーの持っている接続状態を解除する
+      if (this.roomMemberNum != 1) {
+        const data = {
+          type: 'DEL_ALL_FOCUS',
+          info: {
+            from: this.peer
+          }
+        };
+
+        this.websocketConn.send(data);
+      } else {
+        await axios.delete('https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
+      }
+
+      //websocketの接続を切断(正常終了)
       this.websocketConn.close(1000, 'normal amputation websocket');
+
       alert('退出しました');
+
+      //リダイレクト
       this.$router.push('/room/prepare');
+
       this.endEstimateGaze();
       this.isVisibleSwitchButton = false;
     },
@@ -280,7 +311,7 @@ export default {
     document.querySelector('body').classList.add('modal-open');
 
     //WebSocketで接続
-    this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app');
+    this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
     this.setWebsocketEventListener(this.websocketConn);
 
     //ビデオ設定(解像度を落とす)

@@ -41,7 +41,6 @@ func (r *FocusRepository) NewMember(roomId entity.RoomId, newMemberName entity.N
 			Connects: []*entity.Connect{},
 		},
 	)
-	log.Println("hub menbers", h.Focus.Members)
 	return nil
 }
 

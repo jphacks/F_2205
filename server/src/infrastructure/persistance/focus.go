@@ -2,7 +2,6 @@ package persistance
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 	"github.com/jphacks/F_2205/server/src/domain/service"

@@ -1,6 +1,6 @@
 # のみぱら 🍺
 
-[![IMAGE ALT TEXT HERE](https://user-images.githubusercontent.com/70263039/197263117-0f6c1a18-c6f8-44b0-989e-1ae611e7c907.png)]()
+[![IMAGE ALT TEXT HERE](./doc/image/index/nomipara.png)]()
 
 <br>
 
@@ -152,6 +152,7 @@ https://jphacks-app.herokuapp.com/room/prepare
 
 <img src="https://user-images.githubusercontent.com/70263039/197279527-6e4a8def-e689-4a02-abe8-03ee3c84ea56.png" width="600px" />
 
+<br>
 
 ### 活用した技術
 
@@ -176,8 +177,7 @@ https://jphacks-app.herokuapp.com/room/prepare
   - [gin-gonic/gin](https://github.com/gin-gonic/gin)
 - インフラ
   - 開発環境
-    - Docker
-    - Docker Compose
+    - Docker / Docker Compose
   - 本番環境
     - フロントエンド
       - Heroku
@@ -185,11 +185,10 @@ https://jphacks-app.herokuapp.com/room/prepare
       - GCP
       - Cloud Run
       - Cloud Build
-  - GitHub Actions
 - CI/CD
   - GitHub Actions
   - heroku
-  - Cloud Run
+  - Cloud Run / Cloud Build / Container Registry
 - 開発環境整備
   - Make
 
@@ -203,11 +202,6 @@ https://jphacks-app.herokuapp.com/room/prepare
 
 ### 独自技術
 
-- ...
-- ...
-
-<br>
-
 #### ハッカソンで開発した独自機能・技術
 
 ##### フロントエンド
@@ -217,15 +211,112 @@ https://jphacks-app.herokuapp.com/room/prepare
 
 <br>
 
-##### サーバーサイド
+##### フォーカス機能
 
-- hoge
+フォーカス機能はユーザー同士を接続する機能です。
+
+<br>
+
+下記の図のように、
+
+BさんからAさん、CさんからAさん、DさんからAさんにfocusのリクエストを送ると、
+
+AさんとBさん、CさんとAさん、DさんとAさん、それぞれが接続している状態になります。
+
+このとき、Aさんは全員と接続しているのでB,C,Dさんの声がすべて通常通り聞こえますが、
+
+B,C,DさんはAさんの声以外、小さく聞こえるようになります。
+
+<img src="./doc/image/index/focus.png" width="400px" />
+
+<br>
+
+このように、誰かをフォーカスすることで、
+その対象のユーザーと強制的にお互いにフォーカスしあっている状態とする機能がフォーカス機能です。
+
+<br>
+
+この機能を使うことで、
+話したいユーザー以外の声を小さくし、好きな話題を並行して会話できる環境ができます。
+
+<br>
+
+下記で具体例をみます。
+
+この場合、AさんとBさんはお互いにフォーカスしあっており、
+また、CさんとDさんもお互いにフォーカスしあっています。
+
+このとき彼らはお互いの声以外は小さく聞こえており、
+自分たちの好きな話題に集中して会話できます。
+
+Eさんはだれともフォーカスしあってないので、
+参加者全員の声が通常の大きさで聞こえます。
+
+
+<img src="./doc/image/index/focus2.png" width="400px" />
+
+<br>
+
+<!-- TODO どこで実装されているか -->
+
+<!-- TODO ほかにあれば追加する！ -->
+
+<br>
 
 <br>
 
 #### 製品に取り入れた研究内容（データ・ソフトウェアなど）（※アカデミック部門の場合のみ提出必須）
 
--
--
+- hogehoge @やまじゅん が書いてくれるらしい
+- ...
+- ...
+
+<br>
+
+
+### プロダクト開発
+
+#### MVP,Usecaseの検討
+
+私たちのチームはMiroで事前にMVPやUsecaseを検討したことで、
+
+必要な機能をしっかりと選定したうえで開発を進めることができました。
+
+<img src="./doc/image/index/usecase.png" width="600px" />
+
+<img src="./doc/image/index/mvp.png" width="600px" />
+
+<img src="./doc/image/index/mvp2.png" width="600px" />
+
+<br>
+
+#### デザイン
+
+また、Figmaを用いてデザインを行い、
+
+チーム内でのプロダクトのデザインの共通認識を行ってスムーズに開発を進めました。
+
+<img src="./doc/image/index/figma.png" width="600px" />
+
+<br>
+
+#### タスク管理
+
+私たちのチームではタスクをISSUEで管理していました。
+
+ISSUEのラベルを使うことで、タスクの優先度や分野について、わかりやすいように工夫しました。
+
+<img src="./doc/image/index/issue.png" width="600px" />
+
+<br>
+
+#### GitHub
+
+
+Discordのボットを利用することで、
+
+誰が今どの作業をしているのかを全体で共有しました。
+
+<img src="./doc/image/index/discord.png" width="400px" />
 
 <br>

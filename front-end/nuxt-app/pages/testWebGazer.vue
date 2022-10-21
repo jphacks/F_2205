@@ -64,13 +64,6 @@
           <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
           <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
         </v-row>
-        <!-- <v-card>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire" @click="stopWebgather"> Continue </v-btn>
-          <v-btn color="primary" @click="stopWebgather">stopWebgazer</v-btn>
-        </v-card-actions>
-      </v-card> -->
         <ExplainClickPointDialog
           :isOpenExplainClickPointDialog="this.isExplainClickPointDialog"
           @close-explain-click-pointDialog="closeExplainClickPointDialog"
@@ -131,12 +124,8 @@ export default {
   },
   data() {
     return {
-      webgatherData: '',
-      webgatherClock: '',
       xprediction: '',
       yprediction: '',
-      tracker: '',
-      regression: '',
       adjustPoint: 0,
       isExplainClickPointDialog: true,
       isGazeCenterPointDialog: false,
@@ -168,12 +157,6 @@ export default {
     // webgazer.showVideoPreview(true).showPredictionPoints(true).applyKalmanFilter(true);
   },
   computed: {
-    currentTracker() {
-      return (this.tracker = webgazer.getTracker().name);
-    },
-    currentRegression() {
-      return (this.regression = webgazer.getRegression()[0].name);
-    },
     storePredictionPoint() {
       if (this.isStartStorePredictionPoint) {
         var canvas = document.getElementById('plotting_canvas');

@@ -106,7 +106,7 @@ export default {
         const data = JSON.parse(evt.data);
         const myPeerId = document.querySelector('#my-video').getAttribute('name');
 
-        if (data.type != 'SET_FOCUS' && data.type != 'DEL_ALL_FOCUS') return;
+        if (data.type != 'SET_FOCUS' && data.type != 'DEL_ALL_FOCUS' && data.type != 'DEL_FOCUS') return;
 
         focusThisVideoAllLift();
 
@@ -305,15 +305,29 @@ export default {
       //ビデオをフォーカスする(自分のビデオ以外)
       if (id == 'my-video') return;
 
-      //websocket ユーザー同士を接続状態にする
-      const data = {
-        type: 'SET_FOCUS',
-        info: {
-          from: `${this.peer.id}`,
-          to: `${id}`
-        }
-      };
-      this.websocketConn.send(JSON.stringify(data));
+      const className = document.getElementById(id).className;
+      console.log(className);
+      if (className == 'video-individual') {
+        //websocket ユーザー同士を接続状態にする
+        const data = {
+          type: 'SET_FOCUS',
+          info: {
+            from: `${this.peer.id}`,
+            to: `${id}`
+          }
+        };
+        this.websocketConn.send(JSON.stringify(data));
+      } else {
+        //websocket ユーザー同士を接続状態にする
+        const data = {
+          type: 'DEL_FOCUS',
+          info: {
+            from: `${this.peer.id}`,
+            to: `${id}`
+          }
+        };
+        this.websocketConn.send(JSON.stringify(data));
+      }
 
       console.log('focusThisVideo: ' + JSON.stringify(data));
     },

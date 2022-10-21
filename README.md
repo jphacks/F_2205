@@ -1,6 +1,6 @@
 # のみぱら 🍺
 
-[![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2022/08/JPHACKS2022_ogp.jpg)](https://www.youtube.com/watch?v=LUPQFB4QyVo)
+[![IMAGE ALT TEXT HERE](https://user-images.githubusercontent.com/70263039/197263117-0f6c1a18-c6f8-44b0-989e-1ae611e7c907.png)]()
 
 <br>
 

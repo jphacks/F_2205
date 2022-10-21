@@ -20,7 +20,7 @@ func (r Router) Ws() {
 	focusUC := usecase.NewFocusUseCase(focusRepo)
 
 	// TODO handler内でhubsを使っているのおかしい
-	r.engine.GET("/ws/:room", func(ctx *gin.Context) {
+	r.Engine.GET("/ws/:room", func(ctx *gin.Context) {
 		roomId := (entity.RoomId)(ctx.Param("room"))
 
 		var h *entity.Hub
@@ -38,7 +38,7 @@ func (r Router) Ws() {
 		websocket.ServeWs(h, ctx.Writer, ctx.Request, focusUC)
 	})
 
-	r.engine.DELETE("/ws/:room", func(ctx *gin.Context) {
+	r.Engine.DELETE("/ws/:room", func(ctx *gin.Context) {
 		roomId := (entity.RoomId)(ctx.Param("room"))
 
 		if _, ok := (*hubs)[roomId]; !ok {

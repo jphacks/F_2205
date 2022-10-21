@@ -7,9 +7,9 @@ import (
 )
 
 // HealthHandlerはHealthをチェックするhandlerです
-func HealthHandler(ctx *gin.Context){
+func HealthHandler(ctx *gin.Context) {
 	ctx.JSON(
-		http.StatusOK, 
+		http.StatusOK,
 		gin.H{"health": "good"},
 	)
 }

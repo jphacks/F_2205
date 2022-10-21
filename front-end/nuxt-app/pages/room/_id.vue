@@ -11,6 +11,10 @@
         :gazeEstimatingFn="this.swtichEstimateGaze"
         :isEnableGazeEstimating="this.isEnableGazeEstimating"
         :focusThisVideoAllLiftFn="this.focusThisVideoAllLift"
+        :videoMuteFn="this.videoMute"
+        :audioMuteFn="this.audioMute"
+        :myVideoStatus="this.myVideoStatus"
+        :myAudioStatus="this.myAudioStatus"
       />
     </div>
     <!-- ビデオステータスバー -->
@@ -54,7 +58,10 @@ export default {
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
       isEnableGazeEstimating: false,
-      isFirstGazeEstimating: true
+      isFirstGazeEstimating: true,
+      elementUnderGazeCount: 0,
+      myVideoStatus: true,
+      myAudioStatus: true
     };
   },
 
@@ -121,6 +128,7 @@ export default {
       };
       websocketConn.onclose = function (evt) {
         console.log('websocket connection closed');
+        this.roomLeaving();
       };
       websocketConn.onerror = function (evt) {
         console.log('websocket error: ' + evt);
@@ -174,6 +182,8 @@ export default {
 
     roomLeaving: async function () {
       //ルーム退出
+      console.log('room leaving start');
+
       this.peer.destroy();
 
       //websocket そのユーザーの持っている接続状態を解除する
@@ -270,7 +280,16 @@ export default {
           if (elementUnderGaze === null) return;
 
           if (elementUnderGaze.tagName == 'VIDEO') {
-            this.focusThisVideo(elementUnderGaze.id);
+            this.elementUnderGazeCount++;
+            // TODO: 試験的にカウントを10以上に設定, 後ほど適切な値・実装方法に変える
+            if (this.elementUnderGazeCount > 10) {
+              console.log('elementUnderGazeCount is 10 count');
+              this.focusThisVideoLineOfSight(elementUnderGaze.id);
+            }
+          } else {
+            this.elementUnderGazeCount = 0;
+            //フォーカス全外し(この関数を呼ぶことでサーバー側にリクエスト飛ぶ)
+            //this.focusThisVideoAllLift();
           }
         })
         .begin();
@@ -306,7 +325,6 @@ export default {
       if (id == 'my-video') return;
 
       const className = document.getElementById(id).className;
-      console.log(className);
       if (className == 'video-individual') {
         //websocket ユーザー同士を接続状態にする
         const data = {
@@ -328,8 +346,20 @@ export default {
         };
         this.websocketConn.send(JSON.stringify(data));
       }
+    },
+    focusThisVideoLineOfSight: function (id) {
+      //ビデオをフォーカスする(自分のビデオ以外)(視線で)
+      if (id == 'my-video') return;
 
-      console.log('focusThisVideo: ' + JSON.stringify(data));
+      //websocket ユーザー同士を接続状態にする
+      const data = {
+        type: 'SET_FOCUS',
+        info: {
+          from: `${this.peer.id}`,
+          to: `${id}`
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
     },
     focusThisVideoAllLift: function () {
       //フォーカスを全解除
@@ -360,6 +390,24 @@ export default {
         this.roomLeaving();
       }
       console.log('ok');
+    },
+    videoMute: function () {
+      //画面をミュート
+      if (this.myVideoStatus) {
+        this.localStream.getVideoTracks()[0].enabled = false;
+      } else {
+        this.localStream.getVideoTracks()[0].enabled = true;
+      }
+      this.myVideoStatus = !this.myVideoStatus;
+    },
+    audioMute: function () {
+      //音声をミュート
+      if (this.myAudioStatus) {
+        this.localStream.getAudioTracks()[0].enabled = false;
+      } else {
+        this.localStream.getAudioTracks()[0].enabled = true;
+      }
+      this.myAudioStatus = !this.myAudioStatus;
     }
   },
 

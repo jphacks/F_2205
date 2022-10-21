@@ -11,9 +11,17 @@
         :gazeEstimatingFn="this.swtichEstimateGaze"
         :isEnableGazeEstimating="this.isEnableGazeEstimating"
         :focusThisVideoAllLiftFn="this.focusThisVideoAllLift"
+        :handleAdjustWebGazer="this.handleAdjustWebGazer"
       />
     </div>
     <!-- ビデオステータスバー -->
+
+    <div>
+      <AdjustWebgazerDialog
+        :isOpenAdjustWebGazerDialog="this.isOpenAdjustWebGazerDialog"
+        :handleAdjustWebGazer="this.handleAdjustWebGazer"
+      />
+    </div>
 
     <!-- モーダルウィンドウ -->
     <section class="modal-window">
@@ -34,13 +42,15 @@ import Peer from 'skyway-js';
 
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
+import AdjustWebgazerDialog from '~/components/presentational/organisms/adjustWebgazerDialog';
 
 import webgazer from 'webgazer';
 
 export default {
   components: {
     VideoState,
-    Btn
+    Btn,
+    AdjustWebgazerDialog
   },
 
   data() {
@@ -52,7 +62,8 @@ export default {
       websocketConn: null,
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
-      isEnableGazeEstimating: true
+      isEnableGazeEstimating: true,
+      isOpenAdjustWebGazerDialog: false
     };
   },
 
@@ -179,6 +190,9 @@ export default {
       webgazer
         .showVideo(false)
         .showPredictionPoints(true)
+        .setRegression('ridge')
+        .setTracker('clmtrackr')
+        .applyKalmanFilter(true)
         .setGazeListener((gaze, clock) => {
           if (gaze == null) {
             return;
@@ -267,6 +281,11 @@ export default {
         this.roomLeaving();
       }
       console.log('ok');
+    },
+
+    //視線調整用Dialog開閉
+    handleAdjustWebGazer: function () {
+      this.isOpenAdjustWebGazerDialog = !this.isOpenAdjustWebGazerDialog;
     }
   },
 

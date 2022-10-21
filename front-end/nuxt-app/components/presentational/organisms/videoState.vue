@@ -20,6 +20,11 @@
             <v-icon color="black" v-else>mdi-eye-off-outline</v-icon>
           </v-btn>
         </v-avatar>
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-btn color="transparent" height="56" @click.native="handleAdjustWebGazer">
+            <v-icon color="black">mdi-android</v-icon>
+          </v-btn>
+        </v-avatar>
       </div>
 
       <div>
@@ -33,7 +38,7 @@
 import Btn from '~/components/presentational/atoms/btn';
 
 export default {
-  props: ['leavingFn', 'isEnableGazeEstimating', 'gazeEstimatingFn', 'focusThisVideoAllLiftFn'],
+  props: ['leavingFn', 'isEnableGazeEstimating', 'gazeEstimatingFn', 'focusThisVideoAllLiftFn', 'handleAdjustWebGazer'],
   components: {
     Btn
   }

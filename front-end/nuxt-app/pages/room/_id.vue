@@ -279,6 +279,8 @@ export default {
             }
           } else {
             this.elementUnderGazeCount = 0;
+            //フォーカス全外し(この関数を呼ぶことでサーバー側にリクエスト飛ぶ)
+            //this.focusThisVideoAllLift();
           }
         })
         .begin();

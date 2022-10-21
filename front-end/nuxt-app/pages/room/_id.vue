@@ -128,7 +128,6 @@ export default {
       };
       websocketConn.onclose = function (evt) {
         console.log('websocket connection closed');
-        this.roomLeaving();
       };
       websocketConn.onerror = function (evt) {
         console.log('websocket error: ' + evt);
@@ -169,6 +168,9 @@ export default {
       //人数制限チェック
       setTimeout(this.roomMemberNumCheck, 5000);
       setInterval(this.roomMemberNumCheck, 60000);
+
+      //ルーム接続時間制限(5分)
+      setTimeout(this.roomLeaving, 300000);
 
       const data = {
         type: 'NEW_MEMBER',

@@ -16,7 +16,7 @@
               <v-icon>mdi-eye-check</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>現在の精度:{{ this.recisionMeasurement }}%</v-list-item-title>
+              <v-list-item-title>現在の精度:{{ this.precisionMeasurement }}%</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
           <v-list-item class="readjustButton" @click="readjustPosition">
@@ -149,6 +149,7 @@ export default {
   },
 
   mounted: async function () {
+    webgazer.clearData();
     webgazer.setRegression('ridge').setTracker('clmtrackr').begin();
     webgazer.applyKalmanFilter(true).setGazeListener((data, clock) => {
       // this.xprediction = data.x;

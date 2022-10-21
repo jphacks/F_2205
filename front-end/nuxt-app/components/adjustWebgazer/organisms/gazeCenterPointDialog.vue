@@ -3,7 +3,9 @@
     <v-dialog v-model="this.isOpenGazeCenterPointDialog" persistent max-width="390">
       <v-card>
         <v-card-title class="text-h5">細かな設定をします</v-card-title>
-        <v-card-text> センターのマーカーを5秒間見つめてください </v-card-text>
+        <v-card-text>
+          センターのマーカーを5秒間見つめてください。その際マウスカーソルは動かさないでください
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" text @click="closeDialog"> Disagree </v-btn>

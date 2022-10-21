@@ -272,7 +272,9 @@ export default {
 
           if (elementUnderGaze.tagName == 'VIDEO') {
             this.elementUnderGazeCount++;
+            // TODO: 試験的にカウントを10以上に設定, 後ほど適切な値・実装方法に変える
             if (this.elementUnderGazeCount > 10) {
+              console.log('elementUnderGazeCount is 10 count');
               this.focusThisVideo(elementUnderGaze.id);
             }
           } else {

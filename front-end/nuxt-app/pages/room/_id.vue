@@ -304,7 +304,6 @@ export default {
       if (id == 'my-video') return;
 
       const className = document.getElementById(id).className;
-      console.log(className);
       if (className == 'video-individual') {
         //websocket ユーザー同士を接続状態にする
         const data = {
@@ -326,8 +325,6 @@ export default {
         };
         this.websocketConn.send(JSON.stringify(data));
       }
-
-      console.log('focusThisVideo: ' + JSON.stringify(data));
     },
     focusThisVideoAllLift: function () {
       //フォーカスを全解除

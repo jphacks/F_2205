@@ -166,12 +166,8 @@ export default {
             video.style.width = '45%';
             video.style.height = 'auto';
             break;
-          case 3:
-            video.style.width = '32%';
-            video.style.height = 'auto';
-            break;
           default:
-            video.style.width = '32%';
+            video.style.width = '45%';
             video.style.height = 'auto';
             break;
         }

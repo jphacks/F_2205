@@ -53,7 +53,8 @@ export default {
       websocketConn: null,
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
-      isEnableGazeEstimating: true
+      isEnableGazeEstimating: false,
+      isFirstGazeEstimating: true
     };
   },
 
@@ -147,7 +148,6 @@ export default {
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
       this.setSkywayEventListener(mediaConnection);
       document.querySelector('body').classList.remove('modal-open');
-      this.beginEstimateGaze();
       this.isVisibleSwitchButton = true;
 
       //人数制限チェック
@@ -275,6 +275,8 @@ export default {
       // webgazerをendしても視線予測のポインターが消えないため、直接Elementを削除
       const gazeDotEl = document.getElementById('webgazerGazeDot');
       gazeDotEl.remove();
+
+      this.isFirstGazeEstimating = false;
     },
 
     pauseEstimateGaze: function () {
@@ -400,7 +402,18 @@ export default {
   watch: {
     isEnableGazeEstimating: function (isResumeButton) {
       console.log('isResumeButton', isResumeButton);
-      isResumeButton ? this.resumeEstimateGaze() : this.pauseEstimateGaze();
+      if (isResumeButton) {
+        if (this.isFirstGazeEstimating) {
+          console.log('First begin gaze estimation');
+          this.beginEstimateGaze();
+          this.isFirstGazeEstimating = false;
+          return;
+        }
+
+        this.resumeEstimateGaze();
+      } else {
+        this.pauseEstimateGaze();
+      }
     }
   }
 };

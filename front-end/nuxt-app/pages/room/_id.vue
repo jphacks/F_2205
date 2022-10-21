@@ -48,6 +48,7 @@ export default {
       APIKey: '5152bad7-4798-40b1-986a-a7e8f164a8a3',
       localStream: null,
       peer: null,
+      websocketConn: null,
       sameGroup: [],
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
@@ -56,6 +57,17 @@ export default {
   },
 
   methods: {
+    setWebsocketEventListener: function (websocketConn) {
+      websocketConn.onopen = function (e) {
+        console.log('websocket connection');
+      };
+      websocketConn.onclose = function (evt) {
+        console.log('websocket connection closed');
+      };
+      websocketConn.onerror = function (evt) {
+        console.log('websocket error: ' + evt);
+      };
+    },
     setSkywayEventListener: function (mediaConnection) {
       mediaConnection.on('stream', (stream) => {
         //video要素にカメラ映像をセットして再生
@@ -93,6 +105,7 @@ export default {
     roomLeaving: function () {
       //ルーム退出
       this.peer.destroy();
+      this.websocketConn.close(1000, 'normal amputation websocket');
       alert('退出しました');
       this.$router.push('/room/prepare');
       this.endEstimateGaze();
@@ -252,7 +265,12 @@ export default {
       this.$router.push('/room/prepare');
     }
 
+    //モーダルウィンドウを表示
     document.querySelector('body').classList.add('modal-open');
+
+    //WebSocketで接続
+    this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app');
+    this.setWebsocketEventListener(this.websocketConn);
 
     //ビデオ設定(解像度を落とす)
     let constraints = {

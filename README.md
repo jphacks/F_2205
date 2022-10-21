@@ -148,6 +148,12 @@ https://jphacks-app.herokuapp.com/room/prepare
 
 ## 開発技術
 
+### アーキテクチャ
+
+
+<img src="https://user-images.githubusercontent.com/70263039/197271046-63068782-eb74-4d65-8f04-4dcf0e0848ec.png" width="600px" />
+
+
 ### 活用した技術
 
 #### API・データ

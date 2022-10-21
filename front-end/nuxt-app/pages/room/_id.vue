@@ -270,7 +270,7 @@ export default {
           if (elementUnderGaze === null) return;
 
           if (elementUnderGaze.tagName == 'VIDEO') {
-            this.focusThisVideo(elementUnderGaze.id);
+            this.focusThisVideoLineOfSight(elementUnderGaze.id);
           }
         })
         .begin();
@@ -325,6 +325,20 @@ export default {
         };
         this.websocketConn.send(JSON.stringify(data));
       }
+    },
+    focusThisVideoLineOfSight: function (id) {
+      //ビデオをフォーカスする(自分のビデオ以外)(視線で)
+      if (id == 'my-video') return;
+
+      //websocket ユーザー同士を接続状態にする
+      const data = {
+        type: 'SET_FOCUS',
+        info: {
+          from: `${this.peer.id}`,
+          to: `${id}`
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
     },
     focusThisVideoAllLift: function () {
       //フォーカスを全解除

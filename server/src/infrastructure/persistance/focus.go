@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
-	"github.com/jphacks/F_2205/server/src/domain/service"
 	"github.com/jphacks/F_2205/server/src/domain/repository"
+	"github.com/jphacks/F_2205/server/src/domain/service"
 )
 
 var _ repository.IFocusRepository = &FocusRepository{}
@@ -119,8 +119,8 @@ func (r *FocusRepository) DelAllFocus(roomId entity.RoomId, from entity.Name) er
 	for _, member := range h.Focus.Members {
 		if member.Name == from {
 			// fromさんのConnectをリセット
-			member.Connects =  []*entity.Connect{}
-		}else{
+			member.Connects = []*entity.Connect{}
+		} else {
 			// fromさん以外の時はfromさんがいないか確認し、あったら削除する
 			for i, connect := range member.Connects {
 				// TODO こちらのISSUEの対応、なぜnilが入っているのかは調査中
@@ -158,6 +158,6 @@ func (r *FocusRepository) CheckHubExists(roomId entity.RoomId) error {
 		return fmt.Errorf("FocusRepository.CheckHubExists Error : room not found")
 	}
 	// 登録されていたら部屋を削除
-	delete(*r.Hubs,roomId)
+	delete(*r.Hubs, roomId)
 	return nil
 }

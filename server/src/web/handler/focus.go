@@ -1,9 +1,9 @@
 package handler
 
 import (
+	"log"
 	"net/http"
 	"time"
-	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -21,25 +21,25 @@ func NewFocusHandler(u usecase.IFocusUseCase) *FocusHandler {
 	}
 }
 
-func (h *FocusHandler) WsFocus(ctx *gin.Context){
+func (h *FocusHandler) WsFocus(ctx *gin.Context) {
 	roomId := (entity.RoomId)(ctx.Param("room"))
 	hub := h.FocusUC.GetOrRegisterHub(roomId)
 	h.serveWs(hub, ctx.Writer, ctx.Request)
 }
 
-func (h *FocusHandler) DeleteRoomHub(ctx *gin.Context){
+func (h *FocusHandler) DeleteRoomHub(ctx *gin.Context) {
 	roomId := (entity.RoomId)(ctx.Param("room"))
-	if err := h.FocusUC.CheckHubExists(roomId);err!=nil{
+	if err := h.FocusUC.CheckHubExists(roomId); err != nil {
 		ctx.JSON(
 			http.StatusOK,
-			gin.H{"error":err.Error()},
+			gin.H{"error": err.Error()},
 		)
 		return
 	}
 
 	ctx.JSON(
 		http.StatusOK,
-		gin.H{"ok":"delete room successful"},
+		gin.H{"ok": "delete room successful"},
 	)
 }
 
@@ -91,7 +91,6 @@ func (h *FocusHandler) readPump(c *entity.Client) {
 	}
 }
 
-
 // writePumpはbroadcastに入ってきたものを、hubに登録されたクライアント全員に送ります
 func (h *FocusHandler) writePump(c *entity.Client) {
 	ticker := time.NewTicker(pingPeriod)
@@ -122,7 +121,6 @@ func (h *FocusHandler) writePump(c *entity.Client) {
 	}
 }
 
-
 func (h *FocusHandler) serveWs(hub *entity.Hub, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
@@ -136,7 +134,6 @@ func (h *FocusHandler) serveWs(hub *entity.Hub, w http.ResponseWriter, r *http.R
 	go h.writePump(client)
 	go h.readPump(client)
 }
-
 
 const (
 	// Time allowed to write a message to the peer.

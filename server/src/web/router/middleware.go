@@ -7,12 +7,12 @@ import (
 )
 
 // setMiddlewareはmiddlewareを設定します
-func (r *Router) setMiddleware(){
+func (r *Router) setMiddleware() {
 	r.cors()
 }
 
 // CorsはCORSの設定を用意します
-func(r *Router) cors() {
+func (r *Router) cors() {
 	r.Engine.Use(cors.New(cors.Config{
 		// アクセスを許可したいアクセス元
 		AllowOrigins: []string{

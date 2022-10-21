@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/domain/service"
 	"github.com/jphacks/F_2205/server/src/domain/repository"
-	"github.com/jphacks/F_2205/server/src/infrastructure/hub"
 )
 
 var _ repository.IFocusRepository = &FocusRepository{}
@@ -145,7 +145,7 @@ func (r *FocusRepository) GetOrRegisterHub(roomId entity.RoomId) *entity.Hub {
 		h = found
 	} else {
 		// 登録されていなかったら新しく用意する
-		h = hub.NewHub(roomId)
+		h = service.NewHub(roomId)
 		(*r.Hubs)[roomId] = h
 		go h.Run()
 	}

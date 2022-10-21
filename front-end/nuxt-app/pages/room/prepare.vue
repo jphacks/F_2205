@@ -15,7 +15,7 @@
         <div class="main-contents-card">
           <h2>部屋番号</h2>
           <div>
-            <input type="text" id="room-name" placeholder="番号" class="main-contents-card-input" />
+            <input type="number" id="room-name" placeholder="番号" class="main-contents-card-input" />
           </div>
           <div class="main-contents-card-btn">
             <Btn text="作成" color="orange" :clickedfn="this.joinRoom" />
@@ -23,6 +23,9 @@
           <div>
             <Btn text="参加" color="blue" />
           </div>
+          <p class="main-contents-card-point-ms">
+            1ルーム最大18人まで参加できます<br />18人以上でのご利用はしないでください
+          </p>
         </div>
       </div>
     </section>
@@ -82,6 +85,7 @@ body {
     }
   }
   &-card {
+    position: relative;
     width: 40%;
     max-width: 900px;
     padding: 35px 15px;
@@ -101,6 +105,13 @@ body {
     }
     &-btn {
       margin: 25px 0 15px;
+    }
+    &-point-ms {
+      margin-top: 10px;
+      margin-bottom: -20px !important;
+      text-align: right;
+      font-size: 12px;
+      font-weight: normal;
     }
   }
 }

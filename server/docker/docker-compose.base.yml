@@ -1,0 +1,7 @@
+version: "3"
+
+services:
+  server:
+    container_name: f_2205-server
+    restart: always
+    tty: true

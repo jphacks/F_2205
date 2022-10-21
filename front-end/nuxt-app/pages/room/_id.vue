@@ -4,11 +4,28 @@
       <video id="my-video" class="video-individual" autoplay muted playsinline></video>
     </section>
 
-    <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
+    <!-- ビデオステータスバー -->
+    <div class="status-bar">
+      <VideoState
+        :leavingFn="this.roomLeaving"
+        :gazeEstimatingFn="this.swtichEstimateGaze"
+        :isEnableGazeEstimating="this.isEnableGazeEstimating"
+        :focusThisVideoAllLiftFn="this.focusThisVideoAllLift"
+      />
+    </div>
+    <!-- ビデオステータスバー -->
 
-    <!-- ビデオステータスバー -->
-    <VideoState :leavingFn="this.roomLeaving" />
-    <!-- ビデオステータスバー -->
+    <!-- モーダルウィンドウ -->
+    <section class="modal-window">
+      <div class="modal-window-back"></div>
+      <div class="modal-window-front">
+        <h3>部屋に接続する</h3>
+        <div class="modal-window-front_btn-wrap">
+          <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
+        </div>
+      </div>
+    </section>
+    <!-- モーダルウィンドウ -->
   </section>
 </template>
 
@@ -29,16 +46,46 @@ export default {
   data() {
     return {
       APIKey: '5152bad7-4798-40b1-986a-a7e8f164a8a3',
+      unfocusedVolume: 0.15,
       localStream: null,
       peer: null,
-      sameGroup: []
+      websocketConn: null,
+      roomMemberNum: 1,
+      isVisibleSwitchButton: false,
+      isEnableGazeEstimating: true
     };
   },
 
   methods: {
+    setWebsocketEventListener: function (websocketConn) {
+      websocketConn.onopen = function (e) {
+        console.log('websocket connection');
+      };
+      websocketConn.onmessage = function (evt) {
+        //フォーカスしてくれた人のPeerID
+        const tgPeerID = 'hogehoge';
+
+        if (True) {
+          //強制フォーカス
+          document.getElementById(tgPeerID).classList.add('video-individual-focus');
+          tgPeerID.volume = 1;
+        }
+        if (True) {
+          //強制フォーカス解除
+          document.getElementById(tgPeerID).classList.remove('video-individual-focus');
+          tgPeerID.volume = this.unfocusedVolume;
+        }
+      };
+      websocketConn.onclose = function (evt) {
+        console.log('websocket connection closed');
+      };
+      websocketConn.onerror = function (evt) {
+        console.log('websocket error: ' + evt);
+      };
+    },
     setSkywayEventListener: function (mediaConnection) {
       mediaConnection.on('stream', (stream) => {
-        // video要素にカメラ映像をセットして再生
+        //video要素にカメラ映像をセットして再生
         this.addVideo(stream);
         const videoElm = document.getElementById(stream.id);
         videoElm.srcObject = stream;
@@ -61,13 +108,23 @@ export default {
       const roomName = this.$route.params.id;
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
       this.setSkywayEventListener(mediaConnection);
+      document.querySelector('body').classList.remove('modal-open');
+      this.beginEstimateGaze();
+      this.isVisibleSwitchButton = true;
+
+      //人数制限チェック
+      setTimeout(this.roomMemberNumCheck, 5000);
+      setInterval(this.roomMemberNumCheck, 60000);
     },
 
     roomLeaving: function () {
       //ルーム退出
       this.peer.destroy();
+      this.websocketConn.close(1000, 'normal amputation websocket');
       alert('退出しました');
       this.$router.push('/room/prepare');
+      this.endEstimateGaze();
+      this.isVisibleSwitchButton = false;
     },
 
     addVideo: function (stream) {
@@ -77,14 +134,94 @@ export default {
       videoDom.srcObject = stream;
       videoDom.play();
       document.getElementById('video-wrap').append(videoDom);
+
+      //ルームメンバー人数追加
+      this.roomMemberNum++;
+
+      //ビデオのリサイズ
+      this.videoResize();
     },
     removeVideo: function (peerId) {
       console.log(peerId);
       const videoDom = document.getElementById(peerId);
       videoDom.remove();
+
+      //ルームメンバー人数減少
+      this.roomMemberNum--;
+
+      //ビデオのリサイズ
+      this.videoResize();
+    },
+    videoResize: function () {
+      //ビデオのリサイズ
+      const videos = document.querySelectorAll('.video-individual');
+
+      for (let video of videos) {
+        switch (this.roomMemberNum) {
+          case 1:
+            video.style.width = '100%';
+            video.style.height = '100%';
+            break;
+          case 2:
+            video.style.width = '45%';
+            video.style.height = 'auto';
+            break;
+          default:
+            video.style.width = '45%';
+            video.style.height = 'auto';
+            break;
+        }
+      }
     },
 
-    focusThisVideoLineOfSight: function (id) {
+    beginEstimateGaze: function () {
+      //視線からフォーカス
+      webgazer
+        .showVideo(false)
+        .showPredictionPoints(true)
+        .setGazeListener((gaze, clock) => {
+          if (gaze == null) {
+            return;
+          }
+
+          const x = gaze.x;
+          const y = gaze.y;
+
+          const elementUnderGaze = document.elementFromPoint(x, y);
+
+          if (elementUnderGaze === null) return;
+
+          if (elementUnderGaze.tagName == 'VIDEO') {
+            this.focusThisVideo(elementUnderGaze.id);
+          }
+        })
+        .begin();
+    },
+
+    endEstimateGaze: function () {
+      console.log('endEstimateGaze');
+      webgazer.clearGazeListener().end();
+
+      // webgazerをendしても視線予測のポインターが消えないため、直接Elementを削除
+      const gazeDotEl = document.getElementById('webgazerGazeDot');
+      gazeDotEl.remove();
+    },
+
+    pauseEstimateGaze: function () {
+      console.log('pauseEstimateGaze');
+      webgazer.showPredictionPoints(false).pause();
+    },
+
+    resumeEstimateGaze: function () {
+      console.log('resumeEstimateGaze');
+      webgazer.showPredictionPoints(true).resume();
+    },
+
+    swtichEstimateGaze: function () {
+      this.isEnableGazeEstimating = !this.isEnableGazeEstimating;
+    },
+
+    focusThisVideo: function (id) {
       //視線からビデオをフォーカスする(自分のビデオ以外)
       if (id == 'my-video') return;
 
@@ -105,44 +242,31 @@ export default {
           video.volume = 1;
           video.classList.add('video-individual-focus');
         } else {
-          video.volume = 0.07;
+          video.volume = this.unfocusedVolume;
           video.classList.remove('video-individual-focus');
         }
       }
     },
-
-    focusThisVideoClick: function (id) {
-      //クリックされたビデオをフォーカスする(自分のビデオ以外)
-      const videoId = id;
-      if (videoId == 'my-video') {
-        console.log('my-video');
-        return;
-      }
-
-      const videoDom = document.getElementById(videoId);
-      const myVideoDom = document.getElementById('my-video');
-      videoDom.classList.add('video-individual-focus');
-      myVideoDom.classList.add('video-individual-focus');
-
-      //自分と同一グループに追加する
-      this.sameGroup.push(videoId);
-
-      //存在するビデオ要素を取得
+    focusThisVideoAllLift: function () {
+      //フォーカスを全解除
       const videos = document.querySelectorAll('.video-individual');
 
-      for (let video in videos) {
-        let flag = this.sameGroup.find((element) => {
-          return element == video;
-        });
-
-        if (flag) {
-          //自グループ
-          videoDom.volume = 1;
-        } else {
-          //自グループ以外
-          videoDom.volume = 0.07;
-        }
+      for (let video of videos) {
+        //音量設定
+        video.volume = 1;
+        video.classList.remove('video-individual-focus');
       }
+    },
+    roomMemberNumCheck: function () {
+      //部屋の最大人数のチェック
+      const roomMaxmemberNum = 18;
+
+      console.log('check room member num');
+      if (this.roomMemberNum > roomMaxmemberNum) {
+        console.log('forced exit');
+        this.roomLeaving();
+      }
+      console.log('ok');
     }
   },
 
@@ -151,6 +275,13 @@ export default {
       alert('部屋番号が入力されていません');
       this.$router.push('/room/prepare');
     }
+
+    //モーダルウィンドウを表示
+    document.querySelector('body').classList.add('modal-open');
+
+    //WebSocketで接続
+    this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app');
+    this.setWebsocketEventListener(this.websocketConn);
 
     //ビデオ設定(解像度を落とす)
     let constraints = {
@@ -186,53 +317,110 @@ export default {
       const x = e.pageX;
       const y = e.pageY;
 
-      console.log('click: ' + x + ' | ' + y);
-
       const elementUnderMouse = document.elementFromPoint(x, y);
       if (elementUnderMouse.tagName == 'VIDEO') {
-        this.focusThisVideoLineOfSight(elementUnderMouse.id);
+        this.focusThisVideo(elementUnderMouse.id);
       }
     };
 
-    //視線からフォーカス
-    webgazer
-      .showVideo(false)
-      .showPredictionPoints(true)
-      .setGazeListener((gaze, clock) => {
-        if (gaze == null) {
-          return;
-        }
-
-        const x = gaze.x;
-        const y = gaze.y;
-
-        const elementUnderGaze = document.elementFromPoint(x, y);
-
-        if (elementUnderGaze === null) {
-          return;
-        }
-
-        if (elementUnderGaze.tagName == 'VIDEO') {
-          this.focusThisVideoLineOfSight(elementUnderGaze.id);
-        }
-      })
-      .begin();
+    window.onpopstate = function () {
+      console.log('webgazer is finish beacause browser back');
+      webgazer.clearGazeListener().end();
+      const gazeDotEl = document.getElementById('webgazerGazeDot');
+      gazeDotEl.remove();
+    };
+  },
+  watch: {
+    isEnableGazeEstimating: function (isResumeButton) {
+      console.log('isResumeButton', isResumeButton);
+      isResumeButton ? this.resumeEstimateGaze() : this.pauseEstimateGaze();
+    }
   }
 };
 </script>
 
 <style lang="scss">
+body {
+  -ms-overflow-style: none !important; /* IE, Edge 対応 */
+  scrollbar-width: none !important; /* Firefox 対応 */
+  &::-webkit-scrollbar {
+    /* Chrome, Safari 対応 */
+    display: none !important;
+  }
+}
+
 .video {
+  width: 100vw;
+  padding: 10px 0;
+  height: calc(100vh - 72px);
   display: flex;
   justify-content: space-around;
   align-items: center;
   flex-wrap: wrap;
+  background-color: #d3be9a;
+  overflow-y: scroll;
+  -ms-overflow-style: none !important; /* IE, Edge 対応 */
+  scrollbar-width: none !important; /* Firefox 対応 */
+  &::-webkit-scrollbar {
+    /* Chrome, Safari 対応 */
+    display: none !important;
+  }
 
   &-individual {
-    width: 45%;
+    width: 100%;
+    height: 100%;
+    border-radius: 80px;
 
     &-focus {
-      border: solid 3px red;
+      border: solid 5px orange;
+    }
+  }
+}
+
+.status-bar {
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
+
+.modal-open {
+  & .modal-window {
+    display: block;
+  }
+}
+
+.modal-window {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  &-back {
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0.7;
+  }
+  &-front {
+    width: 50%;
+    padding: 50px 0;
+    position: fixed;
+    text-align: center;
+    max-width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    border: solid 5px orange;
+    border-radius: 8px;
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+
+    &_btn-wrap {
+      margin: 20px 0 0;
+      text-align: center;
     }
   }
 }

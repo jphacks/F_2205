@@ -52,7 +52,7 @@ func (r *FocusRepository) SetFocus(roomId entity.RoomId, from entity.Name, to en
 	for _, member := range h.Focus.Members {
 		if member.Name == from {
 			for _, connect := range member.Connects {
-				if connect.Name == to {
+				if connect != nil && connect.Name == to {
 					return fmt.Errorf("FocusRepository.SetFocus Error : already connected")
 				}
 			}
@@ -64,7 +64,7 @@ func (r *FocusRepository) SetFocus(roomId entity.RoomId, from entity.Name, to en
 			)
 		} else if member.Name == to {
 			for _, connect := range member.Connects {
-				if connect.Name == to {
+				if connect != nil && connect.Name == to {
 					return fmt.Errorf("FocusRepository.SetFocus Error : already connected")
 				}
 			}
@@ -88,7 +88,7 @@ func (r *FocusRepository) DelFocus(roomId entity.RoomId, from entity.Name, to en
 		if member.Name == from {
 			// FromさんのConnectからToさんを削除
 			for i, connect := range member.Connects {
-				if connect.Name == to {
+				if connect != nil && connect.Name == to {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
 					member.Connects[len(member.Connects)-1] = nil
@@ -98,7 +98,7 @@ func (r *FocusRepository) DelFocus(roomId entity.RoomId, from entity.Name, to en
 		} else if member.Name == to {
 			// ToさんのConnectからFromさんを削除
 			for i, connect := range member.Connects {
-				if connect.Name == from {
+				if connect != nil && connect.Name == from {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
 					member.Connects[len(member.Connects)-1] = nil

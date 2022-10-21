@@ -46,10 +46,10 @@ export default {
   data() {
     return {
       APIKey: '5152bad7-4798-40b1-986a-a7e8f164a8a3',
+      unfocusedVolume: 0.15,
       localStream: null,
       peer: null,
       websocketConn: null,
-      sameGroup: [],
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
       isEnableGazeEstimating: true
@@ -60,6 +60,21 @@ export default {
     setWebsocketEventListener: function (websocketConn) {
       websocketConn.onopen = function (e) {
         console.log('websocket connection');
+      };
+      websocketConn.onmessage = function (evt) {
+        //フォーカスしてくれた人のPeerID
+        const tgPeerID = 'hogehoge';
+
+        if (True) {
+          //強制フォーカス
+          document.getElementById(tgPeerID).classList.add('video-individual-focus');
+          tgPeerID.volume = 1;
+        }
+        if (True) {
+          //強制フォーカス解除
+          document.getElementById(tgPeerID).classList.remove('video-individual-focus');
+          tgPeerID.volume = this.unfocusedVolume;
+        }
       };
       websocketConn.onclose = function (evt) {
         console.log('websocket connection closed');
@@ -231,7 +246,7 @@ export default {
           video.volume = 1;
           video.classList.add('video-individual-focus');
         } else {
-          video.volume = 0.15;
+          video.volume = this.unfocusedVolume;
           video.classList.remove('video-individual-focus');
         }
       }

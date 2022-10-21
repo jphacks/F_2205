@@ -128,6 +128,7 @@ export default {
       };
       websocketConn.onclose = function (evt) {
         console.log('websocket connection closed');
+        this.roomLeaving();
       };
       websocketConn.onerror = function (evt) {
         console.log('websocket error: ' + evt);

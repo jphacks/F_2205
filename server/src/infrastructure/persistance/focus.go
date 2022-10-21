@@ -2,11 +2,10 @@ package persistance
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/domain/service"
 	"github.com/jphacks/F_2205/server/src/domain/repository"
-	"github.com/jphacks/F_2205/server/src/infrastructure/hub"
 )
 
 var _ repository.IFocusRepository = &FocusRepository{}
@@ -41,7 +40,6 @@ func (r *FocusRepository) NewMember(roomId entity.RoomId, newMemberName entity.N
 			Connects: []*entity.Connect{},
 		},
 	)
-	log.Println("hub menbers", h.Focus.Members)
 	return nil
 }
 
@@ -125,7 +123,9 @@ func (r *FocusRepository) DelAllFocus(roomId entity.RoomId, from entity.Name) er
 		}else{
 			// fromさん以外の時はfromさんがいないか確認し、あったら削除する
 			for i, connect := range member.Connects {
-				if connect.Name == from {
+				// TODO こちらのISSUEの対応、なぜnilが入っているのかは調査中
+				// https://github.com/jphacks/F_2205/issues/95
+				if connect != nil && connect.Name == from {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
 					member.Connects[len(member.Connects)-1] = nil
@@ -145,7 +145,7 @@ func (r *FocusRepository) GetOrRegisterHub(roomId entity.RoomId) *entity.Hub {
 		h = found
 	} else {
 		// 登録されていなかったら新しく用意する
-		h = hub.NewHub(roomId)
+		h = service.NewHub(roomId)
 		(*r.Hubs)[roomId] = h
 		go h.Run()
 	}

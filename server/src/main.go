@@ -8,8 +8,8 @@ func main() {
 
 	// Routerの初期化
 	r := router.NewRouter()
-	r.SetMiddleware()
 
+	// Routerの登録
 	r.Health()
 	r.Ws()
 

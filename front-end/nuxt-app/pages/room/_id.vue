@@ -182,6 +182,8 @@ export default {
 
     roomLeaving: async function () {
       //ルーム退出
+      console.log('room leaving start');
+
       this.peer.destroy();
 
       //websocket そのユーザーの持っている接続状態を解除する

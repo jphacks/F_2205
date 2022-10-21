@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center">
     <v-dialog v-model="isOpenAdjustWebGazerDialog" fullscreen>
-      <v-card>
+      <v-card class="cardContainer">
         <v-toolbar>
           <v-btn icon dark @click="handleAdjustWebGazer">
             <v-icon>mdi-close</v-icon>
@@ -44,10 +44,77 @@
             </v-menu>
           </v-toolbar-items>
         </v-toolbar>
+        <v-row justify="center" align="center" class="adjustFieldContainer">
+          <v-col cols="12" sm="8" md="10" class="adjustCanvus">
+            <v-row justify="space-between" align="center" class="buttons">
+              <v-col cols="12" sm="1"></v-col>
+              <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+              <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+              <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+            </v-row>
+            <v-row justify="space-between" align="center" class="buttons">
+              <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+              <v-col cols="12" sm="1">
+                <ClickAdjustBtn
+                  @add-adjustpoint="adjustPosition"
+                  v-if="adjustPoint > 8"
+                  :isExplainClickPoint="this.isExplainClickPointDialog"
+                />
+                <v-col cols="12" sm="1" class="centerLabel">{{ storePredictionPoint }}{{ adjustPoint }}</v-col>
+              </v-col>
+              <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+            </v-row>
+            <v-row justify="space-between" align="center" class="buttons">
+              <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+              <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+              <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+              <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+            </v-row>
+            <ExplainClickPointDialog
+              :isOpenExplainClickPointDialog="this.isExplainClickPointDialog"
+              @close-explain-click-pointDialog="closeExplainClickPointDialog"
+            />
+            <GazeCenterPointDialog
+              :isOpenGazeCenterPointDialog="this.isGazeCenterPointDialog"
+              @close-gazecenterpointdialog="closeGazeCenterPointDialog"
+            />
+            <LearningResultDialog
+              :isOpenLearningResultDialog="this.isLearningResultDialog"
+              :recisionMeasurement="this.precisionMeasurement"
+              @close-learningresultdialog="closeLearningResultDialog"
+            />
+          </v-col>
+        </v-row>
       </v-card>
     </v-dialog>
   </v-row>
 </template>
+
+<style lang="scss">
+.cardContainer {
+  height: 100%;
+}
+.gazerContainer {
+  height: 100%;
+}
+.adjustFieldContainer {
+  height: 100%;
+}
+.buttons {
+  height: 33%;
+}
+.adjustCanvus {
+  height: 100%;
+}
+.centerLabel {
+  padding-left: 27px;
+}
+.readjustButton {
+  &:hover {
+    cursor: pointer;
+  }
+}
+</style>
 
 <script>
 import ClickAdjustBtn from '~/components/adjustWebgazer/atoms/clickAdjustBtn';
@@ -81,11 +148,10 @@ export default {
   },
 
   mounted: async function () {
-    webgazer.clearData();
+    // webgazer.clearData();
     // webgazer.setRegression('ridge').setTracker('clmtrackr').begin();
     // webgazer.applyKalmanFilter(true).setGazeListener((data, clock) => {
     // });
-
     // var setup = function () {
     //   //Set up the main canvas. The main canvas is used to calibrate the webgazer.
     //   var canvas = document.getElementById('plotting_canvas');
@@ -94,7 +160,6 @@ export default {
     //   canvas.style.position = 'fixed';
     // };
     // setup();
-
     // webgazer.showVideoPreview(true).showPredictionPoints(true).applyKalmanFilter(true);
   },
 
@@ -110,6 +175,9 @@ export default {
           canvas.style.position = 'fixed';
         };
         setup();
+
+        this.isExplainClickPointDialog = true;
+        this.adjustPoint = 0;
       }
     }
   },
@@ -167,13 +235,13 @@ export default {
       this.isExplainClickPointDialog = false;
     },
     readjustPosition() {
-      webgazer.pause();
+      //   webgazer.pause();
 
-      webgazer.clearData();
+      //   webgazer.clearData();
       this.isExplainClickPointDialog = true;
       this.adjustPoint = 0;
 
-      webgazer.resume();
+      //   webgazer.resume();
     }
   }
 };

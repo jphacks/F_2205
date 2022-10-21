@@ -27,6 +27,7 @@ export default {
       dialog: true
     };
   },
+  mounted: async function () {},
   methods: {
     closeDialog() {
       this.$emit('close-explain-click-pointDialog');

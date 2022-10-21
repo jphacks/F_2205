@@ -54,7 +54,8 @@ export default {
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
       isEnableGazeEstimating: false,
-      isFirstGazeEstimating: true
+      isFirstGazeEstimating: true,
+      elementUnderGazeCount: 0
     };
   },
 
@@ -270,7 +271,12 @@ export default {
           if (elementUnderGaze === null) return;
 
           if (elementUnderGaze.tagName == 'VIDEO') {
-            this.focusThisVideo(elementUnderGaze.id);
+            this.elementUnderGazeCount++;
+            if (this.elementUnderGazeCount > 10) {
+              this.focusThisVideo(elementUnderGaze.id);
+            }
+          } else {
+            this.elementUnderGazeCount = 0;
           }
         })
         .begin();

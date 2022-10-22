@@ -61,7 +61,8 @@ export default {
       isFirstGazeEstimating: true,
       elementUnderGazeCount: 0,
       myVideoStatus: true,
-      myAudioStatus: true
+      myAudioStatus: true,
+      focusThisVideoAllLiftCount: 0
     };
   },
 
@@ -283,15 +284,20 @@ export default {
 
           if (elementUnderGaze.tagName == 'VIDEO') {
             this.elementUnderGazeCount++;
+            this.focusThisVideoAllLiftCount = 0;
             // TODO: 試験的にカウントを10以上に設定, 後ほど適切な値・実装方法に変える
             if (this.elementUnderGazeCount > 10) {
               console.log('elementUnderGazeCount is 10 count');
               this.focusThisVideoLineOfSight(elementUnderGaze.id);
             }
           } else {
+            this.focusThisVideoAllLiftCount++;
             this.elementUnderGazeCount = 0;
             //フォーカス全外し(この関数を呼ぶことでサーバー側にリクエスト飛ぶ)
-            //this.focusThisVideoAllLift();
+            if (this.focusThisVideoAllLiftCount > 10) {
+              console.log('focusThisVideoAllLift is 10 count');
+              this.focusThisVideoAllLift();
+            }
           }
         })
         .begin();

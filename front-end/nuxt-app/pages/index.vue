@@ -1,58 +1,118 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <v-card class="logo py-4 d-flex justify-center">
-        <NuxtLogo />
-        <VuetifyLogo />
-      </v-card>
-      <v-card>
-        <v-card-title class="headline"> Welcome to the Vuetify + Nuxt.js template </v-card-title>
-        <v-card-text>
-          <p>
-            Vuetify is a progressive Material Design component framework for Vue.js. It was designed to
-            empowerdevelopers to create amazing applications.
-          </p>
-          <p>
-            For more information on Vuetify, check out the
-            <a href="https://vuetifyjs.com" target="_blank" rel="noopener noreferrer"> documentation </a>.
-          </p>
-          <p>
-            If you have questions, please join the official
-            <a href="https://chat.vuetifyjs.com/" target="_blank" rel="noopener noreferrer" title="chat"> discord </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github
-            <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board </a
-            >.
-          </p>
-          <p>
-            Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.
-          </p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
+  <div>
+    <!-- headerコンポーネント -->
+    <div>
+      <Header />
+    </div>
+    <!-- headerコンポーネント -->
+
+    <section class="main-contents">
+      <div class="max-width">
+        <div class="main-contents-img">
+          <img src="~/assets/img/beer.png" />
+        </div>
+
+        <div class="main-contents-card">
+          <h2>部屋番号</h2>
+          <div>
+            <input type="number" id="room-name" placeholder="番号" class="main-contents-card-input" />
           </div>
-          <hr class="my-3" />
-          <a href="https://nuxtjs.org/" target="_blank" rel="noopener noreferrer"> Nuxt Documentation </a>
-          <br />
-          <a href="https://github.com/nuxt/nuxt.js" target="_blank" rel="noopener noreferrer"> Nuxt GitHub </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire"> Continue </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+          <div class="main-contents-card-btn">
+            <Btn text="作成" color="orange" :clickedfn="this.joinRoom" />
+          </div>
+          <div>
+            <Btn text="参加" color="blue" :clickedfn="this.joinRoom" />
+          </div>
+          <p class="main-contents-card-point-ms">
+            1ルーム最大18人まで参加できます<br />18人以上でのご利用はしないでください
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
+import Btn from '~/components/presentational/atoms/btn';
+import Header from '~/components/presentational/organisms/header';
+
 export default {
-  name: 'IndexPage'
+  components: {
+    Btn,
+    Header
+  },
+
+  methods: {
+    joinRoom: function () {
+      //room新規作成もjoinも同じ
+      const roomName = document.querySelector('#room-name').value;
+      this.$router.push('/room/' + roomName);
+    }
+  }
 };
 </script>
+
+<style lang="scss">
+body {
+  -ms-overflow-style: none !important; /* IE, Edge 対応 */
+  scrollbar-width: none !important; /* Firefox 対応 */
+  &::-webkit-scrollbar {
+    /* Chrome, Safari 対応 */
+    display: none !important;
+  }
+}
+
+.max-width {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+.main-contents {
+  width: 100%;
+  height: calc(100vh - 64px);
+  background-color: #ffd587;
+  &-img {
+    width: 40%;
+    text-align: center;
+    & img {
+      width: 200px;
+    }
+  }
+  &-card {
+    position: relative;
+    width: 40%;
+    max-width: 900px;
+    padding: 35px 15px;
+    text-align: center;
+    background-color: #fdfdfd;
+    color: orange;
+    border-radius: 8px;
+    & h2 {
+      padding: 0 0 15px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    &-input {
+      border-bottom: solid 2px #ccc;
+      background-color: #fff;
+      outline: none !important;
+    }
+    &-btn {
+      margin: 25px 0 15px;
+    }
+    &-point-ms {
+      margin-top: 10px;
+      margin-bottom: -20px !important;
+      text-align: right;
+      font-size: 12px;
+      font-weight: normal;
+    }
+  }
+}
+</style>

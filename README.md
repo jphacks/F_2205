@@ -7,12 +7,12 @@
 ## 🎥 作品紹介動画
 
 <!-- TODO -->
-https://www.youtube.com/hogehoge
+https://youtu.be/JB3t8Gnhozg
 
 <br>
 
 ## ✨ 作品URL
-https://jphacks-app.herokuapp.com/room/prepare
+https://jphacks-app.herokuapp.com
 
 <br>
 
@@ -125,27 +125,6 @@ https://jphacks-app.herokuapp.com/room/prepare
 
    <img src="./doc/image/index/party.png" width="400px" />
 
-#### フォーカス機能の使い方
-
-フォーカスについては[こちら](https://github.com/jphacks/F_2205#%E3%83%95%E3%82%A9%E3%83%BC%E3%82%AB%E3%82%B9%E6%A9%9F%E8%83%BD)をご覧ください。
-
-<!-- TODO 写真欲しいな -->
-
-##### クリックでフォーカスする、解除する
-
-一人フォーカス
-
-複数人フォーカス
-
-もう一度クリックして解除
-
-ボタンで解除
-
-##### 視線でフォーカスする
-
-
-
-
 <br>
 
 余談ですが
@@ -166,16 +145,73 @@ https://jphacks-app.herokuapp.com/room/prepare
 
 #### 1. 一つのビデオ通話にいながら、別々の話題で会話することができる
 
-<!-- TODO 写真欲しいな -->
-フォーカスしている写真
+##### フォーカス機能
+
+フォーカスについては[こちら](https://github.com/jphacks/F_2205#%E3%83%95%E3%82%A9%E3%83%BC%E3%82%AB%E3%82%B9%E6%A9%9F%E8%83%BD)をご覧ください。
+
+###### クリックでフォーカスする、解除する
+
+クリックした人をフォーカスできます。
+
+フォーカスするとオレンジの枠で接続している状態となり、
+
+お互いの声が大きく聞こえ、ほかの人の声は小さく聞こえます。
+
+<img src="./doc/image/index/focus2man.png" width="400px" />
+
+<br>
+
+さらにほかの人をクリックすると、フォーカスする人数を増やせます。
+
+下記の状態では２人と接続している状態となっており、
+
+２人の声が大きく聞こえます。
+
+<img src="./doc/image/index/focus3man.png" width="400px" />
+
+<br>
+
+さらにほかの人をクリックすると、フォーカスする人数を増やせます。
+
+下記の状態では２人と接続している状態となっており、
+
+２人の声が大きく聞こえます。
+
+<img src="./doc/image/index/focus3man.png" width="400px" />
+
+<br>
+
+もう一度クリックしてフォーカス状態を解除できます。
+
+<br>
+
+
+左下の人がたくさんいるボタンを押すとすべてのフォーカスを解除できます。
+
+誰もフォーカスしていない状態だと、参加者全員の声が同じ大きさで聞こえます。
+
+<br>
+
+この機能により、お互いに接続状態のユーザーは自由に会話を楽しむことができます。
 
 <br>
 
 #### 2. 視線操作で会話する相手を選択する
 
+##### 視線でフォーカスする
 
-<!-- TODO 写真欲しいな -->
-視線操作している写真
+右下の目のボタンを押すと、赤色の点が表示されます。
+
+これはあなたの視線を追跡しています。
+
+<img src="./doc/image/index/sisen_notmatch.png" width="400px" />
+
+
+あなたの視線が、誰かを見ているかログをとり、
+
+あなたがよくみているユーザーと接続状態にします。
+
+<img src="./doc/image/index/sisen_match.png" width="400px" />
 
 <br>
 

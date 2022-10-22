@@ -148,7 +148,7 @@ export default {
   },
 
   mounted: async function () {
-    webgazer.clearData();
+    // webgazer.clearData();
     // webgazer.setRegression('ridge').setTracker('clmtrackr').begin();
     // webgazer.applyKalmanFilter(true).setGazeListener((data, clock) => {
     // });

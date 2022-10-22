@@ -2,11 +2,10 @@ package persistance
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
-	"github.com/jphacks/F_2205/server/src/domain/service"
 	"github.com/jphacks/F_2205/server/src/domain/repository"
+	"github.com/jphacks/F_2205/server/src/domain/service"
 )
 
 var _ repository.IFocusRepository = &FocusRepository{}
@@ -41,7 +40,6 @@ func (r *FocusRepository) NewMember(roomId entity.RoomId, newMemberName entity.N
 			Connects: []*entity.Connect{},
 		},
 	)
-	log.Println("hub menbers", h.Focus.Members)
 	return nil
 }
 
@@ -54,7 +52,7 @@ func (r *FocusRepository) SetFocus(roomId entity.RoomId, from entity.Name, to en
 	for _, member := range h.Focus.Members {
 		if member.Name == from {
 			for _, connect := range member.Connects {
-				if connect.Name == to {
+				if connect != nil && connect.Name == to {
 					return fmt.Errorf("FocusRepository.SetFocus Error : already connected")
 				}
 			}
@@ -66,7 +64,7 @@ func (r *FocusRepository) SetFocus(roomId entity.RoomId, from entity.Name, to en
 			)
 		} else if member.Name == to {
 			for _, connect := range member.Connects {
-				if connect.Name == to {
+				if connect != nil && connect.Name == to {
 					return fmt.Errorf("FocusRepository.SetFocus Error : already connected")
 				}
 			}
@@ -90,7 +88,7 @@ func (r *FocusRepository) DelFocus(roomId entity.RoomId, from entity.Name, to en
 		if member.Name == from {
 			// FromさんのConnectからToさんを削除
 			for i, connect := range member.Connects {
-				if connect.Name == to {
+				if connect != nil && connect.Name == to {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
 					member.Connects[len(member.Connects)-1] = nil
@@ -100,7 +98,7 @@ func (r *FocusRepository) DelFocus(roomId entity.RoomId, from entity.Name, to en
 		} else if member.Name == to {
 			// ToさんのConnectからFromさんを削除
 			for i, connect := range member.Connects {
-				if connect.Name == from {
+				if connect != nil && connect.Name == from {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
 					member.Connects[len(member.Connects)-1] = nil
@@ -121,11 +119,13 @@ func (r *FocusRepository) DelAllFocus(roomId entity.RoomId, from entity.Name) er
 	for _, member := range h.Focus.Members {
 		if member.Name == from {
 			// fromさんのConnectをリセット
-			member.Connects =  []*entity.Connect{}
-		}else{
+			member.Connects = []*entity.Connect{}
+		} else {
 			// fromさん以外の時はfromさんがいないか確認し、あったら削除する
 			for i, connect := range member.Connects {
-				if connect.Name == from {
+				// TODO こちらのISSUEの対応、なぜnilが入っているのかは調査中
+				// https://github.com/jphacks/F_2205/issues/95
+				if connect != nil && connect.Name == from {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
 					member.Connects[len(member.Connects)-1] = nil
@@ -147,7 +147,7 @@ func (r *FocusRepository) GetOrRegisterHub(roomId entity.RoomId) *entity.Hub {
 		// 登録されていなかったら新しく用意する
 		h = service.NewHub(roomId)
 		(*r.Hubs)[roomId] = h
-		go h.Run()
+		go service.Run(h)
 	}
 	return h
 }
@@ -158,6 +158,6 @@ func (r *FocusRepository) CheckHubExists(roomId entity.RoomId) error {
 		return fmt.Errorf("FocusRepository.CheckHubExists Error : room not found")
 	}
 	// 登録されていたら部屋を削除
-	delete(*r.Hubs,roomId)
+	delete(*r.Hubs, roomId)
 	return nil
 }

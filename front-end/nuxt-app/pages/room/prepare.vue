@@ -21,7 +21,7 @@
             <Btn text="作成" color="orange" :clickedfn="this.joinRoom" />
           </div>
           <div>
-            <Btn text="参加" color="blue" />
+            <Btn text="参加" color="blue" :clickedfn="this.joinRoom" />
           </div>
           <p class="main-contents-card-point-ms">
             1ルーム最大18人まで参加できます<br />18人以上でのご利用はしないでください

@@ -9,8 +9,8 @@ type Event struct {
 }
 
 const (
-	NewMember EventType = "NEW_MEMBER" //fromを新しいmemberとして追加する
-	SetFocus  EventType = "SET_FOCUS"  //from と toをつなげる
-	DelFocus  EventType = "DEL_FOCUS"  //from と toを解除する
-	DelAllFocus  EventType = "DEL_ALL_FOCUS"  //fromのすべてのconnectを削除する
+	NewMember   EventType = "NEW_MEMBER"    //fromを新しいmemberとして追加する
+	SetFocus    EventType = "SET_FOCUS"     //from と toをつなげる
+	DelFocus    EventType = "DEL_FOCUS"     //from と toを解除する
+	DelAllFocus EventType = "DEL_ALL_FOCUS" //fromのすべてのconnectを削除する
 )

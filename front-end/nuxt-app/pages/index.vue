@@ -15,7 +15,7 @@
         <div class="main-contents-card">
           <h2>部屋番号</h2>
           <div>
-            <input type="number" id="room-name" placeholder="番号" class="main-contents-card-input" />
+            <input type="number" id="room-name" placeholder="部屋番号" class="main-contents-card-input" />
           </div>
           <div class="main-contents-card-btn">
             <Btn text="作成" color="orange" :clickedfn="this.joinRoom" />

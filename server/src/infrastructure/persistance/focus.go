@@ -147,7 +147,7 @@ func (r *FocusRepository) GetOrRegisterHub(roomId entity.RoomId) *entity.Hub {
 		// 登録されていなかったら新しく用意する
 		h = service.NewHub(roomId)
 		(*r.Hubs)[roomId] = h
-		go h.Run()
+		go service.Run(h)
 	}
 	return h
 }

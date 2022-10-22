@@ -14,17 +14,11 @@
         :gazeEstimatingFn="this.swtichEstimateGaze"
         :isEnableGazeEstimating="this.isEnableGazeEstimating"
         :focusThisVideoAllLiftFn="this.focusThisVideoAllLift"
-        :handleAdjustWebGazer="this.handleAdjustWebGazer"
-      />
-    </div>
-    <!-- ビデオステータスバー -->
-
-    <div>
-      <AdjustWebgazerDialog
         :isOpenAdjustWebGazerDialog="this.isOpenAdjustWebGazerDialog"
         :handleAdjustWebGazer="this.handleAdjustWebGazer"
       />
     </div>
+    <!-- ビデオステータスバー -->
 
     <!-- モーダルウィンドウ -->
     <section class="modal-window">

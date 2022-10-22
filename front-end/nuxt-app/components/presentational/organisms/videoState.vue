@@ -28,6 +28,14 @@
       </div>
 
       <div>
+        <AdjustWebgazerDialog
+          :isOpenAdjustWebGazerDialog="this.isOpenAdjustWebGazerDialog"
+          :handleAdjustWebGazer="this.handleAdjustWebGazer"
+          v-if="isEnableGazeEstimating"
+        />
+      </div>
+
+      <div>
         <Btn text="退出" color="red" :clickedfn="leavingFn" />
       </div>
     </div>
@@ -36,11 +44,20 @@
 
 <script>
 import Btn from '~/components/presentational/atoms/btn';
+import AdjustWebgazerDialog from '~/components/presentational/organisms/adjustWebgazerDialog';
 
 export default {
-  props: ['leavingFn', 'isEnableGazeEstimating', 'gazeEstimatingFn', 'focusThisVideoAllLiftFn', 'handleAdjustWebGazer'],
+  props: [
+    'leavingFn',
+    'isEnableGazeEstimating',
+    'gazeEstimatingFn',
+    'focusThisVideoAllLiftFn',
+    'handleAdjustWebGazer',
+    'isOpenAdjustWebGazerDialog'
+  ],
   components: {
-    Btn
+    Btn,
+    AdjustWebgazerDialog
   }
 };
 </script>

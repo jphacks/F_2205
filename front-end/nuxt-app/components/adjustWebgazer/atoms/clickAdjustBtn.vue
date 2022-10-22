@@ -27,7 +27,7 @@ export default {
   mounted: async function () {},
   watch: {
     isExplainClickPoint: function (newIsExplainClickPoint, oldIsExplainClickPoint) {
-      console.log(newIsExplainClickPoint, 'dddd');
+      console.log(newIsExplainClickPoint, oldIsExplainClickPoint, 'dddd');
       if (newIsExplainClickPoint) {
         this.buttonLighten = 5;
         this.buttonLightenString = 'purple lighten-3';

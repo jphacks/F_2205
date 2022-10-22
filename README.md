@@ -127,7 +127,9 @@ https://jphacks-app.herokuapp.com/room/prepare
 
 #### フォーカス機能の使い方
 
-フォーカスについてはこちらをご覧ください。
+フォーカスについては[こちら](https://github.com/jphacks/F_2205#%E3%83%95%E3%82%A9%E3%83%BC%E3%82%AB%E3%82%B9%E6%A9%9F%E8%83%BD)をご覧ください。
+
+<!-- TODO 写真欲しいな -->
 
 ##### クリックでフォーカスする、解除する
 

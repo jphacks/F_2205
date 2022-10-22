@@ -6,7 +6,7 @@
 
 ## 🎥 作品紹介動画
 
-<!-- TODO 写真！！！ -->
+<!-- TODO -->
 https://www.youtube.com/hogehoge
 
 <br>

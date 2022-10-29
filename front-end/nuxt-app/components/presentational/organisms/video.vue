@@ -93,9 +93,17 @@ export default {
       }
     },
 
-    removeVideo: function (peerId) {
+    removeVideo: function (peerId, roomMemberNum) {
+      console.log(roomMemberNum);
+
       const videoDom = document.getElementById(peerId);
       videoDom.remove();
+
+      if (roomMemberNum % 3 == 0) {
+        const videoLineDom = document.querySelectorAll('.video-line');
+        console.log(videoLineDom);
+        videoLineDom[videoLineDom.length - 1].remove();
+      }
     }
   }
 };

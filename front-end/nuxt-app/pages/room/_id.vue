@@ -159,7 +159,7 @@ export default {
         this.roomMemberNum--;
 
         //ビデオの削除
-        this.$refs.videoComponents.removeVideo(peerId);
+        this.$refs.videoComponents.removeVideo(peerId, this.roomMemberNum);
       });
 
       //何らかのエラーが発生した場合に発火

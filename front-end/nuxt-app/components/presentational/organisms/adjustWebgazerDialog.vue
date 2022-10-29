@@ -45,6 +45,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <v-row justify="center" align="center" class="adjustFieldContainer">
+          <canvas id="plotting_canvas" width="500" height="500" style="cursor: crosshair"></canvas>
           <v-col cols="12" sm="8" md="10" class="adjustCanvus">
             <v-row justify="space-between" align="center" class="buttons">
               <v-col cols="12" sm="1"></v-col>
@@ -124,13 +125,14 @@
 </style>
 
 <script>
-import ClickAdjustBtn from '~/components/adjustWebgazer/atoms/clickAdjustBtn';
-import ExplainClickPointDialog from '~/components/adjustWebgazer/organisms/explainClickPointDialog';
-import GazeCenterPointDialog from '~/components/adjustWebgazer/organisms/gazeCenterPointDialog';
-import LearningResultDialog from '~/components/adjustWebgazer/organisms/learningResultDialog';
-import calculatePrecision from '~/components/adjustWebgazer/script/precision_calculation';
+import ClickAdjustBtn from '~/components/presentational/atoms/adjustWebgazer/clickAdjustBtn';
+import ExplainClickPointDialog from '~/components/presentational/organisms/adjustWebgazer/explainClickPointDialog';
+import GazeCenterPointDialog from '~/components/presentational/organisms/adjustWebgazer/gazeCenterPointDialog';
+import LearningResultDialog from '~/components/presentational/organisms/adjustWebgazer/learningResultDialog';
+import calculatePrecision from '../../../script/precision_calculation';
 
 import webgazer from 'webgazer';
+
 export default {
   props: ['isOpenAdjustWebGazerDialog', 'handleAdjustWebGazer'],
   components: {
@@ -155,18 +157,14 @@ export default {
   },
 
   mounted: async function () {
-    // webgazer.clearData();
-    // webgazer.setRegression('ridge').setTracker('clmtrackr').begin();
-    // webgazer.applyKalmanFilter(true).setGazeListener((data, clock) => {
-    // });
-    // var setup = function () {
-    //   //Set up the main canvas. The main canvas is used to calibrate the webgazer.
-    //   var canvas = document.getElementById('plotting_canvas');
-    //   canvas.width = window.innerWidth;
-    //   canvas.height = window.innerHeight;
-    //   canvas.style.position = 'fixed';
-    // };
-    // setup();
+    var setup = function () {
+      //Set up the main canvas. The main canvas is used to calibrate the webgazer.
+      var canvas = document.getElementById('plotting_canvas');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      canvas.style.position = 'fixed';
+    };
+    setup();
     // webgazer.showVideoPreview(true).showPredictionPoints(true).applyKalmanFilter(true);
   },
 
@@ -194,7 +192,6 @@ export default {
         var canvas = document.getElementById('plotting_canvas');
         canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
 
-        console.log('storePredictionPoint');
         webgazer.params.storingPoints = true;
 
         this.sleep(5000).then(() => {
@@ -210,7 +207,7 @@ export default {
           return 'success';
         });
       }
-      return 'center';
+      return '';
     }
   },
   methods: {

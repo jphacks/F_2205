@@ -4,9 +4,6 @@
       <video id="my-video" class="video-individual" autoplay muted playsinline></video>
     </section>
 
-    <!--webgazer調整に使うcanvas-->
-    <canvas id="plotting_canvas" width="500" height="500" style="cursor: crosshair"></canvas>
-
     <!-- ビデオステータスバー -->
     <div class="status-bar">
       <VideoState

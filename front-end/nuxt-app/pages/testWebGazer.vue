@@ -107,11 +107,11 @@
 
 <script>
 import webgazer from 'webgazer';
-import ClickAdjustBtn from '~/components/adjustWebgazer/atoms/clickAdjustBtn';
-import ExplainClickPointDialog from '~/components/adjustWebgazer/organisms/explainClickPointDialog';
-import GazeCenterPointDialog from '~/components/adjustWebgazer/organisms/gazeCenterPointDialog';
-import LearningResultDialog from '~/components/adjustWebgazer/organisms/learningResultDialog';
-import calculatePrecision from '~/components/adjustWebgazer/script/precision_calculation';
+import ClickAdjustBtn from '~/components/presentational/atoms/adjustWebgazer/clickAdjustBtn';
+import ExplainClickPointDialog from '~/components/presentational/organisms/adjustWebgazer/explainClickPointDialog';
+import GazeCenterPointDialog from '~/components/presentational/organisms/adjustWebgazer/gazeCenterPointDialog';
+import LearningResultDialog from '~/components/presentational/organisms/adjustWebgazer/learningResultDialog';
+import calculatePrecision from '../script/precision_calculation';
 
 export default {
   name: 'IndexPage',

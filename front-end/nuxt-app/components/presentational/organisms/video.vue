@@ -103,10 +103,11 @@ export default {
 
 <style lang="scss">
 .video {
-  width: 100vw;
-  padding: 10px 0;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  width: 100vw;
+  padding: 10px 0;
   height: calc(100vh - 72px);
   background-color: #d3be9a;
   overflow-y: scroll;
@@ -120,12 +121,15 @@ export default {
   &-line {
     width: 100vw;
     display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   &-individual {
     flex: 1;
     margin: 10px;
-    border-radius: 80px;
+    border-radius: 20px;
+    max-width: 480px;
 
     &-focus {
       border: solid 5px orange;

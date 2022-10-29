@@ -9,6 +9,8 @@
         :gazeEstimatingFn="this.swtichEstimateGaze"
         :isEnableGazeEstimating="this.isEnableGazeEstimating"
         :focusThisVideoAllLiftFn="this.focusThisVideoAllLift"
+        :isOpenAdjustWebGazerDialog="this.isOpenAdjustWebGazerDialog"
+        :handleAdjustWebGazer="this.handleAdjustWebGazer"
         :videoMuteFn="this.videoMute"
         :audioMuteFn="this.audioMute"
         :myVideoStatus="this.myVideoStatus"
@@ -37,6 +39,8 @@ import axios from 'axios';
 
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
+import AdjustWebgazerDialog from '~/components/presentational/organisms/adjustWebgazerDialog';
+
 import Video from '~/components/presentational/organisms/video';
 
 import webgazer from 'webgazer';
@@ -45,6 +49,7 @@ export default {
   components: {
     VideoState,
     Btn,
+    AdjustWebgazerDialog,
     Video
   },
 
@@ -57,6 +62,7 @@ export default {
       websocketConn: null,
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
+      isOpenAdjustWebGazerDialog: false,
       isEnableGazeEstimating: false,
       isFirstGazeEstimating: true,
       elementUnderGazeCount: 0,
@@ -231,6 +237,9 @@ export default {
       webgazer
         .showVideo(false)
         .showPredictionPoints(true)
+        .setRegression('ridge')
+        .setTracker('clmtrackr')
+        .applyKalmanFilter(true)
         .setGazeListener((gaze, clock) => {
           if (gaze == null) {
             return;
@@ -360,6 +369,11 @@ export default {
       }
       console.log('ok');
     },
+    //視線調整用Dialog開閉
+    handleAdjustWebGazer: function () {
+      this.isOpenAdjustWebGazerDialog = !this.isOpenAdjustWebGazerDialog;
+    },
+
     videoMute: function () {
       //画面をミュート
       if (this.myVideoStatus) {

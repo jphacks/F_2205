@@ -22,6 +22,23 @@
             <v-icon color="black" v-else>mdi-eye-off-outline</v-icon>
           </v-btn>
         </v-avatar>
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-btn color="transparent" height="56" @click.native="handleAdjustWebGazer" v-if="isEnableGazeEstimating">
+            <v-icon color="black">mdi-cog-outline</v-icon>
+          </v-btn>
+          <v-btn color="transparent" height="56" v-else>
+            <v-icon color="black">mdi-cog-off-outline</v-icon>
+          </v-btn>
+        </v-avatar>
+      </div>
+
+      <div class="adjustWebgazerContainer">
+        <AdjustWebgazerDialog
+          :isOpenAdjustWebGazerDialog="this.isOpenAdjustWebGazerDialog"
+          :handleAdjustWebGazer="this.handleAdjustWebGazer"
+          v-if="isOpenAdjustWebGazerDialog"
+          class="adjustWebgazer"
+        />
       </div>
 
       <div>
@@ -33,6 +50,7 @@
 
 <script>
 import Btn from '~/components/presentational/atoms/btn';
+import AdjustWebgazerDialog from '~/components/presentational/organisms/adjustWebgazerDialog';
 
 export default {
   props: [
@@ -40,13 +58,16 @@ export default {
     'isEnableGazeEstimating',
     'gazeEstimatingFn',
     'focusThisVideoAllLiftFn',
+    'handleAdjustWebGazer',
+    'isOpenAdjustWebGazerDialog',
     'videoMuteFn',
     'audioMuteFn',
     'myAudioStatus',
     'myVideoStatus'
   ],
   components: {
-    Btn
+    Btn,
+    AdjustWebgazerDialog
   }
 };
 </script>
@@ -70,5 +91,14 @@ export default {
       }
     }
   }
+}
+.adjustWebgazerContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+.adjustWebgazer {
+  width: 100vw;
+  height: 100vh;
 }
 </style>

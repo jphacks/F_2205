@@ -64,13 +64,6 @@
           <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
           <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
         </v-row>
-        <!-- <v-card>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn color="primary" nuxt to="/inspire" @click="stopWebgather"> Continue </v-btn>
-          <v-btn color="primary" @click="stopWebgather">stopWebgazer</v-btn>
-        </v-card-actions>
-      </v-card> -->
         <ExplainClickPointDialog
           :isOpenExplainClickPointDialog="this.isExplainClickPointDialog"
           @close-explain-click-pointDialog="closeExplainClickPointDialog"
@@ -114,11 +107,11 @@
 
 <script>
 import webgazer from 'webgazer';
-import ClickAdjustBtn from '~/components/adjustWebgazer/atoms/clickAdjustBtn';
-import ExplainClickPointDialog from '~/components/adjustWebgazer/organisms/explainClickPointDialog';
-import GazeCenterPointDialog from '~/components/adjustWebgazer/organisms/gazeCenterPointDialog';
-import LearningResultDialog from '~/components/adjustWebgazer/organisms/learningResultDialog';
-import calculatePrecision from '~/components/adjustWebgazer/script/precision_calculation';
+import ClickAdjustBtn from '~/components/presentational/atoms/adjustWebgazer/clickAdjustBtn';
+import ExplainClickPointDialog from '~/components/presentational/organisms/adjustWebgazer/explainClickPointDialog';
+import GazeCenterPointDialog from '~/components/presentational/organisms/adjustWebgazer/gazeCenterPointDialog';
+import LearningResultDialog from '~/components/presentational/organisms/adjustWebgazer/learningResultDialog';
+import calculatePrecision from '../script/precision_calculation';
 
 export default {
   name: 'IndexPage',
@@ -131,12 +124,8 @@ export default {
   },
   data() {
     return {
-      webgatherData: '',
-      webgatherClock: '',
       xprediction: '',
       yprediction: '',
-      tracker: '',
-      regression: '',
       adjustPoint: 0,
       isExplainClickPointDialog: true,
       isGazeCenterPointDialog: false,
@@ -168,12 +157,6 @@ export default {
     // webgazer.showVideoPreview(true).showPredictionPoints(true).applyKalmanFilter(true);
   },
   computed: {
-    currentTracker() {
-      return (this.tracker = webgazer.getTracker().name);
-    },
-    currentRegression() {
-      return (this.regression = webgazer.getRegression()[0].name);
-    },
     storePredictionPoint() {
       if (this.isStartStorePredictionPoint) {
         var canvas = document.getElementById('plotting_canvas');

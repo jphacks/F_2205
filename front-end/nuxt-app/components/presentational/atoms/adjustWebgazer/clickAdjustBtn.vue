@@ -24,8 +24,10 @@ export default {
       buttonLightenString: 'purple lighten-3'
     };
   },
+  mounted: async function () {},
   watch: {
     isExplainClickPoint: function (newIsExplainClickPoint, oldIsExplainClickPoint) {
+      console.log(newIsExplainClickPoint, oldIsExplainClickPoint, 'dddd');
       if (newIsExplainClickPoint) {
         this.buttonLighten = 5;
         this.buttonLightenString = 'purple lighten-3';

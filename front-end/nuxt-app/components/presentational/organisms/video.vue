@@ -27,7 +27,7 @@ export default {
         return;
       }
 
-      if (roomMemberNum > 3 && roomMemberNum >= 6) {
+      if (roomMemberNum > 3 && roomMemberNum <= 6) {
         if (roomMemberNum == 4) {
           divDom = document.createElement('div');
           divDom.classList.add('video-line');
@@ -37,6 +37,58 @@ export default {
         }
 
         videoLineDoms[1].append(videoDom);
+        return;
+      }
+
+      if (roomMemberNum > 6 && roomMemberNum <= 9) {
+        if (roomMemberNum == 7) {
+          divDom = document.createElement('div');
+          divDom.classList.add('video-line');
+          divDom.append(videoDom);
+          document.getElementById('video-wrap').append(divDom);
+          return;
+        }
+
+        videoLineDoms[2].append(videoDom);
+        return;
+      }
+
+      if (roomMemberNum > 9 && roomMemberNum <= 12) {
+        if (roomMemberNum == 10) {
+          divDom = document.createElement('div');
+          divDom.classList.add('video-line');
+          divDom.append(videoDom);
+          document.getElementById('video-wrap').append(divDom);
+          return;
+        }
+
+        videoLineDoms[3].append(videoDom);
+        return;
+      }
+
+      if (roomMemberNum > 12 && roomMemberNum <= 15) {
+        if (roomMemberNum == 13) {
+          divDom = document.createElement('div');
+          divDom.classList.add('video-line');
+          divDom.append(videoDom);
+          document.getElementById('video-wrap').append(divDom);
+          return;
+        }
+
+        videoLineDoms[4].append(videoDom);
+        return;
+      }
+
+      if (roomMemberNum > 15 && roomMemberNum <= 18) {
+        if (roomMemberNum == 16) {
+          divDom = document.createElement('div');
+          divDom.classList.add('video-line');
+          divDom.append(videoDom);
+          document.getElementById('video-wrap').append(divDom);
+          return;
+        }
+
+        videoLineDoms[5].append(videoDom);
         return;
       }
     },
@@ -72,7 +124,7 @@ export default {
 
   &-individual {
     flex: 1;
-    margin: 0 10px;
+    margin: 10px;
     border-radius: 80px;
 
     &-focus {

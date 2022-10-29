@@ -153,7 +153,7 @@ export default {
         this.roomMemberNum--;
 
         //ビデオの削除
-        this.$refs.videoComponents.removeVideo(peerId, this.roomMemberNum);
+        this.$refs.videoComponents.removeVideo(peerId);
       });
 
       //何らかのエラーが発生した場合に発火
@@ -216,11 +216,14 @@ export default {
       //websocketの接続を切断(正常終了)
       this.websocketConn.close(1000, 'normal amputation websocket');
 
-      //リダイレクト
-      this.$router.push('/room/prepare');
+      //end EstimateGaze
+      if (this.isEnableGazeEstimating) {
+        this.endEstimateGaze();
+        this.isVisibleSwitchButton = false;
+      }
 
-      this.endEstimateGaze();
-      this.isVisibleSwitchButton = false;
+      //リダイレクト
+      this.$router.push('/');
     },
 
     beginEstimateGaze: function () {

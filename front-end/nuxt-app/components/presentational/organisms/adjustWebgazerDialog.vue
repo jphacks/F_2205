@@ -1,6 +1,6 @@
 <template>
-  <v-row justify="center">
-    <v-dialog v-model="isOpenAdjustWebGazerDialog" fullscreen>
+  <v-row justify="center" class="rowContainer">
+    <div v-if="isOpenAdjustWebGazerDialog" class="fullscreen">
       <v-card class="cardContainer">
         <v-toolbar>
           <v-btn icon dark @click="handleAdjustWebGazer">
@@ -86,7 +86,7 @@
           </v-col>
         </v-row>
       </v-card>
-    </v-dialog>
+    </div>
   </v-row>
 </template>
 
@@ -113,6 +113,13 @@
   &:hover {
     cursor: pointer;
   }
+}
+.fullscreen {
+  width: 100%;
+}
+.rowContainer {
+  margin: 0;
+  z-index: 10;
 }
 </style>
 
@@ -235,13 +242,13 @@ export default {
       this.isExplainClickPointDialog = false;
     },
     readjustPosition() {
-      //   webgazer.pause();
+      webgazer.pause();
 
-      //   webgazer.clearData();
+      webgazer.clearData();
       this.isExplainClickPointDialog = true;
       this.adjustPoint = 0;
 
-      //   webgazer.resume();
+      webgazer.resume();
     }
   }
 };

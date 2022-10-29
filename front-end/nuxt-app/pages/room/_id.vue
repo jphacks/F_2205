@@ -369,8 +369,8 @@ export default {
       }
       console.log('ok');
     },
-    //視線調整用Dialog開閉
     handleAdjustWebGazer: function () {
+      //視線調整用Dialog開閉
       this.isOpenAdjustWebGazerDialog = !this.isOpenAdjustWebGazerDialog;
     },
 

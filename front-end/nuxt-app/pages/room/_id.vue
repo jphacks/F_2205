@@ -1,8 +1,6 @@
 <template>
   <section>
-    <section id="video-wrap" class="video">
-      <video id="my-video" class="video-individual" autoplay muted playsinline></video>
-    </section>
+    <Video ref="videoComponents" :roomMemberNum="this.roomMemberNum" />
 
     <!-- ビデオステータスバー -->
     <div class="status-bar">
@@ -39,13 +37,15 @@ import axios from 'axios';
 
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
+import Video from '~/components/presentational/organisms/video';
 
 import webgazer from 'webgazer';
 
 export default {
   components: {
     VideoState,
-    Btn
+    Btn,
+    Video
   },
 
   data() {
@@ -136,10 +136,11 @@ export default {
     },
     setSkywayEventListener: function (mediaConnection) {
       mediaConnection.on('stream', (stream) => {
+        //ルームメンバー人数追加
+        this.roomMemberNum++;
+
         //video要素にカメラ映像をセットして再生
-        this.addVideo(stream);
-        const videoElm = document.getElementById(stream.id);
-        videoElm.srcObject = stream;
+        this.$refs.videoComponents.addVideo(stream, this.roomMemberNum);
       });
 
       mediaConnection.on('open', () => {
@@ -148,7 +149,11 @@ export default {
 
       //ルームメンバーが退出したときに発火
       mediaConnection.on('peerLeave', (peerId) => {
-        this.removeVideo(peerId);
+        //ルームメンバー人数減少
+        this.roomMemberNum--;
+
+        //ビデオの削除
+        this.$refs.videoComponents.removeVideo(peerId, this.roomMemberNum);
       });
 
       //何らかのエラーが発生した場合に発火
@@ -216,53 +221,6 @@ export default {
 
       this.endEstimateGaze();
       this.isVisibleSwitchButton = false;
-    },
-
-    addVideo: function (stream) {
-      const videoDom = document.createElement('video');
-      videoDom.setAttribute('id', stream.peerId);
-      videoDom.classList.add('video-individual');
-      videoDom.srcObject = stream;
-      videoDom.play();
-      document.getElementById('video-wrap').append(videoDom);
-
-      //ルームメンバー人数追加
-      this.roomMemberNum++;
-
-      //ビデオのリサイズ
-      this.videoResize();
-    },
-    removeVideo: function (peerId) {
-      console.log(peerId);
-      const videoDom = document.getElementById(peerId);
-      videoDom.remove();
-
-      //ルームメンバー人数減少
-      this.roomMemberNum--;
-
-      //ビデオのリサイズ
-      this.videoResize();
-    },
-    videoResize: function () {
-      //ビデオのリサイズ
-      const videos = document.querySelectorAll('.video-individual');
-
-      for (let video of videos) {
-        switch (this.roomMemberNum) {
-          case 1:
-            video.style.width = '100%';
-            video.style.height = '100%';
-            break;
-          case 2:
-            video.style.width = '34%';
-            video.style.height = 'auto';
-            break;
-          default:
-            video.style.width = '34%';
-            video.style.height = 'auto';
-            break;
-        }
-      }
     },
 
     beginEstimateGaze: function () {
@@ -447,7 +405,7 @@ export default {
     };
 
     try {
-      // カメラ映像取得
+      // カメラ映像取得(自)
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       document.getElementById('my-video').srcObject = stream;
       this.localStream = stream;
@@ -506,34 +464,6 @@ body {
   &::-webkit-scrollbar {
     /* Chrome, Safari 対応 */
     display: none !important;
-  }
-}
-
-.video {
-  width: 100vw;
-  padding: 10px 0;
-  height: calc(100vh - 72px);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  background-color: #d3be9a;
-  overflow-y: scroll;
-  -ms-overflow-style: none !important; /* IE, Edge 対応 */
-  scrollbar-width: none !important; /* Firefox 対応 */
-  &::-webkit-scrollbar {
-    /* Chrome, Safari 対応 */
-    display: none !important;
-  }
-
-  &-individual {
-    width: 100%;
-    height: 100%;
-    border-radius: 80px;
-
-    &-focus {
-      border: solid 5px orange;
-    }
   }
 }
 

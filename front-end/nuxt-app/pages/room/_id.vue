@@ -30,6 +30,10 @@
       </div>
     </section>
     <!-- モーダルウィンドウ -->
+
+    <!-- ローダー -->
+    <Loader v-if="isVisibleLoader" @loaderOperationFn="loaderOperation" :autoDelete="true" />
+    <!-- ローダー -->
   </section>
 </template>
 
@@ -40,8 +44,8 @@ import axios from 'axios';
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
 import AdjustWebgazerDialog from '~/components/presentational/organisms/adjustWebgazerDialog';
-
 import Video from '~/components/presentational/organisms/video';
+import Loader from '~/components/presentational/organisms/loader';
 
 import webgazer from 'webgazer';
 
@@ -50,7 +54,8 @@ export default {
     VideoState,
     Btn,
     AdjustWebgazerDialog,
-    Video
+    Video,
+    Loader
   },
 
   data() {
@@ -70,7 +75,8 @@ export default {
       myAudioStatus: true,
       focusThisVideoAllLiftCount: 0,
       roomMemberNumCheckIntervalFn: null,
-      roomLeavingCheckTimeoutFn: null
+      roomLeavingCheckTimeoutFn: null,
+      isVisibleLoader: true
     };
   },
 
@@ -399,6 +405,10 @@ export default {
         this.localStream.getAudioTracks()[0].enabled = true;
       }
       this.myAudioStatus = !this.myAudioStatus;
+    },
+
+    loaderOperation: function () {
+      this.isVisibleLoader = !this.isVisibleLoader;
     }
   },
 
@@ -407,9 +417,6 @@ export default {
       alert('部屋番号が入力されていません');
       this.$router.push('/room/prepare');
     }
-
-    //モーダルウィンドウを表示
-    document.querySelector('body').classList.add('modal-open');
 
     //WebSocketで接続
     this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
@@ -437,6 +444,9 @@ export default {
     } catch (error) {
       console.log(error);
     }
+
+    //モーダルウィンドウを表示
+    document.querySelector('body').classList.add('modal-open');
 
     //Peer作成
     this.peer = new Peer({

@@ -13,15 +13,18 @@
         </div>
 
         <div class="main-contents-card">
-          <h2>部屋番号</h2>
-          <div>
-            <input type="number" id="room-name" placeholder="部屋番号(例: 1111)" class="main-contents-card-input" />
-          </div>
+          <h2>のみぱらを始める</h2>
           <div class="main-contents-card-btn">
-            <Btn text="作成" color="orange" :clickedfn="this.joinRoom" />
+            <Btn text="部屋を作成" color="orange" :clickedfn="this.createRoom" />
+          </div>
+          <div class="main-contents-card-input-box">
+            <h2>部屋番号</h2>
+            <div>
+              <input type="number" id="room-name" placeholder="部屋番号(例: 1111)" class="main-contents-card-input" />
+            </div>
           </div>
           <div>
-            <Btn text="参加" color="blue" :clickedfn="this.joinRoom" />
+            <Btn text="部屋に参加" color="blue" :clickedfn="this.joinRoom" />
           </div>
           <p class="main-contents-card-point-ms">
             1ルーム最大18人まで参加できます<br />18人以上でのご利用はしないでください
@@ -44,9 +47,16 @@ export default {
 
   methods: {
     joinRoom: function () {
-      //room新規作成もjoinも同じ
       const roomName = document.querySelector('#room-name').value;
       this.$router.push('/room/' + roomName);
+    },
+    createRoom: function () {
+      const roomNumer = this.random(1000, 1000000);
+      this.$router.push('/room/' + roomNumer);
+    },
+
+    random: function (min, max) {
+      return Math.floor(Math.random() * (max + 1 - min)) + min;
     }
   }
 };
@@ -98,13 +108,16 @@ body {
       font-size: 22px;
       font-weight: bold;
     }
+    &-input-box {
+      margin: 50px 0 20px;
+    }
     &-input {
       border-bottom: solid 2px #ccc;
       background-color: #fff;
       outline: none !important;
     }
     &-btn {
-      margin: 25px 0 15px;
+      margin: 15px 0;
     }
     &-point-ms {
       margin-top: 10px;

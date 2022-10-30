@@ -69,7 +69,8 @@ export default {
       myVideoStatus: true,
       myAudioStatus: true,
       focusThisVideoAllLiftCount: 0,
-      roomMemberNumCheckFn: null
+      roomMemberNumCheckIntervalFn: null,
+      roomLeavingCheckTimeoutFn: null
     };
   },
 
@@ -180,10 +181,10 @@ export default {
 
       //人数制限チェック
       setTimeout(this.roomMemberNumCheck, 5000);
-      this.roomMemberNumCheckFn = setInterval(this.roomMemberNumCheck, 60000);
+      this.roomMemberNumCheckIntervalFn = setInterval(this.roomMemberNumCheck, 60000);
 
       //ルーム接続時間制限(5分)
-      setTimeout(this.roomLeaving, 300000);
+      this.roomLeavingCheckTimeoutFn = setTimeout(this.roomLeaving, 300000);
 
       const data = {
         type: 'NEW_MEMBER',
@@ -202,8 +203,10 @@ export default {
       //peerIDを破棄
       this.peer.destroy();
 
-      //人数チェック処理を解除
-      clearInterval(this.roomMemberNumCheckFn);
+      //人数チェック処理を解除(Interval)
+      clearInterval(this.roomMemberNumCheckIntervalFn);
+      //強制退出処理を解除(Timeout)
+      clearTimeout(this.roomLeavingCheckTimeoutFn);
 
       //websocket そのユーザーの持っている接続状態を解除する
       if (this.roomMemberNum != 1) {

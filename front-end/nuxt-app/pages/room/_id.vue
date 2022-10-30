@@ -82,7 +82,8 @@ export default {
       focusThisVideoAllLiftCount: 0,
       roomMemberNumCheckIntervalFn: null,
       roomLeavingCheckTimeoutFn: null,
-      isVisibleLoader: true
+      isVisibleLoader: true,
+      isConnectionRoom: false
     };
   },
 
@@ -184,6 +185,8 @@ export default {
 
     roomConnection: function () {
       //ルーム作成 or ルーム参加
+      this.isConnectionRoom = true;
+
       console.log('my peer id: ' + this.peer.id);
       const roomName = this.$route.params.id;
       const mediaConnection = this.peer.joinRoom(roomName, { mode: 'sfu', stream: this.localStream });
@@ -194,9 +197,6 @@ export default {
       //人数制限チェック
       setTimeout(this.roomMemberNumCheck, 5000);
       this.roomMemberNumCheckIntervalFn = setInterval(this.roomMemberNumCheck, 60000);
-
-      //ルーム接続時間制限(5分)
-      this.roomLeavingCheckTimeoutFn = setTimeout(this.roomLeaving, 300000);
 
       const data = {
         type: 'NEW_MEMBER',
@@ -221,23 +221,25 @@ export default {
       clearTimeout(this.roomLeavingCheckTimeoutFn);
 
       //websocket そのユーザーの持っている接続状態を解除する
-      if (this.roomMemberNum != 1) {
-        const data = {
-          type: 'DEL_ALL_FOCUS',
-          info: {
-            from: this.peer
-          }
-        };
+      if (this.isConnectionRoom) {
+        if (this.roomMemberNum != 1) {
+          const data = {
+            type: 'DEL_ALL_FOCUS',
+            info: {
+              from: this.peer
+            }
+          };
 
-        this.websocketConn.send(data);
-      } else {
-        const response = await axios.delete(
-          'https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id
-        );
-        console.log(response);
+          this.websocketConn.send(data);
+        } else {
+          const response = await axios.delete(
+            'https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id
+          );
+          console.log(response);
+        }
       }
 
-      alert('退出しました');
+      this.isConnectionRoom = false;
 
       //websocketの接続を切断(正常終了)
       this.websocketConn.close(1000, 'normal amputation websocket');
@@ -247,6 +249,8 @@ export default {
         this.endEstimateGaze();
         this.isVisibleSwitchButton = false;
       }
+
+      alert('退出しました');
 
       //リダイレクト
       this.$router.push('/');
@@ -427,6 +431,9 @@ export default {
     //WebSocketで接続
     this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
     this.setWebsocketEventListener(this.websocketConn);
+
+    //ルーム接続時間制限(5分)
+    this.roomLeavingCheckTimeoutFn = setTimeout(this.roomLeaving, 300000);
 
     //ビデオ設定(解像度を落とす)
     let constraints = {

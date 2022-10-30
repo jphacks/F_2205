@@ -2,6 +2,10 @@
   <section>
     <Video ref="videoComponents" :roomMemberNum="this.roomMemberNum" />
 
+    <!-- シェアカード -->
+    <ShareCard />
+    <!-- シェアカード -->
+
     <!-- ビデオステータスバー -->
     <div class="status-bar">
       <VideoState
@@ -46,6 +50,7 @@ import Btn from '~/components/presentational/atoms/btn';
 import AdjustWebgazerDialog from '~/components/presentational/organisms/adjustWebgazerDialog';
 import Video from '~/components/presentational/organisms/video';
 import Loader from '~/components/presentational/organisms/loader';
+import ShareCard from '~/components/presentational/organisms/shareCard';
 
 import webgazer from 'webgazer';
 
@@ -55,7 +60,8 @@ export default {
     Btn,
     AdjustWebgazerDialog,
     Video,
-    Loader
+    Loader,
+    ShareCard
   },
 
   data() {

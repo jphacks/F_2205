@@ -68,7 +68,8 @@ export default {
       elementUnderGazeCount: 0,
       myVideoStatus: true,
       myAudioStatus: true,
-      focusThisVideoAllLiftCount: 0
+      focusThisVideoAllLiftCount: 0,
+      roomMemberNumCheckFn: null
     };
   },
 
@@ -179,7 +180,7 @@ export default {
 
       //人数制限チェック
       setTimeout(this.roomMemberNumCheck, 5000);
-      setInterval(this.roomMemberNumCheck, 60000);
+      this.roomMemberNumCheckFn = setInterval(this.roomMemberNumCheck, 60000);
 
       //ルーム接続時間制限(5分)
       setTimeout(this.roomLeaving, 300000);
@@ -198,7 +199,11 @@ export default {
       //ルーム退出
       console.log('room leaving start');
 
+      //peerIDを破棄
       this.peer.destroy();
+
+      //人数チェック処理を解除
+      clearInterval(this.roomMemberNumCheckFn);
 
       //websocket そのユーザーの持っている接続状態を解除する
       if (this.roomMemberNum != 1) {
@@ -367,7 +372,7 @@ export default {
         console.log('forced exit');
         this.roomLeaving();
       }
-      console.log('ok');
+      console.log('There are currently ' + this.roomMemberNum + ' people in the room');
     },
     handleAdjustWebGazer: function () {
       //視線調整用Dialog開閉

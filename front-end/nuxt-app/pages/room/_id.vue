@@ -419,7 +419,8 @@ export default {
     },
 
     effectFn: function () {
-      this.$refs.videoComponents.effectOn();
+      //自分の画像にエフェクトを追加する(エフェクト作動)
+      this.$refs.videoComponents.effectOnMySelf(1);
     },
 
     loaderOperation: function () {

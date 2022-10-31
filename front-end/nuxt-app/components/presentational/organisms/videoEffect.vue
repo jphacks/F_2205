@@ -1,6 +1,6 @@
 <template>
   <section class="video-effect" :id="videoId + '-effect'">
-    <section class="video-effect-waiwai">
+    <section class="video-effect-waiwai" v-if="effectNumber == 1">
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-1" />
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-2" />
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-3" />
@@ -11,8 +11,15 @@
 <script>
 export default {
   props: ['videoId'],
+  data() {
+    return {
+      effectNumber: null
+    };
+  },
   methods: {
-    init: function () {
+    start: function (effectNumber) {
+      this.effectNumber = effectNumber;
+
       const videoDom = document.querySelector(`#${this.videoId}`);
       const width = videoDom.clientWidth;
       const height = videoDom.clientHeight;

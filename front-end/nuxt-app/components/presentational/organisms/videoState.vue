@@ -3,7 +3,11 @@
     <div class="video-state-inner pa-2 d-flex align-center">
       <div class="video-state-icon">
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
-          <v-icon color="black" @click.native="focusThisVideoAllLiftFn">mdi-account-group </v-icon>
+          <v-icon color="black" @click.native="effectFn">mdi-emoticon-happy-outline</v-icon>
+        </v-avatar>
+
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-icon color="black" @click.native="focusThisVideoAllLiftFn">mdi-account-group</v-icon>
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
@@ -63,7 +67,8 @@ export default {
     'videoMuteFn',
     'audioMuteFn',
     'myAudioStatus',
-    'myVideoStatus'
+    'myVideoStatus',
+    'effectFn'
   ],
   components: {
     Btn,

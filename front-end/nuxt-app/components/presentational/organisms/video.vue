@@ -3,11 +3,12 @@
     <div class="video-line">
       <video id="my-video" class="video-individual" autoplay muted playsinline></video>
     </div>
-    <VideoEffect ref="effectComponents" videoId="my-video" />
+    <VideoEffect ref="effectComponentsMyVideo" videoId="my-video" />
   </section>
 </template>
 
 <script>
+import Vue from 'vue/dist/vue.esm.js';
 import VideoEffect from '~/components/presentational/organisms/videoEffect';
 
 export default {
@@ -30,6 +31,8 @@ export default {
       let divDom;
       if (roomMemberNum <= 3) {
         videoLineDoms[0].append(videoDom);
+
+        this.addEffectComponents(stream.peerId);
         return;
       }
 
@@ -39,10 +42,13 @@ export default {
           divDom.classList.add('video-line');
           divDom.append(videoDom);
           document.getElementById('video-wrap').append(divDom);
+
+          this.addEffectComponents(stream.peerId);
           return;
         }
 
         videoLineDoms[1].append(videoDom);
+        this.addEffectComponents(stream.peerId);
         return;
       }
 
@@ -52,10 +58,13 @@ export default {
           divDom.classList.add('video-line');
           divDom.append(videoDom);
           document.getElementById('video-wrap').append(divDom);
+
+          this.addEffectComponents(stream.peerId);
           return;
         }
 
         videoLineDoms[2].append(videoDom);
+        this.addEffectComponents(stream.peerId);
         return;
       }
 
@@ -65,10 +74,13 @@ export default {
           divDom.classList.add('video-line');
           divDom.append(videoDom);
           document.getElementById('video-wrap').append(divDom);
+
+          this.addEffectComponents(stream.peerId);
           return;
         }
 
         videoLineDoms[3].append(videoDom);
+        this.addEffectComponents(stream.peerId);
         return;
       }
 
@@ -78,10 +90,13 @@ export default {
           divDom.classList.add('video-line');
           divDom.append(videoDom);
           document.getElementById('video-wrap').append(divDom);
+
+          this.addEffectComponents(stream.peerId);
           return;
         }
 
         videoLineDoms[4].append(videoDom);
+        this.addEffectComponents(stream.peerId);
         return;
       }
 
@@ -91,10 +106,13 @@ export default {
           divDom.classList.add('video-line');
           divDom.append(videoDom);
           document.getElementById('video-wrap').append(divDom);
+
+          this.addEffectComponents(stream.peerId);
           return;
         }
 
         videoLineDoms[5].append(videoDom);
+        this.addEffectComponents(stream.peerId);
         return;
       }
     },
@@ -112,8 +130,28 @@ export default {
       }
     },
 
-    effectOn: function () {
-      this.$refs.effectComponents.init();
+    addEffectComponents: function (videoId) {
+      const ComponentClass = Vue.extend(VideoEffect);
+      const instance = new ComponentClass({
+        propsData: {
+          ref: `effectComponents${videoId}`,
+          videoId: videoId
+        }
+      });
+      instance.$mount();
+
+      document.querySelector('#video-wrap').append(instance.$el);
+    },
+
+    effectOthers: function (effectNumber, videoId) {
+      //自分以外のビデオにエフェクトを追加する(websocketConn.onmessageから呼ばれる)
+      const tgRef = 'effectComponents' + videoId;
+      this.$refs.eval(tgRef).start(effectNumber);
+    },
+
+    effectOnMySelf: function (effectNumber) {
+      //自分の画像にエフェクトを追加する
+      this.$refs.effectComponentsMyVideo.start(effectNumber);
     }
   }
 };

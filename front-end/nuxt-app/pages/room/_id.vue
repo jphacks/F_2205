@@ -19,6 +19,7 @@
         :audioMuteFn="this.audioMute"
         :myVideoStatus="this.myVideoStatus"
         :myAudioStatus="this.myAudioStatus"
+        :effectFn="this.effectFn"
       />
     </div>
     <!-- ビデオステータスバー -->
@@ -415,6 +416,10 @@ export default {
         this.localStream.getAudioTracks()[0].enabled = true;
       }
       this.myAudioStatus = !this.myAudioStatus;
+    },
+
+    effectFn: function () {
+      this.$refs.videoComponents.effectOn();
     },
 
     loaderOperation: function () {

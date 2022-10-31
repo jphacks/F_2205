@@ -3,12 +3,18 @@
     <div class="video-line">
       <video id="my-video" class="video-individual" autoplay muted playsinline></video>
     </div>
+    <VideoEffect ref="effectComponents" videoId="my-video" />
   </section>
 </template>
 
 <script>
+import VideoEffect from '~/components/presentational/organisms/videoEffect';
+
 export default {
   props: ['roomMemberNum'],
+  components: {
+    VideoEffect
+  },
 
   methods: {
     addVideo: function (stream, roomMemberNum) {
@@ -104,6 +110,10 @@ export default {
         console.log(videoLineDom);
         videoLineDom[videoLineDom.length - 1].remove();
       }
+    },
+
+    effectOn: function () {
+      this.$refs.effectComponents.init();
     }
   }
 };

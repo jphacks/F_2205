@@ -38,47 +38,52 @@
         </v-list>
       </v-menu>
     </v-app-bar>
-    <v-row justify="center" align="center" class="adjustFieldContainer">
-      <v-col cols="12" sm="8" md="10" class="adjustCanvus">
-        <v-row justify="space-between" align="center" class="buttons">
-          <v-col cols="12" sm="1"></v-col>
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
-        </v-row>
-        <v-row justify="space-between" align="center" class="buttons">
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
-          <v-col cols="12" sm="1">
-            <ClickAdjustBtn
-              @add-adjustpoint="adjustPosition"
-              v-if="adjustPoint > 8"
-              :isExplainClickPoint="this.isExplainClickPointDialog"
-            />
-            <v-col cols="12" sm="1" class="centerLabel">{{ storePredictionPoint }}{{ adjustPoint }}</v-col>
-          </v-col>
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
-        </v-row>
-        <v-row justify="space-between" align="center" class="buttons">
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
-          <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
-        </v-row>
-        <ExplainClickPointDialog
-          :isOpenExplainClickPointDialog="this.isExplainClickPointDialog"
-          @close-explain-click-pointDialog="closeExplainClickPointDialog"
-        />
-        <GazeCenterPointDialog
-          :isOpenGazeCenterPointDialog="this.isGazeCenterPointDialog"
-          @close-gazecenterpointdialog="closeGazeCenterPointDialog"
-        />
-        <LearningResultDialog
-          :isOpenLearningResultDialog="this.isLearningResultDialog"
-          :recisionMeasurement="this.precisionMeasurement"
-          @close-learningresultdialog="closeLearningResultDialog"
-        />
-      </v-col>
-    </v-row>
+    <div id="capture">
+      <v-row justify="center" align="center" class="adjustFieldContainer">
+        <v-col cols="12" sm="8" md="10" class="adjustCanvus">
+          <v-row justify="space-between" align="center" class="buttons">
+            <v-col cols="12" sm="1"></v-col>
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          </v-row>
+          <v-row justify="space-between" align="center" class="buttons">
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+            <v-col cols="12" sm="1">
+              <ClickAdjustBtn
+                @add-adjustpoint="adjustPosition"
+                v-if="adjustPoint > 8"
+                :isExplainClickPoint="this.isExplainClickPointDialog"
+              />
+              <v-col cols="12" sm="1" class="centerLabel">{{ storePredictionPoint }}{{ adjustPoint }}</v-col>
+            </v-col>
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          </v-row>
+          <v-row justify="space-between" align="center" class="buttons">
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+            <ClickAdjustBtn @add-adjustpoint="adjustPosition" :isExplainClickPoint="this.isExplainClickPointDialog" />
+          </v-row>
+          <div>
+            <v-btn id="save-btn" @click="captureImage"> 画像を保存 </v-btn>
+          </div>
+          <ExplainClickPointDialog
+            :isOpenExplainClickPointDialog="this.isExplainClickPointDialog"
+            @close-explain-click-pointDialog="closeExplainClickPointDialog"
+          />
+          <GazeCenterPointDialog
+            :isOpenGazeCenterPointDialog="this.isGazeCenterPointDialog"
+            @close-gazecenterpointdialog="closeGazeCenterPointDialog"
+          />
+          <LearningResultDialog
+            :isOpenLearningResultDialog="this.isLearningResultDialog"
+            :recisionMeasurement="this.precisionMeasurement"
+            @close-learningresultdialog="closeLearningResultDialog"
+          />
+        </v-col>
+      </v-row>
+    </div>
   </div>
 </template>
 
@@ -107,6 +112,8 @@
 
 <script>
 import webgazer from 'webgazer';
+import html2canvas from 'html2canvas';
+
 import ClickAdjustBtn from '~/components/presentational/atoms/adjustWebgazer/clickAdjustBtn';
 import ExplainClickPointDialog from '~/components/presentational/organisms/adjustWebgazer/explainClickPointDialog';
 import GazeCenterPointDialog from '~/components/presentational/organisms/adjustWebgazer/gazeCenterPointDialog';
@@ -183,6 +190,14 @@ export default {
     }
   },
   methods: {
+    captureImage() {
+      html2canvas(document.querySelector('#capture')).then((canvas) => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL();
+        link.download = `export_image.png`;
+        link.click();
+      });
+    },
     stopWebgather() {
       webgazer.end();
       console.log('stop');

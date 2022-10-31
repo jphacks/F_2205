@@ -30,6 +30,9 @@
             <v-icon color="black">mdi-cog-off-outline</v-icon>
           </v-btn>
         </v-avatar>
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-icon color="black" @click.native="captureImage">mdi-monitor-screenshot</v-icon>
+        </v-avatar>
       </div>
 
       <div class="adjustWebgazerContainer">
@@ -63,7 +66,8 @@ export default {
     'videoMuteFn',
     'audioMuteFn',
     'myAudioStatus',
-    'myVideoStatus'
+    'myVideoStatus',
+    'captureImage'
   ],
   components: {
     Btn,

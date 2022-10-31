@@ -1,7 +1,9 @@
 <template>
   <section id="video-wrap" class="video">
     <div class="video-line">
-      <video id="my-video" class="video-individual" autoplay muted playsinline></video>
+      <div class="video-individual">
+        <video id="my-video" autoplay muted playsinline></video>
+      </div>
     </div>
   </section>
 </template>
@@ -14,16 +16,20 @@ export default {
     addVideo: function (stream, roomMemberNum) {
       const videoLineDoms = document.querySelectorAll('.video-line');
 
+      const videoContainer = document.createElement('div');
+      videoContainer.classList.add('video-individual');
+
       const videoDom = document.createElement('video');
       videoDom.setAttribute('id', stream.peerId);
-      videoDom.classList.add('video-individual');
+      // videoDom.classList.add('video-individual');
       videoDom.srcObject = stream;
       videoDom.play();
+      videoContainer.appendChild(videoDom);
 
       //append
       let divDom;
       if (roomMemberNum <= 3) {
-        videoLineDoms[0].append(videoDom);
+        videoLineDoms[0].append(videoContainer);
         return;
       }
 
@@ -31,12 +37,12 @@ export default {
         if (roomMemberNum == 4) {
           divDom = document.createElement('div');
           divDom.classList.add('video-line');
-          divDom.append(videoDom);
+          divDom.append(videoContainer);
           document.getElementById('video-wrap').append(divDom);
           return;
         }
 
-        videoLineDoms[1].append(videoDom);
+        videoLineDoms[1].append(videoContainer);
         return;
       }
 
@@ -44,12 +50,12 @@ export default {
         if (roomMemberNum == 7) {
           divDom = document.createElement('div');
           divDom.classList.add('video-line');
-          divDom.append(videoDom);
+          divDom.append(videoContainer);
           document.getElementById('video-wrap').append(divDom);
           return;
         }
 
-        videoLineDoms[2].append(videoDom);
+        videoLineDoms[2].append(videoContainer);
         return;
       }
 
@@ -57,12 +63,12 @@ export default {
         if (roomMemberNum == 10) {
           divDom = document.createElement('div');
           divDom.classList.add('video-line');
-          divDom.append(videoDom);
+          divDom.append(videoContainer);
           document.getElementById('video-wrap').append(divDom);
           return;
         }
 
-        videoLineDoms[3].append(videoDom);
+        videoLineDoms[3].append(videoContainer);
         return;
       }
 
@@ -70,12 +76,12 @@ export default {
         if (roomMemberNum == 13) {
           divDom = document.createElement('div');
           divDom.classList.add('video-line');
-          divDom.append(videoDom);
+          divDom.append(videoContainer);
           document.getElementById('video-wrap').append(divDom);
           return;
         }
 
-        videoLineDoms[4].append(videoDom);
+        videoLineDoms[4].append(videoContainer);
         return;
       }
 
@@ -83,12 +89,12 @@ export default {
         if (roomMemberNum == 16) {
           divDom = document.createElement('div');
           divDom.classList.add('video-line');
-          divDom.append(videoDom);
+          divDom.append(videoContainer);
           document.getElementById('video-wrap').append(divDom);
           return;
         }
 
-        videoLineDoms[5].append(videoDom);
+        videoLineDoms[5].append(videoContainer);
         return;
       }
     },
@@ -134,10 +140,12 @@ export default {
   }
 
   &-individual {
-    flex: 1;
-    margin: 10px;
-    border-radius: 20px;
-    max-width: 480px;
+    * {
+      flex: 1;
+      margin: 10px;
+      border-radius: 20px;
+      max-width: 480px;
+    }
 
     &-focus {
       border: solid 5px orange;

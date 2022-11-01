@@ -63,7 +63,7 @@ func (r *EventRepository) SetFocus(roomId entity.RoomId, from entity.Name, to en
 			)
 		} else if member.Name == to {
 			for _, connect := range member.Connects {
-				if connect != nil && connect.Name == to {
+				if connect != nil && connect.Name == from {
 					return fmt.Errorf("EventRepository.SetFocus Error : already connected")
 				}
 			}

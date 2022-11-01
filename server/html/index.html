@@ -20,12 +20,12 @@ window.onload = function () {
         if (!conn) {
             return false;
         }
-        const data = {
-            type:"DEL_ALL_FOCUS",
-            info:{
-                from:"hoge11",
-            }
-        }
+        // const data = {
+        //     type:"DEL_ALL_FOCUS",
+        //     info:{
+        //         from:"hoge11",
+        //     }
+        // }
         // const data = {
         //     type:"DEL_FOCUS",
         //     info:{
@@ -33,13 +33,13 @@ window.onload = function () {
         //         to:"hoge12",
         //     }
         // }
-        // const data = {
-        //     type:"SET_FOCUS",
-        //     info:{
-        //         from:"hoge11",
-        //         to:"hoge12",
-        //     }
-        // }
+        const data = {
+            type:"SET_FOCUS",
+            info:{
+                from:"hoge11",
+                to:"hoge12",
+            }
+        }
         // const data = {
         //     type:"NEW_MEMBER",
         //     info:{

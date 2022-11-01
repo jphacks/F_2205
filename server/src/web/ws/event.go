@@ -1,50 +1,39 @@
-package handler
+package ws
 
 import (
 	"log"
 	"net/http"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 	"github.com/jphacks/F_2205/server/src/usecase"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
 
-type FocusHandler struct {
-	FocusUC usecase.IFocusUseCase
+type EventWsHandler struct {
+	uc   usecase.IEventUseCase
+	Hubs *Hubs
 }
 
-func NewFocusHandler(u usecase.IFocusUseCase) *FocusHandler {
-	return &FocusHandler{
-		FocusUC: u,
+func NewEventWsHandler(uc usecase.IEventUseCase, hubs *Hubs) *EventWsHandler {
+	return &EventWsHandler{
+		uc:   uc,
+		Hubs: hubs,
 	}
 }
 
-func (h *FocusHandler) WsFocus(ctx *gin.Context) {
+// ConnectWsEventはwebsocket通信でserver内のEventsオブジェクトとデータをやり取りします
+func (h *EventWsHandler) ConnectWsEvent(ctx *gin.Context) {
 	roomId := (entity.RoomId)(ctx.Param("room"))
-	hub := h.FocusUC.GetOrRegisterHub(roomId)
+	hub := h.getOrRegisterHub(roomId)
+	h.uc.CheckExistsEventAndInit(roomId)
 	h.serveWs(hub, ctx.Writer, ctx.Request)
 }
 
-func (h *FocusHandler) DeleteRoomHub(ctx *gin.Context) {
-	roomId := (entity.RoomId)(ctx.Param("room"))
-	if err := h.FocusUC.CheckHubExists(roomId); err != nil {
-		ctx.JSON(
-			http.StatusOK,
-			gin.H{"error": err.Error()},
-		)
-		return
-	}
-
-	ctx.JSON(
-		http.StatusOK,
-		gin.H{"ok": "delete room successful"},
-	)
-}
-
 // readPumpはクライアントから何か送られてきたとき、broadcastに書き込みます
-func (h *FocusHandler) readPump(c *entity.Client) {
+func (h *EventWsHandler) readPump(c *Client) {
 	defer func() {
 		c.Hub.Unregister <- c
 		c.Conn.Close()
@@ -66,33 +55,33 @@ func (h *FocusHandler) readPump(c *entity.Client) {
 		// Eventのタイプによって処理を切り替える
 		switch e.Type {
 		case entity.NewMember:
-			if err := h.FocusUC.NewMember(c.Hub.RoomId, e.Info); err != nil {
+			if err := h.uc.NewMember(c.Hub.RoomId, e.Info); err != nil {
 				log.Println("Error : ", err)
 			}
 		case entity.SetFocus:
-			if err := h.FocusUC.SetFocus(c.Hub.RoomId, e.Info); err != nil {
+			if err := h.uc.SetFocus(c.Hub.RoomId, e.Info); err != nil {
 				log.Println("Error : ", err)
 			}
 		case entity.DelFocus:
-			if err := h.FocusUC.DelFocus(c.Hub.RoomId, e.Info); err != nil {
+			if err := h.uc.DelFocus(c.Hub.RoomId, e.Info); err != nil {
 				log.Println("Error : ", err)
 			}
 		case entity.DelAllFocus:
-			if err := h.FocusUC.DelAllFocus(c.Hub.RoomId, e.Info); err != nil {
+			if err := h.uc.DelAllFocus(c.Hub.RoomId, e.Info); err != nil {
 				log.Println("Error : ", err)
 			}
 		default:
 			log.Println("Error : not matched type")
 		}
 
-		// 最新のHubの状態を書き込む
-		e.Focus.Members = c.Hub.Focus.Members
+		// 指定したroomIdのMember情報をeventに入れる
+		e.Focus.Members = h.uc.GetMemberOfRoomId(c.Hub.RoomId)
 		c.Hub.Broadcast <- &e
 	}
 }
 
 // writePumpはbroadcastに入ってきたものを、hubに登録されたクライアント全員に送ります
-func (h *FocusHandler) writePump(c *entity.Client) {
+func (h *EventWsHandler) writePump(c *Client) {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -121,39 +110,35 @@ func (h *FocusHandler) writePump(c *entity.Client) {
 	}
 }
 
-func (h *FocusHandler) serveWs(hub *entity.Hub, w http.ResponseWriter, r *http.Request) {
+// serveWsはwebsocketのサーバーを起動します
+func (h *EventWsHandler) serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println("Error : ", err)
 		return
 	}
 
-	client := &entity.Client{Hub: hub, Conn: conn, Send: make(chan *entity.Event)}
+	client := &Client{
+		Hub:  hub,
+		Conn: conn,
+		Send: make(chan *entity.Event),
+	}
 	client.Hub.Register <- client
 
 	go h.writePump(client)
 	go h.readPump(client)
 }
 
-const (
-	// Time allowed to write a message to the peer.
-	writeWait = 10 * time.Second
+// getOrRegisterHubはHubがすでに登録されていた場合既存のHubを返し、なかった場合は新規登録します
+func (h *EventWsHandler) getOrRegisterHub(roomId entity.RoomId) *Hub {
+	// もしすでにroomIdのHubが存在していた場合hubに代入する
+	hub, found := h.Hubs.getExistsHubOfRoomId(roomId)
 
-	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
-
-	// Send pings to peer with this period. Must be less than pongWait.
-	pingPeriod = (pongWait * 9) / 10
-
-	// Maximum message size allowed from peer.
-	maxMessageSize = 512
-)
-
-// upgraderはHTTP通信からwebsocket プロトコルにアップグレードします
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin: func(r *http.Request) bool {
-		return true
-	},
+	// roomIdのHubが存在していなかったら新しく登録する
+	if !found {
+		hub = NewHub(roomId)
+		h.Hubs.setNewHubOfRoomId(hub, roomId)
+		go hub.Run()
+	}
+	return hub
 }

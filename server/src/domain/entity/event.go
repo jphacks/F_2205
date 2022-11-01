@@ -8,6 +8,8 @@ type Event struct {
 	Focus Focus     `json:"focus"`
 }
 
+type Events map[RoomId]*Event
+
 const (
 	NewMember   EventType = "NEW_MEMBER"    //fromを新しいmemberとして追加する
 	SetFocus    EventType = "SET_FOCUS"     //from と toをつなげる

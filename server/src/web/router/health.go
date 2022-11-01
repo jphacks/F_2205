@@ -5,6 +5,6 @@ import (
 )
 
 // Healthはサーバーのヘルスチェックをするrouterです
-func (r Router) Health() {
+func (r Router) InitHealthRouter() {
 	r.Engine.GET("/health", handler.HealthHandler)
 }

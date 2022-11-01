@@ -10,8 +10,8 @@ func main() {
 	r := router.NewRouter()
 
 	// Routerの登録
-	r.Health()
-	r.WsFocus()
+	r.InitHealthRouter()
+	r.InitWsEventRouter()
 
 	// Routerの起動
 	r.Serve()

@@ -11,19 +11,19 @@ import (
 )
 
 // TODO handlerがHubsに依存しているのが気になる。
-type EventHandler struct {
-	uc   usecase.IEventUseCase
+type RoomHandler struct {
+	uc   usecase.IRoomUseCase
 	Hubs *ws.Hubs
 }
 
-func NewEventHandler(uc usecase.IEventUseCase, hubs *ws.Hubs) *EventHandler {
-	return &EventHandler{
+func NewRoomHandler(uc usecase.IRoomUseCase, hubs *ws.Hubs) *RoomHandler {
+	return &RoomHandler{
 		uc:   uc,
 		Hubs: hubs,
 	}
 }
 
-func (h *EventHandler) DeleteHubOfRoomId(ctx *gin.Context) {
+func (h *RoomHandler) DeleteHubOfRoomId(ctx *gin.Context) {
 	roomId := (entity.RoomId)(ctx.Param("room"))
 	if err := h.Hubs.CheckAndDeleteHubOfRoomId(roomId); err != nil {
 		ctx.JSON(

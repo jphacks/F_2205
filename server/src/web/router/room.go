@@ -8,17 +8,16 @@ import (
 	"github.com/jphacks/F_2205/server/src/web/ws"
 )
 
-// WsFocusは
-func (r Router) InitWsEventRouter() {
+func (r Router) InitWsRoomRouter() {
 
 	hubs := ws.NewHubs()
-	events := service.NewEvents()
+	rooms := service.NewRooms()
 
-	repo := persistance.NewEventRepository(events)
-	uc := usecase.NewEventUseCase(repo)
-	h := handler.NewEventHandler(uc, hubs)
-	hWs := ws.NewEventWsHandler(uc, hubs)
+	repo := persistance.NewRoomRepository(rooms)
+	uc := usecase.NewRoomUseCase(repo)
+	h := handler.NewRoomHandler(uc, hubs)
+	hWs := ws.NewRoomWsHandler(uc, hubs)
 
 	r.Engine.DELETE("/ws/:room", h.DeleteHubOfRoomId)
-	r.Engine.GET("/ws/:room", hWs.ConnectWsEvent)
+	r.Engine.GET("/ws/:room", hWs.ConnectWsRoom)
 }

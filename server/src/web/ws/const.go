@@ -1,3 +1,5 @@
+// const.goではwebsocket通信で使う定数を管理しています
+
 package ws
 
 import "time"

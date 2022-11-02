@@ -11,7 +11,7 @@ func main() {
 
 	// Routerの登録
 	r.InitHealthRouter()
-	r.InitWsEventRouter()
+	r.InitWsRoomRouter()
 
 	// Routerの起動
 	r.Serve()

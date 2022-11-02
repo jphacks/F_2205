@@ -1,5 +1,6 @@
 package entity
 
+// EventTypeはwebsocket通信の際のEventを管理する構造体です
 type EventType string
 
 // TODO ドメインはjsonに依存すべきではない
@@ -16,4 +17,5 @@ const (
 	DelFocus      EventType = "DEL_FOCUS"       // from と toを解除する
 	DelAllFocus   EventType = "DEL_ALL_FOCUS"   // fromのすべてのconnectを削除する
 	SetScreenShot EventType = "SET_SCREEN_SHOT" // スクリーンショットの開始
+	SetEffect     EventType = "SET_EFFECT"      // エフェクトを設定する
 )

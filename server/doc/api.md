@@ -21,7 +21,7 @@
 
 <br>
 
-## 詳しく
+## Focus
 
 ### AddNewMember
 
@@ -34,7 +34,9 @@ send
 const data = {
     type:"NEW_MEMBER",
     info:{
-        from:"hoge1",
+        focus:{
+            from:"hoge1"
+        }
     }
 }
 ```
@@ -42,13 +44,16 @@ const data = {
 response
 ```
 {
-    "focus": {
-        "members": [
-            {
-                "name": "hoge1",
-                "Connects": []
-            }
-        ]
+    "event_type": "NEW_MEMBER",
+    "focus_members": [
+        {
+            "name": "hoge1",
+            "connects": []
+        }
+    ],
+    "effect_member": {
+        "name": "",
+        "type": ""
     }
 }
 ```
@@ -66,8 +71,10 @@ send
 const data = {
     type:"SET_FOCUS",
     info:{
-        from:"hoge1",
-        to:"hoge11",
+        focus:{
+            from:"hoge1",
+            to:"hoge2",
+        }
     }
 }
 ```
@@ -75,25 +82,28 @@ const data = {
 response
 ```
 {
-    "focus": {
-        "members": [
-            {
-                "name": "hoge1",
-                "Connects": [
-                    {
-                        "name": "hoge11"
-                    }
-                ]
-            },
-            {
-                "name": "hoge11",
-                "Connects": [
-                    {
-                        "name": "hoge1"
-                    }
-                ]
-            }
-        ]
+    "event_type": "SET_FOCUS",
+    "focus_members": [
+        {
+            "name": "hoge1",
+            "connects": [
+                {
+                    "name": "hoge2"
+                }
+            ]
+        },
+        {
+            "name": "hoge2",
+            "connects": [
+                {
+                    "name": "hoge1"
+                }
+            ]
+        }
+    ],
+    "effect_member": {
+        "name": "",
+        "type": ""
     }
 }
 ```
@@ -109,8 +119,10 @@ send
 const data = {
     type:"DEL_FOCUS",
     info:{
-        from:"hoge1",
-        to:"hoge11",
+        focus:{
+            from:"hoge1",
+            to:"hoge2",
+        }
     }
 }
 ```
@@ -119,17 +131,20 @@ const data = {
 response
 ```
 {
-    "focus": {
-        "members": [
-            {
-                "name": "hoge1",
-                "Connects": []
-            },
-            {
-                "name": "hoge11",
-                "Connects": []
-            }
-        ]
+    "event_type": "DEL_FOCUS",
+    "focus_members": [
+        {
+            "name": "hoge1",
+            "connects": []
+        },
+        {
+            "name": "hoge2",
+            "connects": []
+        }
+    ],
+    "effect_member": {
+        "name": "",
+        "type": ""
     }
 }
 ```
@@ -145,7 +160,9 @@ send
 const data = {
     type:"DEL_ALL_FOCUS",
     info:{
-        from:"hoge1",
+        focus:{
+            from:"hoge1"
+        }
     }
 }
 ```
@@ -154,17 +171,20 @@ const data = {
 response
 ```
 {
-    "focus": {
-        "members": [
-            {
-                "name": "hoge1",
-                "Connects": []
-            },
-            {
-                "name": "hoge11",
-                "Connects": []
-            }
-        ]
+    "event_type": "DEL_ALL_FOCUS",
+    "focus_members": [
+        {
+            "name": "hoge1",
+            "connects": []
+        },
+        {
+            "name": "hoge2",
+            "connects": []
+        }
+    ],
+    "effect_member": {
+        "name": "",
+        "type": ""
     }
 }
 ```
@@ -182,6 +202,89 @@ response
 ```
 {
     "ok": "delete room successful"
+}
+```
+
+<br>
+
+
+## ScreenShot
+
+### SetScreenShot
+
+スクリーンショットの開始を通知する
+
+send
+```
+const data = {
+    type:"SET_SCREEN_SHOT"
+}
+```
+
+
+response
+```
+{
+    "event_type": "SET_SCREEN_SHOT",
+    "focus_members": [
+        {
+            "name": "hoge1",
+            "connects": []
+        },
+        {
+            "name": "hoge2",
+            "connects": []
+        }
+    ],
+    "effect_member": {
+        "name": "",
+        "type": ""
+    }
+}
+```
+
+<br>
+
+
+
+## Effect
+
+### SetEffect
+
+スクリーンショットの開始を通知する
+
+send
+```
+const data = {
+    type:"SET_EFFECT",
+    info:{
+        effect:{
+            name:"hoge1",
+            type:"happy"
+        }
+    }
+}
+```
+
+
+response
+```
+{
+    "event_type": "SET_EFFECT",
+    "focus_members": [
+        {
+            "name": "hoge1",
+            "connects": []
+        },
+        {
+            "name": "hoge2",
+            "connects": []
+        }
+    ],
+    "effect_member": {
+        "name": "hoge1",
+        "type": "happy"
+    }
 }
 ```
 

@@ -14,8 +14,8 @@ type RoomUseCase struct {
 }
 
 type IRoomUseCase interface {
-	ExecEventOfEventType(eType entity.EventType, roomId entity.RoomId, info entity.Info) error
-	GetMemberOfRoomId(roomId entity.RoomId) entity.Members
+	ExecEventOfEventType(e entity.Event, roomId entity.RoomId) (*entity.Room,error)
+	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
 	CheckExistsRoomAndInit(roomId entity.RoomId)
 	DeleteRoomOfRoomId(roomId entity.RoomId)
 }
@@ -26,8 +26,8 @@ func NewRoomUseCase(repo repository.IRoomRepository) *RoomUseCase {
 	}
 }
 
-func (uc *RoomUseCase) GetMemberOfRoomId(roomId entity.RoomId) entity.Members {
-	return uc.repo.GetMemberOfRoomId(roomId)
+func (uc *RoomUseCase) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers {
+	return uc.repo.GetFocusMembersOfRoomId(roomId)
 }
 
 // CheckExistsRoomAndInitはroomIdのRoomが登録されているか確認し、登録されてなかった場合Roomを初期化して用意します
@@ -39,8 +39,42 @@ func (uc *RoomUseCase) DeleteRoomOfRoomId(roomId entity.RoomId) {
 	uc.repo.DeleteRoomOfRoomId(roomId)
 }
 
-// ExecEventOfEventTypeは指定されたEventTypeのEventを実行します
-func (uc *RoomUseCase) ExecEventOfEventType(eType entity.EventType, roomId entity.RoomId, info entity.Info) error {
+// ExecEventOfEventTypeはInfoの型をチェックし、それぞれのイベント実行関数を呼び出します
+func (uc *RoomUseCase) ExecEventOfEventType(e entity.Event, roomId entity.RoomId) (*entity.Room,error) {
+	r := &entity.Room{}
+	r.EventType = e.Type
+
+	// ScreenShotEventの場合
+	if e.Type == entity.SetScreenShot{
+		return r,nil
+	}
+
+	// FocusEventの場合
+	// TODO もう少しきれいに書きたい
+	if e.Type == entity.NewMember || e.Type == entity.SetFocus ||
+		e.Type == entity.DelFocus || e.Type == entity.DelAllFocus {
+			// FocusEventを実行する
+			err := uc.execFocusEventOfEventType(e.Type,roomId,e.Info.Focus)
+			if err!=nil{
+				return r,err
+			}
+			return r,nil
+		}
+
+	// EfectEventの場合
+	if e.Type == entity.SetEffect{
+		m,_ := uc.execEffectEventOfEventType(roomId,e.Info.Effect)
+		r.EffectMember = *m
+		return r,nil
+	}
+	return r,nil
+}
+
+// execFocusEventOfEventTypeは指定されたEventTypeのEventを実行します
+func (uc *RoomUseCase) execFocusEventOfEventType(
+	eType entity.EventType, 
+	roomId entity.RoomId, 
+	info entity.FocusInfo) error {
 	switch eType {
 	case entity.NewMember:
 		if err := uc.addNewMemberOfRoomId(roomId, info); err != nil {
@@ -58,15 +92,21 @@ func (uc *RoomUseCase) ExecEventOfEventType(eType entity.EventType, roomId entit
 		if err := uc.delAllMemberFocusOfRoomId(roomId, info); err != nil {
 			return err
 		}
-	case entity.SetScreenShot:
-		// SetScreenShotの場合、何もせず、eventTypeをBroadcastに設定する
 	default:
 		return fmt.Errorf("RoomUseCase.ExecEventOfEventType : not matched type")
 	}
 	return nil
 }
 
-func (uc *RoomUseCase) addNewMemberOfRoomId(roomId entity.RoomId, info entity.Info) error {
+func (uc *RoomUseCase) execEffectEventOfEventType(roomId entity.RoomId, info entity.EffectInfo) (*entity.EffectMember,error) {
+		m := &entity.EffectMember{
+			Name: info.Name,
+			Type: info.Type,
+		}
+		return m,nil
+}
+
+func (uc *RoomUseCase) addNewMemberOfRoomId(roomId entity.RoomId, info entity.FocusInfo) error {
 	newMemberName := info.From
 	if newMemberName == "" {
 		return fmt.Errorf("RoomUseCase.AddNewMemberOfRoomId Error : from is required")
@@ -76,7 +116,7 @@ func (uc *RoomUseCase) addNewMemberOfRoomId(roomId entity.RoomId, info entity.In
 
 // FromさんがToさんをRoomする
 // ToさんのconnectsとFromさんもconnectsにお互いを追加する
-func (uc *RoomUseCase) setMemberFocusOfRoomId(roomId entity.RoomId, info entity.Info) error {
+func (uc *RoomUseCase) setMemberFocusOfRoomId(roomId entity.RoomId, info entity.FocusInfo) error {
 	from := info.From
 	to := info.To
 	if from == "" || to == "" {
@@ -85,7 +125,7 @@ func (uc *RoomUseCase) setMemberFocusOfRoomId(roomId entity.RoomId, info entity.
 	return uc.repo.SetMemberFocusOfRoomId(roomId, from, to)
 }
 
-func (uc *RoomUseCase) delMemberFocusOfRoomId(roomId entity.RoomId, info entity.Info) error {
+func (uc *RoomUseCase) delMemberFocusOfRoomId(roomId entity.RoomId, info entity.FocusInfo) error {
 	from := info.From
 	to := info.To
 	if from == "" || to == "" {
@@ -94,15 +134,7 @@ func (uc *RoomUseCase) delMemberFocusOfRoomId(roomId entity.RoomId, info entity.
 	return uc.repo.DelMemberFocusOfRoomId(roomId, from, to)
 }
 
-func (uc *RoomUseCase) delAllMemberFocusOfRoomId(roomId entity.RoomId, info entity.Info) error {
-	from := info.From
-	if from == "" {
-		return fmt.Errorf("RoomUseCase.DelAllMemberFocusOfRoomId Error : from is required")
-	}
-	return uc.repo.DelAllMemberFocusOfRoomId(roomId, from)
-}
-
-func (uc *RoomUseCase) setScreenShotOfRoomId(roomId entity.RoomId, info entity.Info) error {
+func (uc *RoomUseCase) delAllMemberFocusOfRoomId(roomId entity.RoomId, info entity.FocusInfo) error {
 	from := info.From
 	if from == "" {
 		return fmt.Errorf("RoomUseCase.DelAllMemberFocusOfRoomId Error : from is required")

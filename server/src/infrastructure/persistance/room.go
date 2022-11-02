@@ -25,15 +25,15 @@ func (r *RoomRepository) AddNewMemberOfRoomId(roomId entity.RoomId, newMemberNam
 		return fmt.Errorf("RoomRepository.AddNewMemberOfRoomId Error : room not found")
 	}
 
-	for _, member := range room.Focus.Members {
+	for _, member := range room.FocusMembers {
 		if member.Name == newMemberName {
 			return fmt.Errorf("RoomRepository.AddNewMemberOfRoomId Error : new member name already exist")
 		}
 	}
 
-	room.Focus.Members = append(
-		room.Focus.Members,
-		&entity.Member{
+	room.FocusMembers = append(
+		room.FocusMembers,
+		&entity.FocusMember{
 			Name:     newMemberName,
 			Connects: []*entity.Connect{},
 		},
@@ -47,7 +47,7 @@ func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entit
 		return fmt.Errorf("RoomRepository.SetMemberFocusOfRoomId Error : room not found")
 	}
 
-	for _, member := range room.Focus.Members {
+	for _, member := range room.FocusMembers {
 		if member.Name == from {
 			for _, connect := range member.Connects {
 				if connect != nil && connect.Name == to {
@@ -82,7 +82,7 @@ func (r *RoomRepository) DelMemberFocusOfRoomId(roomId entity.RoomId, from entit
 	if !found {
 		return fmt.Errorf("RoomRepository.DelMemberFocusOfRoomId Error : room not found")
 	}
-	for _, member := range room.Focus.Members {
+	for _, member := range room.FocusMembers {
 		if member.Name == from {
 			// FromさんのConnectからToさんを削除
 			for i, connect := range member.Connects {
@@ -114,7 +114,7 @@ func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from en
 		return fmt.Errorf("RoomRepository.DelAllMemberFocusOfRoomId Error : room not found")
 	}
 
-	for _, member := range room.Focus.Members {
+	for _, member := range room.FocusMembers {
 		if member.Name == from {
 			// fromさんのConnectをリセット
 			member.Connects = []*entity.Connect{}
@@ -135,13 +135,13 @@ func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from en
 	return nil
 }
 
-func (r *RoomRepository) GetMemberOfRoomId(roomId entity.RoomId) entity.Members {
+func (r *RoomRepository) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers {
 	room, found := r.getExistsRoomOfRoomId(roomId)
 	if !found {
 		// TODO エラーハンドリング
-		return entity.Members{}
+		return entity.FocusMembers{}
 	}
-	return room.Focus.Members
+	return room.FocusMembers
 }
 
 func (r *RoomRepository) CheckExistsRoomAndInit(roomId entity.RoomId) {

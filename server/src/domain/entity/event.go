@@ -6,7 +6,6 @@ type EventType string
 type Event struct {
 	Type EventType `json:"type"`
 	Info Info      `json:"info"`
-	// Focus Focus     `json:"focus"`
 }
 
 type Events map[RoomId]*Event

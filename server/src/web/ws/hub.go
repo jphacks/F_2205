@@ -1,3 +1,5 @@
+// hub.goではwebsocket通信で使うHubの構造体を管理しています
+
 package ws
 
 import (
@@ -11,7 +13,7 @@ type Hub struct {
 	Clients map[*Client]bool
 
 	// Inbound messages from the clients.
-	Broadcast chan *entity.Event
+	BroadcastRoomInfo chan *entity.Room
 
 	// Register requests from the clients.
 	Register chan *Client
@@ -26,11 +28,11 @@ type Hubs map[entity.RoomId]*Hub
 
 func NewHub(roomId entity.RoomId) *Hub {
 	return &Hub{
-		Broadcast:  make(chan *entity.Event),
-		Register:   make(chan *Client),
-		Unregister: make(chan *Client),
-		Clients:    make(map[*Client]bool),
-		RoomId:     roomId,
+		BroadcastRoomInfo: make(chan *entity.Room),
+		Register:          make(chan *Client),
+		Unregister:        make(chan *Client),
+		Clients:           make(map[*Client]bool),
+		RoomId:            roomId,
 	}
 }
 
@@ -48,14 +50,15 @@ func (h *Hub) Run() {
 		case client := <-h.Unregister:
 			if _, ok := h.Clients[client]; ok {
 				delete(h.Clients, client)
-				close(client.Send)
+				close(client.SendRoomInfo)
 			}
-		case message := <-h.Broadcast:
+		// BroadcastRoomInfoにroom情報が来た時、各ClientのSendRoomInfoチャネルにroom情報を送る
+		case room := <-h.BroadcastRoomInfo:
 			for client := range h.Clients {
 				select {
-				case client.Send <- message:
+				case client.SendRoomInfo <- room:
 				default:
-					close(client.Send)
+					close(client.SendRoomInfo)
 					delete(h.Clients, client)
 				}
 			}

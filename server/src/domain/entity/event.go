@@ -2,10 +2,11 @@ package entity
 
 type EventType string
 
+// TODO ドメインはjsonに依存すべきではない
 type Event struct {
-	Type  EventType `json:"type"`
-	Info  Info      `json:"info"`
-	Focus Focus     `json:"focus"`
+	Type EventType `json:"type"`
+	Info Info      `json:"info"`
+	// Focus Focus     `json:"focus"`
 }
 
 type Events map[RoomId]*Event

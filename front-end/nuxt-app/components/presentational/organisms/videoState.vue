@@ -2,8 +2,8 @@
   <v-card class="video-state" color="orange lighten-3" tile>
     <div class="video-state-inner pa-2 d-flex align-center">
       <div class="video-state-icon">
-        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
-          <v-icon color="black" @click.native="effectFn">mdi-emoticon-happy-outline</v-icon>
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar effect-btn">
+          <v-icon color="black" @click="this.effectOperation" id="effect-icon">mdi-emoticon-happy-outline</v-icon>
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
@@ -49,6 +49,10 @@
         <Btn text="退出" color="red" :clickedfn="leavingFn" />
       </div>
     </div>
+
+    <div class="effect-select-box">
+      <img src="~/assets/img/waiwaiImg.svg" class="effect-select-box-img" @click="effectFn" />
+    </div>
   </v-card>
 </template>
 
@@ -73,6 +77,22 @@ export default {
   components: {
     Btn,
     AdjustWebgazerDialog
+  },
+
+  methods: {
+    effectOperation: function () {
+      this.isEffectDisplay = !this.isEffectDisplay;
+
+      const effectSelectBoxDom = document.querySelector('.effect-select-box');
+      effectSelectBoxDom.classList.toggle('effect-open');
+
+      const tgIconDom = document.querySelector('#effect-icon');
+      const x = tgIconDom.getBoundingClientRect().left;
+      const y = tgIconDom.getBoundingClientRect().top;
+
+      effectSelectBoxDom.style.top = y - 100 + 'px';
+      effectSelectBoxDom.style.left = x - 30 + 'px';
+    }
   }
 };
 </script>
@@ -105,5 +125,33 @@ export default {
 .adjustWebgazer {
   width: 100vw;
   height: 100vh;
+}
+
+.effect-select-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 80px;
+  border-radius: 20px !important;
+  padding: 0 10px;
+  background-color: #fff;
+  transition: opacity 0.3s;
+
+  &-img {
+    width: 80px;
+    &:hover {
+      cursor: pointer;
+      opacity: 0.6;
+    }
+  }
+}
+
+.effect-open.effect-select-box {
+  opacity: 1;
 }
 </style>

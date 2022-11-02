@@ -28,17 +28,14 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 			}
 			break
 		}
-
-		if err := h.uc.ExecEventOfEventType(e.Type, c.Hub.RoomId, e.Info); err != nil {
+		// eventを実行して、最新のroomオブジェクトを返す
+		room,err := h.uc.ExecEventOfEventType(e,c.Hub.RoomId)
+		if err != nil {
 			log.Println("ExecEventOfEventType Error :", err)
 		}
-
-		// 指定したroomIdのMember情報をBroadcastRoomInfoに入れる
-		r := entity.Room{}
-		r.EventType = e.Type
-		r.Focus.Members = h.uc.GetMemberOfRoomId(c.Hub.RoomId)
-
-		c.Hub.BroadcastRoomInfo <- &r
+		// FocusMemberに最新の情報をいれる
+		room.FocusMembers = h.uc.GetFocusMembersOfRoomId(c.Hub.RoomId)
+		c.Hub.BroadcastRoomInfo <- room
 	}
 }
 

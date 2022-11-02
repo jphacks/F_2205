@@ -33,13 +33,13 @@ window.onload = function () {
         //         to:"hoge12",
         //     }
         // }
-        const data = {
-            type:"SET_FOCUS",
-            info:{
-                from:"hoge11",
-                to:"hoge13",
-            }
-        }
+        // const data = {
+        //     type:"SET_FOCUS",
+        //     info:{
+        //         from:"hoge11",
+        //         to:"hoge12",
+        //     }
+        // }
         // const data = {
         //     type:"NEW_MEMBER",
         //     info:{
@@ -51,6 +51,10 @@ window.onload = function () {
         //     info:{
         //         from:"hoge12",
         //     }
+        // }
+        // const data = {
+        //     type:"SET_SCREEN_SHOT",
+        //     info:{}
         // }
         console.log(data)
         conn.send(JSON.stringify(data));

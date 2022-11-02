@@ -58,6 +58,8 @@ func (uc *RoomUseCase) ExecEventOfEventType(eType entity.EventType, roomId entit
 		if err := uc.delAllMemberFocusOfRoomId(roomId, info); err != nil {
 			return err
 		}
+	case entity.SetScreenShot:
+		// SetScreenShotの場合、何もせず、eventTypeをBroadcastに設定する
 	default:
 		return fmt.Errorf("RoomUseCase.ExecEventOfEventType : not matched type")
 	}
@@ -93,6 +95,14 @@ func (uc *RoomUseCase) delMemberFocusOfRoomId(roomId entity.RoomId, info entity.
 }
 
 func (uc *RoomUseCase) delAllMemberFocusOfRoomId(roomId entity.RoomId, info entity.Info) error {
+	from := info.From
+	if from == "" {
+		return fmt.Errorf("RoomUseCase.DelAllMemberFocusOfRoomId Error : from is required")
+	}
+	return uc.repo.DelAllMemberFocusOfRoomId(roomId, from)
+}
+
+func (uc *RoomUseCase) setScreenShotOfRoomId(roomId entity.RoomId, info entity.Info) error {
 	from := info.From
 	if from == "" {
 		return fmt.Errorf("RoomUseCase.DelAllMemberFocusOfRoomId Error : from is required")

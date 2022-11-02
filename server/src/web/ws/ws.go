@@ -29,7 +29,7 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 			break
 		}
 		// eventを実行して、最新のroomオブジェクトを返す
-		room,err := h.uc.ExecEventOfEventType(e,c.Hub.RoomId)
+		room, err := h.uc.ExecEventOfEventType(e, c.Hub.RoomId)
 		if err != nil {
 			log.Println("ExecEventOfEventType Error :", err)
 		}

@@ -2,7 +2,7 @@ package entity
 
 // InfoはEventの情報を管理する構造体です
 type Info struct {
-	Focus  FocusInfo `json:"focus"`
+	Focus  FocusInfo  `json:"focus"`
 	Effect EffectInfo `json:"effect"`
 }
 
@@ -14,6 +14,6 @@ type FocusInfo struct {
 
 // EffectInfoはMemberのエフェクトを保持する構造体です
 type EffectInfo struct {
-	Name  Name       `json:"name"`
-	Type  EffectType `json:"type"`
+	Name Name       `json:"name"`
+	Type EffectType `json:"type"`
 }

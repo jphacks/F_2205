@@ -9,6 +9,6 @@ const (
 
 // EffectMemberはどのMemberがどのエフェクトを使ったかの情報を保持します
 type EffectMember struct {
-	Name       Name        `json:"name"`
-	Type       EffectType  `json:"type"`
+	Name Name       `json:"name"`
+	Type EffectType `json:"type"`
 }

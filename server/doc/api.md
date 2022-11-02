@@ -42,11 +42,6 @@ const data = {
 response
 ```
 {
-    "type": "NEW_MEMBER",
-    "info": {
-        "from": "hoge1",
-        "to": ""
-    },
     "focus": {
         "members": [
             {
@@ -80,11 +75,6 @@ const data = {
 response
 ```
 {
-    "type": "SET_FOCUS",
-    "info": {
-        "from": "hoge1",
-        "to": "hoge11"
-    },
     "focus": {
         "members": [
             {
@@ -129,11 +119,6 @@ const data = {
 response
 ```
 {
-    "type": "DEL_FOCUS",
-    "info": {
-        "from": "hoge1",
-        "to": "hoge11"
-    },
     "focus": {
         "members": [
             {
@@ -169,11 +154,6 @@ const data = {
 response
 ```
 {
-    "type": "DEL_ALL_FOCUS",
-    "info": {
-        "from": "hoge1",
-        "to": ""
-    },
     "focus": {
         "members": [
             {

@@ -3,7 +3,8 @@ package entity
 type RoomId string
 
 type Room struct {
-	Focus Focus `json:"focus"`
+	EventType  EventType  `json:"event_type"`
+	Focus      Focus      `json:"focus"`
 }
 
 type Rooms map[RoomId]*Room

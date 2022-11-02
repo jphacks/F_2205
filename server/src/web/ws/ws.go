@@ -35,7 +35,9 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 
 		// 指定したroomIdのMember情報をBroadcastRoomInfoに入れる
 		r := entity.Room{}
+		r.EventType = e.Type
 		r.Focus.Members = h.uc.GetMemberOfRoomId(c.Hub.RoomId)
+
 		c.Hub.BroadcastRoomInfo <- &r
 	}
 }

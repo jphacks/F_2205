@@ -20,7 +20,7 @@ func NewRoomRepository(rooms *entity.Rooms) *RoomRepository {
 }
 
 func (r *RoomRepository) AddNewMemberOfRoomId(roomId entity.RoomId, newMemberName entity.Name) error {
-	room, found := r.getExistsRoomOfRoomId(roomId)
+	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.AddNewMemberOfRoomId Error : room not found")
 	}
@@ -42,7 +42,7 @@ func (r *RoomRepository) AddNewMemberOfRoomId(roomId entity.RoomId, newMemberNam
 }
 
 func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error {
-	room, found := r.getExistsRoomOfRoomId(roomId)
+	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.SetMemberFocusOfRoomId Error : room not found")
 	}
@@ -78,7 +78,7 @@ func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entit
 }
 
 func (r *RoomRepository) DelMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error {
-	room, found := r.getExistsRoomOfRoomId(roomId)
+	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.DelMemberFocusOfRoomId Error : room not found")
 	}
@@ -109,7 +109,7 @@ func (r *RoomRepository) DelMemberFocusOfRoomId(roomId entity.RoomId, from entit
 }
 
 func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name) error {
-	room, found := r.getExistsRoomOfRoomId(roomId)
+	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.DelAllMemberFocusOfRoomId Error : room not found")
 	}
@@ -136,7 +136,7 @@ func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from en
 }
 
 func (r *RoomRepository) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers {
-	room, found := r.getExistsRoomOfRoomId(roomId)
+	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		// TODO エラーハンドリング
 		return entity.FocusMembers{}
@@ -144,8 +144,9 @@ func (r *RoomRepository) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.Fo
 	return room.FocusMembers
 }
 
+// RoomIdが存在するか確認し、存在しなかった場合はroomIdをkeyにRoomを作成する
 func (r *RoomRepository) CheckExistsRoomAndInit(roomId entity.RoomId) {
-	_, found := r.getExistsRoomOfRoomId(roomId)
+	_, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		r.initRoomOfRoomId(roomId)
 	}
@@ -166,11 +167,15 @@ func (r *RoomRepository) DeleteRoomOfRoomId(roomId entity.RoomId) {
 	delete(*r.Rooms, roomId)
 }
 
-// getExistsRoomOfRoomIdはroomIdのRoomが存在するか確認し、存在した場合はRoomを返します
-func (r *RoomRepository) getExistsRoomOfRoomId(roomId entity.RoomId) (*entity.Room, bool) {
+// GetExistsRoomOfRoomIdはroomIdのRoomが存在するか確認し、存在した場合はRoomを返します
+func (r *RoomRepository) GetExistsRoomOfRoomId(roomId entity.RoomId) (*entity.Room, bool) {
 	room, ok := (*r.Rooms)[roomId]
 	if !ok {
 		return nil, false
 	}
 	return room, true
+}
+
+func (r *RoomRepository) GetSumOfRoom() int {
+	return len(*r.Rooms)
 }

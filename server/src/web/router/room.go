@@ -18,6 +18,9 @@ func (r Router) InitWsRoomRouter() {
 	h := handler.NewRoomHandler(uc, hubs)
 	hWs := ws.NewRoomWsHandler(uc, hubs)
 
-	r.Engine.DELETE("/ws/:room", h.DeleteHubOfRoomId)
-	r.Engine.GET("/ws/:room", hWs.ConnectWsRoom)
+	r.Engine.GET("/room/sum", h.GetCountSumOfRoom)
+	r.Engine.POST("/room", h.CreateRoom)
+	r.Engine.DELETE("/room/:room_id", h.DeleteHubAndRoomOfRoomId)
+
+	r.Engine.GET("/ws/:room_id", hWs.ConnectWsRoom)
 }

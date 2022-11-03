@@ -20,9 +20,8 @@ func NewRoomWsHandler(uc usecase.IRoomUseCase, hubs *Hubs) *RoomWsHandler {
 
 // ConnectWsRoomはwebsocket通信でserver内のRoomsオブジェクトとデータをやり取りします
 func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
-	roomId := (entity.RoomId)(ctx.Param("room"))
+	roomId := (entity.RoomId)(ctx.Param("room_id"))
 	hub := h.getOrRegisterHub(roomId)
-	h.uc.CheckExistsRoomAndInit(roomId)
 	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
 }
 

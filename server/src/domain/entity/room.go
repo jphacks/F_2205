@@ -9,3 +9,7 @@ type Room struct {
 }
 
 type Rooms map[RoomId]*Room
+
+type RoomInfo struct {
+	Id RoomId `json:"id"`
+}

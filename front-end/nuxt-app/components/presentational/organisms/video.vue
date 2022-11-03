@@ -3,18 +3,25 @@
     <div class="video-line">
       <video id="my-video" class="video-individual" autoplay muted playsinline></video>
     </div>
-    <VideoEffect ref="effectComponentsMyVideo" videoId="my-video" />
+    <div v-for="peerId of peerIds" :key="peerId">
+      <VideoEffect :ref="`effectComponents${peerId}`" :videoId="peerId" />
+    </div>
   </section>
 </template>
 
 <script>
-import Vue from 'vue/dist/vue.esm.js';
 import VideoEffect from '~/components/presentational/organisms/videoEffect';
 
 export default {
   props: ['roomMemberNum'],
   components: {
     VideoEffect
+  },
+
+  data() {
+    return {
+      peerIds: ['my-video']
+    };
   },
 
   methods: {
@@ -131,27 +138,18 @@ export default {
     },
 
     addEffectComponents: function (videoId) {
-      const ComponentClass = Vue.extend(VideoEffect);
-      const instance = new ComponentClass({
-        propsData: {
-          ref: `effectComponents${videoId}`,
-          videoId: videoId
-        }
-      });
-      instance.$mount();
-
-      document.querySelector('#video-wrap').append(instance.$el);
+      this.peerIds.push(videoId);
     },
 
     effectOthers: function (effectNumber, videoId) {
       //自分以外のビデオにエフェクトを追加する(websocketConn.onmessageから呼ばれる)
       const tgRef = 'effectComponents' + videoId;
-      this.$refs.eval(tgRef).start(effectNumber);
+      this.$refs[tgRef][0].start(effectNumber);
     },
 
     effectOnMySelf: function (effectNumber) {
       //自分の画像にエフェクトを追加する
-      this.$refs.effectComponentsMyVideo.start(effectNumber);
+      this.$refs['effectComponentsmy-video'][0].start(effectNumber);
     }
   }
 };

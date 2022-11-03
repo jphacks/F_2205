@@ -1,6 +1,6 @@
 <template>
   <section class="video-effect" :id="videoId + '-effect'">
-    <section class="video-effect-waiwai" v-if="effectNumber == 1">
+    <section class="video-effect-waiwai" v-if="effectNumber == '1'">
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-1" />
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-2" />
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-3" />
@@ -20,7 +20,10 @@ export default {
     start: function (effectNumber) {
       this.effectNumber = effectNumber;
 
-      const videoDom = document.querySelector(`#${this.videoId}`);
+      console.log('effect: ' + this.effectNumber);
+
+      // const videoDom = document.querySelector(`#${this.videoId}`);
+      const videoDom = document.getElementById(this.videoId);
       const width = videoDom.clientWidth;
       const height = videoDom.clientHeight;
       const x = videoDom.getBoundingClientRect().left;

@@ -111,7 +111,7 @@ export default {
         };
         //-------------------------------------------------------------------------//
         //-------------------------------------------------------------------------//
-        //引数のメンバーをフォーカスしてそれ以外を除外
+        //引数のメンバーをフォーカス
         const doFocus = (focusMemberData) => {
           if (focusMemberData.length == 0) {
             const videos = document.querySelectorAll('.video-individual');
@@ -136,16 +136,19 @@ export default {
         const data = JSON.parse(evt.data);
         const myPeerId = document.querySelector('#my-video').getAttribute('name');
 
-        if (data.type != 'SET_FOCUS' && data.type != 'DEL_ALL_FOCUS' && data.type != 'DEL_FOCUS') return;
+        if (data.event_type != 'SET_FOCUS' && data.event_type != 'DEL_ALL_FOCUS' && data.event_type != 'DEL_FOCUS')
+          return;
+
+        console.log(data);
 
         focusThisVideoAllLift();
 
-        const memberDatas = data.focus.members;
+        const memberDatas = data.focus_members;
 
         for (let memberData of memberDatas) {
           if (memberData.name == myPeerId) {
             //引数のメンバーをフォーカスしてそれ以外を除外
-            doFocus(memberData.Connects);
+            doFocus(memberData.connects);
           }
         }
       };
@@ -227,7 +230,9 @@ export default {
           const data = {
             type: 'DEL_ALL_FOCUS',
             info: {
-              from: this.peer
+              focus: {
+                from: this.peer
+              }
             }
           };
 
@@ -333,18 +338,23 @@ export default {
         const data = {
           type: 'SET_FOCUS',
           info: {
-            from: `${this.peer.id}`,
-            to: `${id}`
+            focus: {
+              from: `${this.peer.id}`,
+              to: `${id}`
+            }
           }
         };
+        console.log(data);
         this.websocketConn.send(JSON.stringify(data));
       } else {
         //websocket ユーザー同士を接続状態にする
         const data = {
           type: 'DEL_FOCUS',
           info: {
-            from: `${this.peer.id}`,
-            to: `${id}`
+            focus: {
+              from: `${this.peer.id}`,
+              to: `${id}`
+            }
           }
         };
         this.websocketConn.send(JSON.stringify(data));
@@ -358,19 +368,22 @@ export default {
       const data = {
         type: 'SET_FOCUS',
         info: {
-          from: `${this.peer.id}`,
-          to: `${id}`
+          focus: {
+            from: `${this.peer.id}`,
+            to: `${id}`
+          }
         }
       };
       this.websocketConn.send(JSON.stringify(data));
     },
     focusThisVideoAllLift: function () {
       //フォーカスを全解除
-
       const data = {
         type: 'DEL_ALL_FOCUS',
         info: {
-          from: `${this.peer.id}`
+          focus: {
+            from: `${this.peer.id}`
+          }
         }
       };
       this.websocketConn.send(JSON.stringify(data));

@@ -45,6 +45,7 @@
 <script>
 import Peer from 'skyway-js';
 import axios from 'axios';
+import Vue from 'vue/dist/vue.esm.js';
 
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
@@ -94,13 +95,15 @@ export default {
         console.log('websocket connection');
       };
       websocketConn.onmessage = function (evt) {
-        //フォーカス処理
-
+        // フォーカスされた人以外の音量
         const unfocusedVolume = 0.15;
 
-        //-------------------------------------------------------------------------//
-        //フォーカス全解除&音量下げ
+        // ======================================================================== //
+        // focus function
+        // ======================================================================== //
         const focusThisVideoAllLift = () => {
+          // フォーカス全解除&音量下げ
+
           const videos = document.querySelectorAll('.video-individual');
 
           for (let video of videos) {
@@ -109,10 +112,9 @@ export default {
             video.classList.remove('video-individual-focus');
           }
         };
-        //-------------------------------------------------------------------------//
-        //-------------------------------------------------------------------------//
-        //引数のメンバーをフォーカス
         const doFocus = (focusMemberData) => {
+          // 引数のメンバーをフォーカス
+
           if (focusMemberData.length == 0) {
             const videos = document.querySelectorAll('.video-individual');
 
@@ -131,29 +133,45 @@ export default {
             videoDom.volume = 1;
           }
         };
-        //-------------------------------------------------------------------------//
+
+        const focusRun = (data, myPeerId) => {
+          // フォーカス起動
+          focusThisVideoAllLift();
+
+          const memberDatas = data.focus_members;
+
+          for (let memberData of memberDatas) {
+            if (memberData.name == myPeerId) {
+              //引数のメンバーをフォーカスしてそれ以外を除外
+              doFocus(memberData.connects);
+            }
+          }
+        };
+        // ======================================================================== //
+
+        // ======================================================================== //
+        // effect function
+        // ======================================================================== //
+        const effectRun = (data, myPeerId) => {
+          // エフェクト起動
+          if (data.effect_member.name == myPeerId) return;
+
+          this.$refs.videoComponents.effectOthers(data.effect_member.type, data.effect_member.name);
+        };
+        // ======================================================================== //
 
         const data = JSON.parse(evt.data);
         const myPeerId = document.querySelector('#my-video').getAttribute('name');
 
-        console.log(data);
+        // フォーカス
+        if (data.event_type == 'SET_FOCUS' || data.event_type == 'DEL_ALL_FOCUS' || data.event_type == 'DEL_FOCUS')
+          focusRun(data, myPeerId);
 
-        if (data.event_type != 'SET_FOCUS' && data.event_type != 'DEL_ALL_FOCUS' && data.event_type != 'DEL_FOCUS')
-          return;
+        // エフェクト
+        if (data.event_type == 'SET_EFFECT') effectRun(data, myPeerId);
 
-        console.log(data);
-
-        focusThisVideoAllLift();
-
-        const memberDatas = data.focus_members;
-
-        for (let memberData of memberDatas) {
-          if (memberData.name == myPeerId) {
-            //引数のメンバーをフォーカスしてそれ以外を除外
-            doFocus(memberData.connects);
-          }
-        }
-      };
+        return;
+      }.bind(this);
       websocketConn.onclose = function (evt) {
         console.log('websocket connection closed');
       };
@@ -348,7 +366,6 @@ export default {
             }
           }
         };
-        console.log(data);
         this.websocketConn.send(JSON.stringify(data));
       } else {
         //websocket ユーザー同士を接続状態にする
@@ -437,7 +454,18 @@ export default {
 
     effectFn: function () {
       //自分の画像にエフェクトを追加する(エフェクト作動)
-      this.$refs.videoComponents.effectOnMySelf(1);
+      const data = {
+        type: 'SET_EFFECT',
+        info: {
+          effect: {
+            name: `${this.peer.id}`,
+            type: '1'
+          }
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
+
+      this.$refs.videoComponents.effectOnMySelf('1');
     },
 
     loaderOperation: function () {

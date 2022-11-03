@@ -1,5 +1,5 @@
 <template>
-  <section class="video-effect" :id="videoId + '-effect'">
+  <section class="video-effect" :id="'video' + videoId + '-effect'">
     <section class="video-effect-waiwai" v-if="effectNumber == '1'">
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-1" />
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-2" />
@@ -20,16 +20,13 @@ export default {
     start: function (effectNumber) {
       this.effectNumber = effectNumber;
 
-      console.log('effect: ' + this.effectNumber);
-
-      // const videoDom = document.querySelector(`#${this.videoId}`);
-      const videoDom = document.getElementById(this.videoId);
+      const videoDom = document.querySelector(`#video${this.videoId}`);
       const width = videoDom.clientWidth;
       const height = videoDom.clientHeight;
       const x = videoDom.getBoundingClientRect().left;
       const y = videoDom.getBoundingClientRect().top;
 
-      const tgDom = document.querySelector(`#${this.videoId}-effect`);
+      const tgDom = document.querySelector(`#video${this.videoId}-effect`);
 
       tgDom.classList.add('open');
       tgDom.style.width = width + 'px';
@@ -40,7 +37,7 @@ export default {
       setTimeout(this.remove, 5000);
     },
     remove: function () {
-      const tgDom = document.querySelector(`#${this.videoId}-effect`);
+      const tgDom = document.querySelector(`#video${this.videoId}-effect`);
       tgDom.classList.remove('open');
     }
   },
@@ -52,6 +49,7 @@ export default {
 <style lang="scss">
 .open.video-effect {
   opacity: 1;
+  z-index: 100;
 }
 .video-effect {
   //   background-color: red;
@@ -63,6 +61,7 @@ export default {
   border-radius: 20px;
   opacity: 0;
   transition: opacity 0.4s;
+  z-index: -100;
 
   &-waiwai {
     &-img-1 {

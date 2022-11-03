@@ -45,7 +45,6 @@
 <script>
 import Peer from 'skyway-js';
 import axios from 'axios';
-import Vue from 'vue/dist/vue.esm.js';
 
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
@@ -125,7 +124,7 @@ export default {
             return;
           }
 
-          document.querySelector('#my-video').classList.add('video-individual-focus');
+          document.querySelector('#videomy-video').classList.add('video-individual-focus');
 
           for (let tgMemberData of focusMemberData) {
             let videoDom = document.getElementById(tgMemberData.name);
@@ -134,14 +133,14 @@ export default {
           }
         };
 
-        const focusRun = (data, myPeerId) => {
+        const focusRun = (data, myVideoDomName) => {
           // フォーカス起動
           focusThisVideoAllLift();
 
           const memberDatas = data.focus_members;
 
           for (let memberData of memberDatas) {
-            if (memberData.name == myPeerId) {
+            if (memberData.name == myVideoDomName) {
               //引数のメンバーをフォーカスしてそれ以外を除外
               doFocus(memberData.connects);
             }
@@ -152,23 +151,23 @@ export default {
         // ======================================================================== //
         // effect function
         // ======================================================================== //
-        const effectRun = (data, myPeerId) => {
+        const effectRun = (data, myVideoDomName) => {
           // エフェクト起動
-          if (data.effect_member.name == myPeerId) return;
+          if (data.effect_member.name == myVideoDomName) return;
 
           this.$refs.videoComponents.effectOthers(data.effect_member.type, data.effect_member.name);
         };
         // ======================================================================== //
 
         const data = JSON.parse(evt.data);
-        const myPeerId = document.querySelector('#my-video').getAttribute('name');
+        const myVideoDomName = document.querySelector('#videomy-video').getAttribute('name');
 
         // フォーカス
         if (data.event_type == 'SET_FOCUS' || data.event_type == 'DEL_ALL_FOCUS' || data.event_type == 'DEL_FOCUS')
-          focusRun(data, myPeerId);
+          focusRun(data, myVideoDomName);
 
         // エフェクト
-        if (data.event_type == 'SET_EFFECT') effectRun(data, myPeerId);
+        if (data.event_type == 'SET_EFFECT') effectRun(data, myVideoDomName);
 
         return;
       }.bind(this);
@@ -189,7 +188,7 @@ export default {
       });
 
       mediaConnection.on('open', () => {
-        document.querySelector('#my-video').setAttribute('name', this.peer.id);
+        document.querySelector('#videomy-video').setAttribute('name', `video${this.peer.id}`);
       });
 
       //ルームメンバーが退出したときに発火
@@ -226,7 +225,7 @@ export default {
         type: 'NEW_MEMBER',
         info: {
           focus: {
-            from: `${this.peer.id}`
+            from: `video${this.peer.id}`
           }
         }
       };
@@ -253,7 +252,7 @@ export default {
             type: 'DEL_ALL_FOCUS',
             info: {
               focus: {
-                from: this.peer
+                from: `video${this.peer}`
               }
             }
           };
@@ -352,7 +351,7 @@ export default {
 
     focusThisVideo: function (id) {
       //ビデオをフォーカスする(自分のビデオ以外)
-      if (id == 'my-video') return;
+      if (id == 'videomy-video') return;
 
       const className = document.getElementById(id).className;
       if (className == 'video-individual') {
@@ -361,7 +360,7 @@ export default {
           type: 'SET_FOCUS',
           info: {
             focus: {
-              from: `${this.peer.id}`,
+              from: `video${this.peer.id}`,
               to: `${id}`
             }
           }
@@ -373,7 +372,7 @@ export default {
           type: 'DEL_FOCUS',
           info: {
             focus: {
-              from: `${this.peer.id}`,
+              from: `video${this.peer.id}`,
               to: `${id}`
             }
           }
@@ -383,14 +382,14 @@ export default {
     },
     focusThisVideoLineOfSight: function (id) {
       //ビデオをフォーカスする(自分のビデオ以外)(視線で)
-      if (id == 'my-video') return;
+      if (id == 'videomy-video') return;
 
       //websocket ユーザー同士を接続状態にする
       const data = {
         type: 'SET_FOCUS',
         info: {
           focus: {
-            from: `${this.peer.id}`,
+            from: `video${this.peer.id}`,
             to: `${id}`
           }
         }
@@ -403,7 +402,7 @@ export default {
         type: 'DEL_ALL_FOCUS',
         info: {
           focus: {
-            from: `${this.peer.id}`
+            from: `video${this.peer.id}`
           }
         }
       };
@@ -458,7 +457,7 @@ export default {
         type: 'SET_EFFECT',
         info: {
           effect: {
-            name: `${this.peer.id}`,
+            name: `video${this.peer.id}`,
             type: '1'
           }
         }
@@ -503,7 +502,7 @@ export default {
     try {
       // カメラ映像取得(自)
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      document.getElementById('my-video').srcObject = stream;
+      document.getElementById('videomy-video').srcObject = stream;
       this.localStream = stream;
     } catch (error) {
       console.log(error);

@@ -1,10 +1,10 @@
 <template>
   <section id="video-wrap" class="video">
     <div class="video-line">
-      <video id="my-video" class="video-individual" autoplay muted playsinline></video>
+      <video id="videomy-video" class="video-individual" autoplay muted playsinline></video>
     </div>
     <div v-for="peerId of peerIds" :key="peerId">
-      <VideoEffect :ref="`effectComponents${peerId}`" :videoId="peerId" />
+      <VideoEffect :ref="`effectComponentsvideo${peerId}`" :videoId="peerId" />
     </div>
   </section>
 </template>
@@ -29,7 +29,7 @@ export default {
       const videoLineDoms = document.querySelectorAll('.video-line');
 
       const videoDom = document.createElement('video');
-      videoDom.setAttribute('id', stream.peerId);
+      videoDom.setAttribute('id', `video${stream.peerId}`);
       videoDom.classList.add('video-individual');
       videoDom.srcObject = stream;
       videoDom.play();
@@ -127,7 +127,7 @@ export default {
     removeVideo: function (peerId, roomMemberNum) {
       console.log(roomMemberNum);
 
-      const videoDom = document.getElementById(peerId);
+      const videoDom = document.getElementById(`video${peerId}`);
       videoDom.remove();
 
       if (roomMemberNum % 3 == 0) {
@@ -141,15 +141,15 @@ export default {
       this.peerIds.push(videoId);
     },
 
-    effectOthers: function (effectNumber, videoId) {
+    effectOthers: function (effectNumber, videoDomId) {
       //自分以外のビデオにエフェクトを追加する(websocketConn.onmessageから呼ばれる)
-      const tgRef = 'effectComponents' + videoId;
+      const tgRef = 'effectComponents' + videoDomId;
       this.$refs[tgRef][0].start(effectNumber);
     },
 
     effectOnMySelf: function (effectNumber) {
       //自分の画像にエフェクトを追加する
-      this.$refs['effectComponentsmy-video'][0].start(effectNumber);
+      this.$refs['effectComponentsvideomy-video'][0].start(effectNumber);
     }
   }
 };

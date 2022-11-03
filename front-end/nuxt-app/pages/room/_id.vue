@@ -136,6 +136,8 @@ export default {
         const data = JSON.parse(evt.data);
         const myPeerId = document.querySelector('#my-video').getAttribute('name');
 
+        console.log(data);
+
         if (data.event_type != 'SET_FOCUS' && data.event_type != 'DEL_ALL_FOCUS' && data.event_type != 'DEL_FOCUS')
           return;
 
@@ -205,7 +207,9 @@ export default {
       const data = {
         type: 'NEW_MEMBER',
         info: {
-          from: `${this.peer.id}`
+          focus: {
+            from: `${this.peer.id}`
+          }
         }
       };
 

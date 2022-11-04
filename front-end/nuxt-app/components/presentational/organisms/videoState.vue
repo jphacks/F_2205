@@ -51,7 +51,9 @@
     </div>
 
     <div class="effect-select-box">
-      <img src="~/assets/img/waiwaiImg.svg" class="effect-select-box-img" @click="effectFn" />
+      <img src="~/assets/img/waiwaiImg.svg" class="effect-select-box-img" @click="effectFn('1')" />
+      <img src="~/assets/img/gogogoImg.svg" class="effect-select-box-img" @click="effectFn('2')" />
+      <img src="~/assets/img/gokuImg.svg" class="effect-select-box-img" @click="effectFn('3')" />
     </div>
   </v-card>
 </template>

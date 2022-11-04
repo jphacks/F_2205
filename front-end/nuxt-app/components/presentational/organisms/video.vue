@@ -186,6 +186,17 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    * {
+      flex: 1;
+      margin: 10px;
+      border-radius: 20px;
+      max-width: 480px;
+    }
+
+    .video-individual-focus {
+      border: solid 5px orange;
+    }
   }
 
   &-individual {
@@ -196,14 +207,14 @@ export default {
     //   max-width: 480px;
     // }
 
-    flex: 1;
-    margin: 10px;
-    border-radius: 20px;
-    max-width: 480px;
+    // flex: 1;
+    // margin: 10px;
+    // border-radius: 20px;
+    // max-width: 480px;
 
-    &-focus {
-      border: solid 5px orange;
-    }
+    // &-focus {
+    //   border: solid 5px orange;
+    // }
   }
 }
 </style>

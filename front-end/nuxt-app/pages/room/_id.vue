@@ -451,20 +451,20 @@ export default {
       this.myAudioStatus = !this.myAudioStatus;
     },
 
-    effectFn: function () {
+    effectFn: function (effectNumber) {
       //自分の画像にエフェクトを追加する(エフェクト作動)
       const data = {
         type: 'SET_EFFECT',
         info: {
           effect: {
             name: `video${this.peer.id}`,
-            type: '1'
+            type: `${effectNumber}`
           }
         }
       };
       this.websocketConn.send(JSON.stringify(data));
 
-      this.$refs.videoComponents.effectOnMySelf('1');
+      this.$refs.videoComponents.effectOnMySelf(`${effectNumber}`);
     },
 
     loaderOperation: function () {

@@ -4,6 +4,19 @@
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-1" />
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-2" />
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-3" />
+      <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-4" />
+    </section>
+
+    <section class="video-effect-gogogo" v-if="effectNumber == '2'">
+      <img src="~/assets/img/gogogoImg.svg" class="video-effect-gogogo-img-1" />
+      <img src="~/assets/img/gogogoImg.svg" class="video-effect-gogogo-img-2" />
+      <img src="~/assets/img/gogogoImg.svg" class="video-effect-gogogo-img-3" />
+    </section>
+
+    <section class="video-effect-goku" v-if="effectNumber == '3'">
+      <img src="~/assets/img/gokuImg.svg" class="video-effect-goku-img-1" />
+      <img src="~/assets/img/gokuImg.svg" class="video-effect-goku-img-2" />
+      <img src="~/assets/img/gokuImg.svg" class="video-effect-goku-img-3" />
     </section>
   </section>
 </template>
@@ -13,11 +26,15 @@ export default {
   props: ['videoId'],
   data() {
     return {
-      effectNumber: null
+      effectNumber: null,
+      isCurrentEffect: false
     };
   },
   methods: {
     start: function (effectNumber) {
+      if (this.isCurrentEffect) return;
+
+      this.isCurrentEffect = true;
       this.effectNumber = effectNumber;
 
       const videoDom = document.querySelector(`#video${this.videoId}`);
@@ -39,6 +56,7 @@ export default {
     remove: function () {
       const tgDom = document.querySelector(`#video${this.videoId}-effect`);
       tgDom.classList.remove('open');
+      this.isCurrentEffect = false;
     }
   },
 
@@ -67,30 +85,119 @@ export default {
     &-img-1 {
       position: absolute;
       top: 0;
-      left: 30px;
-      width: 160px;
+      left: 5%;
+      width: 35%;
       transform: rotate(10deg);
       animation: waiwai linear 0.4s infinite;
     }
     &-img-2 {
       position: absolute;
-      top: 80px;
-      right: 30px;
-      width: 160px;
+      top: 5%;
+      right: 5%;
+      width: 40%;
       transform: rotate(-10deg);
       animation: waiwai linear 0.4s infinite;
     }
     &-img-3 {
       position: absolute;
-      bottom: 10px;
-      left: 60px;
-      width: 160px;
+      bottom: 0;
+      left: 10%;
+      width: 40%;
       animation: waiwai linear 0.4s infinite;
+    }
+    &-img-4 {
+      position: absolute;
+      bottom: 5%;
+      right: 5%;
+      width: 30%;
+      animation: waiwai linear 0.4s infinite;
+    }
+  }
+
+  &-gogogo {
+    &-img-1 {
+      position: absolute;
+      top: 0;
+      left: 5%;
+      width: 40%;
+      transform: rotate(10deg);
+      animation: gogogo linear 0.4s infinite;
+    }
+    &-img-2 {
+      position: absolute;
+      top: 10%;
+      right: 0;
+      width: 30%;
+      transform: rotate(10deg);
+      animation: gogogo linear 0.4s infinite;
+    }
+    &-img-3 {
+      position: absolute;
+      top: 50%;
+      left: 10%;
+      width: 30%;
+      transform: rotate(10deg);
+      animation: gogogo linear 0.4s infinite;
+    }
+  }
+
+  &-goku {
+    &-img-1 {
+      position: absolute;
+      top: 30%;
+      left: 5%;
+      width: 40%;
+      transform: rotate(10deg);
+      animation: goku linear 0.4s infinite;
+    }
+    &-img-2 {
+      position: absolute;
+      top: 40%;
+      right: 5%;
+      width: 40%;
+      transform: rotate(10deg);
+      animation: goku linear 0.4s infinite;
+    }
+    &-img-3 {
+      position: absolute;
+      top: 0%;
+      left: 30%;
+      width: 30%;
+      transform: rotate(10deg);
+      animation: goku linear 0.4s infinite;
     }
   }
 }
 
 @keyframes waiwai {
+  0% {
+    transform: translateY(0) rotate(10deg);
+  }
+
+  50% {
+    transform: translateY(7px) rotate(9deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(10deg);
+  }
+}
+
+@keyframes gogogo {
+  0% {
+    transform: translateY(0) rotate(10deg);
+  }
+
+  50% {
+    transform: translateY(7px) rotate(9deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(10deg);
+  }
+}
+
+@keyframes goku {
   0% {
     transform: translateY(0) rotate(10deg);
   }

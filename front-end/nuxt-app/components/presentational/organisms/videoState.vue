@@ -3,7 +3,7 @@
     <div class="video-state-inner pa-2 d-flex align-center">
       <div class="video-state-icon">
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar effect-btn">
-          <v-icon color="black" @click="this.effectOperation" id="effect-icon">mdi-emoticon-happy-outline</v-icon>
+          <v-icon color="black" @click="this.effectOperation" id="effect-icon">mdi-thumb-up </v-icon>
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
@@ -51,7 +51,9 @@
     </div>
 
     <div class="effect-select-box">
-      <img src="~/assets/img/waiwaiImg.svg" class="effect-select-box-img" @click="effectFn" />
+      <img src="~/assets/img/waiwaiImg.svg" class="effect-select-box-img" @click="effectFn('1')" />
+      <img src="~/assets/img/gogogoImg.svg" class="effect-select-box-img" @click="effectFn('2')" />
+      <img src="~/assets/img/gokuImg.svg" class="effect-select-box-img" @click="effectFn('3')" />
     </div>
   </v-card>
 </template>

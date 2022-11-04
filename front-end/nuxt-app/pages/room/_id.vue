@@ -21,6 +21,7 @@
         :myVideoStatus="this.myVideoStatus"
         :myAudioStatus="this.myAudioStatus"
         :captureImage="this.captureImage"
+        :effectFn="this.effectFn"
       />
     </div>
     <!-- ビデオステータスバー -->
@@ -105,13 +106,15 @@ export default {
         console.log('websocket connection');
       };
       websocketConn.onmessage = function (evt) {
-        //フォーカス処理
-
+        // フォーカスされた人以外の音量
         const unfocusedVolume = 0.15;
 
-        //-------------------------------------------------------------------------//
-        //フォーカス全解除&音量下げ
+        // ======================================================================== //
+        // focus function
+        // ======================================================================== //
         const focusThisVideoAllLift = () => {
+          // フォーカス全解除&音量下げ
+
           const videos = document.querySelectorAll('.video-individual');
 
           for (let video of videos) {
@@ -120,10 +123,9 @@ export default {
             video.classList.remove('video-individual-focus');
           }
         };
-        //-------------------------------------------------------------------------//
-        //-------------------------------------------------------------------------//
-        //引数のメンバーをフォーカスしてそれ以外を除外
         const doFocus = (focusMemberData) => {
+          // 引数のメンバーをフォーカス
+
           if (focusMemberData.length == 0) {
             const videos = document.querySelectorAll('.video-individual');
 
@@ -134,7 +136,7 @@ export default {
             return;
           }
 
-          document.querySelector('#my-video').classList.add('video-individual-focus');
+          document.querySelector('#videomy-video').classList.add('video-individual-focus');
 
           for (let tgMemberData of focusMemberData) {
             let videoDom = document.getElementById(tgMemberData.name);
@@ -142,24 +144,45 @@ export default {
             videoDom.volume = 1;
           }
         };
-        //-------------------------------------------------------------------------//
+
+        const focusRun = (data, myVideoDomName) => {
+          // フォーカス起動
+          focusThisVideoAllLift();
+
+          const memberDatas = data.focus_members;
+
+          for (let memberData of memberDatas) {
+            if (memberData.name == myVideoDomName) {
+              //引数のメンバーをフォーカスしてそれ以外を除外
+              doFocus(memberData.connects);
+            }
+          }
+        };
+        // ======================================================================== //
+
+        // ======================================================================== //
+        // effect function
+        // ======================================================================== //
+        const effectRun = (data, myVideoDomName) => {
+          // エフェクト起動
+          if (data.effect_member.name == myVideoDomName) return;
+
+          this.$refs.videoComponents.effectOthers(data.effect_member.type, data.effect_member.name);
+        };
+        // ======================================================================== //
 
         const data = JSON.parse(evt.data);
-        const myPeerId = document.querySelector('#my-video').getAttribute('name');
+        const myVideoDomName = document.querySelector('#videomy-video').getAttribute('name');
 
-        if (data.type != 'SET_FOCUS' && data.type != 'DEL_ALL_FOCUS' && data.type != 'DEL_FOCUS') return;
+        // フォーカス
+        if (data.event_type == 'SET_FOCUS' || data.event_type == 'DEL_ALL_FOCUS' || data.event_type == 'DEL_FOCUS')
+          focusRun(data, myVideoDomName);
 
-        focusThisVideoAllLift();
+        // エフェクト
+        if (data.event_type == 'SET_EFFECT') effectRun(data, myVideoDomName);
 
-        const memberDatas = data.focus.members;
-
-        for (let memberData of memberDatas) {
-          if (memberData.name == myPeerId) {
-            //引数のメンバーをフォーカスしてそれ以外を除外
-            doFocus(memberData.Connects);
-          }
-        }
-      };
+        return;
+      }.bind(this);
       websocketConn.onclose = function (evt) {
         console.log('websocket connection closed');
       };
@@ -177,7 +200,7 @@ export default {
       });
 
       mediaConnection.on('open', () => {
-        document.querySelector('#my-video').setAttribute('name', this.peer.id);
+        document.querySelector('#videomy-video').setAttribute('name', `video${this.peer.id}`);
       });
 
       //ルームメンバーが退出したときに発火
@@ -213,7 +236,9 @@ export default {
       const data = {
         type: 'NEW_MEMBER',
         info: {
-          from: `${this.peer.id}`
+          focus: {
+            from: `video${this.peer.id}`
+          }
         }
       };
 
@@ -238,7 +263,9 @@ export default {
           const data = {
             type: 'DEL_ALL_FOCUS',
             info: {
-              from: this.peer
+              focus: {
+                from: `video${this.peer}`
+              }
             }
           };
 
@@ -336,7 +363,7 @@ export default {
 
     focusThisVideo: function (id) {
       //ビデオをフォーカスする(自分のビデオ以外)
-      if (id == 'my-video') return;
+      if (id == 'videomy-video') return;
 
       const className = document.getElementById(id).className;
       if (className == 'video-individual') {
@@ -344,8 +371,10 @@ export default {
         const data = {
           type: 'SET_FOCUS',
           info: {
-            from: `${this.peer.id}`,
-            to: `${id}`
+            focus: {
+              from: `video${this.peer.id}`,
+              to: `${id}`
+            }
           }
         };
         this.websocketConn.send(JSON.stringify(data));
@@ -354,8 +383,10 @@ export default {
         const data = {
           type: 'DEL_FOCUS',
           info: {
-            from: `${this.peer.id}`,
-            to: `${id}`
+            focus: {
+              from: `video${this.peer.id}`,
+              to: `${id}`
+            }
           }
         };
         this.websocketConn.send(JSON.stringify(data));
@@ -363,25 +394,28 @@ export default {
     },
     focusThisVideoLineOfSight: function (id) {
       //ビデオをフォーカスする(自分のビデオ以外)(視線で)
-      if (id == 'my-video') return;
+      if (id == 'videomy-video') return;
 
       //websocket ユーザー同士を接続状態にする
       const data = {
         type: 'SET_FOCUS',
         info: {
-          from: `${this.peer.id}`,
-          to: `${id}`
+          focus: {
+            from: `video${this.peer.id}`,
+            to: `${id}`
+          }
         }
       };
       this.websocketConn.send(JSON.stringify(data));
     },
     focusThisVideoAllLift: function () {
       //フォーカスを全解除
-
       const data = {
         type: 'DEL_ALL_FOCUS',
         info: {
-          from: `${this.peer.id}`
+          focus: {
+            from: `video${this.peer.id}`
+          }
         }
       };
       this.websocketConn.send(JSON.stringify(data));
@@ -429,6 +463,22 @@ export default {
       this.myAudioStatus = !this.myAudioStatus;
     },
 
+    effectFn: function () {
+      //自分の画像にエフェクトを追加する(エフェクト作動)
+      const data = {
+        type: 'SET_EFFECT',
+        info: {
+          effect: {
+            name: `video${this.peer.id}`,
+            type: '1'
+          }
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
+
+      this.$refs.videoComponents.effectOnMySelf('1');
+    },
+
     loaderOperation: function () {
       this.isVisibleLoader = !this.isVisibleLoader;
     }
@@ -464,7 +514,7 @@ export default {
     try {
       // カメラ映像取得(自)
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
-      document.getElementById('my-video').srcObject = stream;
+      document.getElementById('videomy-video').srcObject = stream;
       this.localStream = stream;
     } catch (error) {
       console.log(error);

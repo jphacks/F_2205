@@ -20,38 +20,66 @@ window.onload = function () {
         if (!conn) {
             return false;
         }
-        const data = {
-            type:"DEL_ALL_FOCUS",
-            info:{
-                from:"hoge11",
-            }
-        }
+
+        // TODO もう少しテストしやすくする
+
         // const data = {
-        //     type:"DEL_FOCUS",
+        //     type:"NEW_MEMBER",
         //     info:{
-        //         from:"hoge11",
-        //         to:"hoge12",
+        //         focus:{
+        //             from:"hoge1"
+        //         }
+        //     }
+        // }
+        // const data = {
+        //     type:"NEW_MEMBER",
+        //     info:{
+        //         focus:{
+        //             from:"hoge2"
+        //         }
         //     }
         // }
         // const data = {
         //     type:"SET_FOCUS",
         //     info:{
-        //         from:"hoge11",
-        //         to:"hoge12",
+        //         focus:{
+        //             from:"hoge1",
+        //             to:"hoge2",
+        //         }
         //     }
         // }
         // const data = {
-        //     type:"NEW_MEMBER",
+        //     type:"DEL_FOCUS",
         //     info:{
-        //         from:"hoge11",
+        //         focus:{
+        //             from:"hoge1",
+        //             to:"hoge2",
+        //         }
         //     }
         // }
         // const data = {
-        //     type:"NEW_MEMBER",
+        //     type:"DEL_ALL_FOCUS",
         //     info:{
-        //         from:"hoge12",
+        //         focus:{
+        //             from:"hoge1"
+        //         }
         //     }
         // }
+
+        // const data = {
+        //     type:"SET_SCREEN_SHOT"
+        // }
+
+        // const data = {
+        //     type:"SET_EFFECT",
+        //     info:{
+        //         effect:{
+        //             name:"hoge1",
+        //             type:"happy"
+        //         }
+        //     }
+        // }
+
         console.log(data)
         conn.send(JSON.stringify(data));
         return false;

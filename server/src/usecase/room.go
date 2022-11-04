@@ -5,6 +5,7 @@ import (
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 	"github.com/jphacks/F_2205/server/src/domain/repository"
+	"github.com/jphacks/F_2205/server/src/utils/generate"
 )
 
 var _ IRoomUseCase = &RoomUseCase{}
@@ -18,6 +19,8 @@ type IRoomUseCase interface {
 	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
 	CheckExistsRoomAndInit(roomId entity.RoomId)
 	DeleteRoomOfRoomId(roomId entity.RoomId)
+	CreateRoom() (*entity.RoomInfo, error)
+	GetSumOfRoom() int
 }
 
 func NewRoomUseCase(repo repository.IRoomRepository) *RoomUseCase {
@@ -33,6 +36,28 @@ func (uc *RoomUseCase) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.Focu
 // CheckExistsRoomAndInitはroomIdのRoomが登録されているか確認し、登録されてなかった場合Roomを初期化して用意します
 func (uc *RoomUseCase) CheckExistsRoomAndInit(roomId entity.RoomId) {
 	uc.repo.CheckExistsRoomAndInit(roomId)
+}
+
+func (uc *RoomUseCase) GetSumOfRoom() int {
+	return uc.repo.GetSumOfRoom()
+}
+
+// CreateRoomはルーム番号を生成します
+// またそのルーム番号がすでに使われているか確認し、使われていた場合エラーを返します
+func (uc *RoomUseCase) CreateRoom() (*entity.RoomInfo, error) {
+	roomIdString, err := generate.MakeRandomStrFromLetters(4)
+	if err != nil {
+		return nil, fmt.Errorf("RoomUseCase.CreateRoom Error : %w", err)
+	}
+	roomId := (entity.RoomId)(roomIdString)
+	_, found := uc.repo.GetExistsRoomOfRoomId(roomId)
+	if found {
+		return nil, fmt.Errorf("RoomUseCase.CreateRoom Error : roomId already used")
+	}
+	roomInfo := &entity.RoomInfo{
+		Id: roomId,
+	}
+	return roomInfo, nil
 }
 
 func (uc *RoomUseCase) DeleteRoomOfRoomId(roomId entity.RoomId) {

@@ -10,4 +10,6 @@ type IRoomRepository interface {
 	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
 	CheckExistsRoomAndInit(roomId entity.RoomId)
 	DeleteRoomOfRoomId(roomId entity.RoomId)
+	GetExistsRoomOfRoomId(roomId entity.RoomId) (*entity.Room, bool)
+	GetSumOfRoom() int
 }

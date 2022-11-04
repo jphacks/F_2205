@@ -1,7 +1,8 @@
 <template>
   <section>
-    <Video ref="videoComponents" :roomMemberNum="this.roomMemberNum" />
-
+    <div id="capture">
+      <Video ref="videoComponents" :roomMemberNum="this.roomMemberNum" />
+    </div>
     <!-- シェアカード -->
     <ShareCard />
     <!-- シェアカード -->
@@ -19,6 +20,7 @@
         :audioMuteFn="this.audioMute"
         :myVideoStatus="this.myVideoStatus"
         :myAudioStatus="this.myAudioStatus"
+        :captureImage="this.captureImage"
         :effectFn="this.effectFn"
       />
     </div>
@@ -45,6 +47,7 @@
 <script>
 import Peer from 'skyway-js';
 import axios from 'axios';
+import html2canvas from 'html2canvas';
 
 import VideoState from '~/components/presentational/organisms/videoState';
 import Btn from '~/components/presentational/atoms/btn';
@@ -89,6 +92,15 @@ export default {
   },
 
   methods: {
+    //スクリーンショット起動
+    captureImage() {
+      html2canvas(document.querySelector('#capture')).then((canvas) => {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL();
+        link.download = `export_image.png`;
+        link.click();
+      });
+    },
     setWebsocketEventListener: function (websocketConn) {
       websocketConn.onopen = function (e) {
         console.log('websocket connection');

@@ -29,6 +29,7 @@ export default {
       const videoLineDoms = document.querySelectorAll('.video-line');
 
       const videoDom = document.createElement('video');
+
       videoDom.setAttribute('id', `video${stream.peerId}`);
       videoDom.classList.add('video-individual');
       videoDom.srcObject = stream;
@@ -56,6 +57,7 @@ export default {
 
         videoLineDoms[1].append(videoDom);
         this.addEffectComponents(stream.peerId);
+
         return;
       }
 
@@ -88,6 +90,7 @@ export default {
 
         videoLineDoms[3].append(videoDom);
         this.addEffectComponents(stream.peerId);
+
         return;
       }
 
@@ -104,6 +107,7 @@ export default {
 
         videoLineDoms[4].append(videoDom);
         this.addEffectComponents(stream.peerId);
+
         return;
       }
 
@@ -120,6 +124,7 @@ export default {
 
         videoLineDoms[5].append(videoDom);
         this.addEffectComponents(stream.peerId);
+
         return;
       }
     },
@@ -177,17 +182,20 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    * {
+      flex: 1;
+      margin: 10px;
+      border-radius: 20px;
+      max-width: 480px;
+    }
+
+    .video-individual-focus {
+      border: solid 5px orange;
+    }
   }
 
   &-individual {
-    flex: 1;
-    margin: 10px;
-    border-radius: 20px;
-    max-width: 480px;
-
-    &-focus {
-      border: solid 5px orange;
-    }
   }
 }
 </style>

@@ -28,16 +28,12 @@ export default {
     addVideo: function (stream, roomMemberNum) {
       const videoLineDoms = document.querySelectorAll('.video-line');
 
-      // const videoContainer = document.createElement('div');
-      // videoContainer.classList.add('video-individual');
-
       const videoDom = document.createElement('video');
 
       videoDom.setAttribute('id', `video${stream.peerId}`);
       videoDom.classList.add('video-individual');
       videoDom.srcObject = stream;
       videoDom.play();
-      // videoContainer.appendChild(videoDom);
 
       //append
       let divDom;
@@ -200,21 +196,6 @@ export default {
   }
 
   &-individual {
-    // * {
-    //   flex: 1;
-    //   margin: 10px;
-    //   border-radius: 20px;
-    //   max-width: 480px;
-    // }
-
-    // flex: 1;
-    // margin: 10px;
-    // border-radius: 20px;
-    // max-width: 480px;
-
-    // &-focus {
-    //   border: solid 5px orange;
-    // }
   }
 }
 </style>

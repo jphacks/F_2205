@@ -3,7 +3,7 @@
     <div class="video-state-inner pa-2 d-flex align-center">
       <div class="video-state-icon">
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar effect-btn">
-          <v-icon color="black" @click="this.effectOperation" id="effect-icon">mdi-emoticon-happy-outline</v-icon>
+          <v-icon color="black" @click="this.effectOperation" id="effect-icon">mdi-thumb-up </v-icon>
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">

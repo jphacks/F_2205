@@ -4,6 +4,7 @@
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-1" />
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-2" />
       <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-3" />
+      <img src="~/assets/img/waiwaiImg.svg" class="video-effect-waiwai-img-4" />
     </section>
 
     <section class="video-effect-gogogo" v-if="effectNumber == '2'">
@@ -84,24 +85,31 @@ export default {
     &-img-1 {
       position: absolute;
       top: 0;
-      left: 30px;
-      width: 160px;
+      left: 5%;
+      width: 35%;
       transform: rotate(10deg);
       animation: waiwai linear 0.4s infinite;
     }
     &-img-2 {
       position: absolute;
-      top: 80px;
-      right: 30px;
-      width: 160px;
+      top: 5%;
+      right: 5%;
+      width: 40%;
       transform: rotate(-10deg);
       animation: waiwai linear 0.4s infinite;
     }
     &-img-3 {
       position: absolute;
-      bottom: 10px;
-      left: 60px;
-      width: 160px;
+      bottom: 0;
+      left: 10%;
+      width: 40%;
+      animation: waiwai linear 0.4s infinite;
+    }
+    &-img-4 {
+      position: absolute;
+      bottom: 5%;
+      right: 5%;
+      width: 30%;
       animation: waiwai linear 0.4s infinite;
     }
   }
@@ -111,23 +119,23 @@ export default {
       position: absolute;
       top: 0;
       left: 5%;
-      width: 160px;
+      width: 40%;
       transform: rotate(10deg);
       animation: gogogo linear 0.4s infinite;
     }
     &-img-2 {
       position: absolute;
-      top: 5%;
-      right: 10%;
-      width: 160px;
+      top: 10%;
+      right: 0;
+      width: 30%;
       transform: rotate(10deg);
       animation: gogogo linear 0.4s infinite;
     }
     &-img-3 {
       position: absolute;
-      top: 40%;
+      top: 50%;
       left: 10%;
-      width: 160px;
+      width: 30%;
       transform: rotate(10deg);
       animation: gogogo linear 0.4s infinite;
     }
@@ -138,7 +146,7 @@ export default {
       position: absolute;
       top: 30%;
       left: 5%;
-      width: 120px;
+      width: 40%;
       transform: rotate(10deg);
       animation: goku linear 0.4s infinite;
     }
@@ -146,15 +154,15 @@ export default {
       position: absolute;
       top: 40%;
       right: 5%;
-      width: 120px;
+      width: 40%;
       transform: rotate(10deg);
       animation: goku linear 0.4s infinite;
     }
     &-img-3 {
       position: absolute;
       top: 0%;
-      left: 40%;
-      width: 120px;
+      left: 30%;
+      width: 30%;
       transform: rotate(10deg);
       animation: goku linear 0.4s infinite;
     }

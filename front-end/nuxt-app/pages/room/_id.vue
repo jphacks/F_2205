@@ -536,11 +536,12 @@ export default {
       if (prediction[1].probability.toFixed(2)>=0.80) {
         this.predictionCount += 1
 
-        // 数ミリ秒単位でカウントしているため，50回カウントで1秒とする
-        if (this.predictionCount > 50) {
-          this.drinkingCount += 1;
+        // 数ミリ秒単位でカウントしているため，30回カウントで制御
+        if (this.predictionCount > 10) {
+          this.effectFn('3');
+          this.drinkingCount += 1; // TODO: 廃止予定
           this.predictionCount = 0;
-        } 
+        }
       }
     },
   },

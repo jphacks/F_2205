@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// upgraderはHTTP通信からwebsocket プロトコルにアップグレードします
+// upgraderはHTTP通信からwebsocketプロトコルにアップグレードします
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,

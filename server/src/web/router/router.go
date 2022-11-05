@@ -18,6 +18,7 @@ func NewRouter() *Router {
 	r := &Router{
 		Engine: e,
 	}
+
 	// middlewareの設定
 	r.setMiddleware()
 

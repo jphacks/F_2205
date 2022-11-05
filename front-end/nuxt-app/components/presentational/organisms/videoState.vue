@@ -2,8 +2,8 @@
   <v-card class="video-state" color="orange lighten-3" tile>
     <div class="video-state-inner pa-2 d-flex align-center">
       <div class="video-state-icon">
-        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
-          <v-icon color="black" @click.native="effectFn">mdi-emoticon-happy-outline</v-icon>
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar effect-btn">
+          <v-icon color="black" @click="this.effectOperation" id="effect-icon">mdi-thumb-up </v-icon>
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
@@ -36,10 +36,13 @@
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
-            <v-icon color="black" @click.native="drinkEstimatingFn" v-if="isEnableDrinkEstimating">mdi-glass-cocktail</v-icon>
-            <v-icon color="black" @click.native="drinkEstimatingFn" v-else>mdi-glass-cocktail-off</v-icon>
+          <v-icon color="black" @click.native="captureImage">mdi-monitor-screenshot</v-icon>
         </v-avatar>
 
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-icon color="black" @click.native="drinkEstimatingFn" v-if="isEnableDrinkEstimating">mdi-glass-cocktail</v-icon>
+          <v-icon color="black" @click.native="drinkEstimatingFn" v-else>mdi-glass-cocktail-off</v-icon>
+        </v-avatar>
       </div>
 
       <div class="adjustWebgazerContainer">
@@ -54,6 +57,12 @@
       <div>
         <Btn text="退出" color="red" :clickedfn="leavingFn" />
       </div>
+    </div>
+
+    <div class="effect-select-box">
+      <img src="~/assets/img/waiwaiImg.svg" class="effect-select-box-img" @click="effectFn('1')" />
+      <img src="~/assets/img/gogogoImg.svg" class="effect-select-box-img" @click="effectFn('2')" />
+      <img src="~/assets/img/gokuImg.svg" class="effect-select-box-img" @click="effectFn('3')" />
     </div>
   </v-card>
 </template>
@@ -76,11 +85,28 @@ export default {
     'audioMuteFn',
     'myAudioStatus',
     'myVideoStatus',
+    'captureImage',
     'effectFn'
   ],
   components: {
     Btn,
     AdjustWebgazerDialog
+  },
+
+  methods: {
+    effectOperation: function () {
+      this.isEffectDisplay = !this.isEffectDisplay;
+
+      const effectSelectBoxDom = document.querySelector('.effect-select-box');
+      effectSelectBoxDom.classList.toggle('effect-open');
+
+      const tgIconDom = document.querySelector('#effect-icon');
+      const x = tgIconDom.getBoundingClientRect().left;
+      const y = tgIconDom.getBoundingClientRect().top;
+
+      effectSelectBoxDom.style.top = y - 100 + 'px';
+      effectSelectBoxDom.style.left = x - 30 + 'px';
+    }
   }
 };
 </script>
@@ -113,5 +139,33 @@ export default {
 .adjustWebgazer {
   width: 100vw;
   height: 100vh;
+}
+
+.effect-select-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 80px;
+  border-radius: 20px !important;
+  padding: 0 10px;
+  background-color: #fff;
+  transition: opacity 0.3s;
+
+  &-img {
+    width: 80px;
+    &:hover {
+      cursor: pointer;
+      opacity: 0.6;
+    }
+  }
+}
+
+.effect-open.effect-select-box {
+  opacity: 1;
 }
 </style>

@@ -1,14 +1,15 @@
 <template>
   <section id="video-wrap" class="video">
     <div class="video-line">
-      <video id="my-video" class="video-individual" autoplay muted playsinline></video>
+      <video id="videomy-video" class="video-individual" autoplay muted playsinline></video>
     </div>
-    <VideoEffect ref="effectComponentsMyVideo" videoId="my-video" />
+    <div v-for="peerId of peerIds" :key="peerId">
+      <VideoEffect :ref="`effectComponentsvideo${peerId}`" :videoId="peerId" />
+    </div>
   </section>
 </template>
 
 <script>
-import Vue from 'vue/dist/vue.esm.js';
 import VideoEffect from '~/components/presentational/organisms/videoEffect';
 
 export default {
@@ -17,12 +18,19 @@ export default {
     VideoEffect
   },
 
+  data() {
+    return {
+      peerIds: ['my-video']
+    };
+  },
+
   methods: {
     addVideo: function (stream, roomMemberNum) {
       const videoLineDoms = document.querySelectorAll('.video-line');
 
       const videoDom = document.createElement('video');
-      videoDom.setAttribute('id', stream.peerId);
+
+      videoDom.setAttribute('id', `video${stream.peerId}`);
       videoDom.classList.add('video-individual');
       videoDom.srcObject = stream;
       videoDom.play();
@@ -49,6 +57,7 @@ export default {
 
         videoLineDoms[1].append(videoDom);
         this.addEffectComponents(stream.peerId);
+
         return;
       }
 
@@ -81,6 +90,7 @@ export default {
 
         videoLineDoms[3].append(videoDom);
         this.addEffectComponents(stream.peerId);
+
         return;
       }
 
@@ -97,6 +107,7 @@ export default {
 
         videoLineDoms[4].append(videoDom);
         this.addEffectComponents(stream.peerId);
+
         return;
       }
 
@@ -113,6 +124,7 @@ export default {
 
         videoLineDoms[5].append(videoDom);
         this.addEffectComponents(stream.peerId);
+
         return;
       }
     },
@@ -120,7 +132,7 @@ export default {
     removeVideo: function (peerId, roomMemberNum) {
       console.log(roomMemberNum);
 
-      const videoDom = document.getElementById(peerId);
+      const videoDom = document.getElementById(`video${peerId}`);
       videoDom.remove();
 
       if (roomMemberNum % 3 == 0) {
@@ -131,27 +143,18 @@ export default {
     },
 
     addEffectComponents: function (videoId) {
-      const ComponentClass = Vue.extend(VideoEffect);
-      const instance = new ComponentClass({
-        propsData: {
-          ref: `effectComponents${videoId}`,
-          videoId: videoId
-        }
-      });
-      instance.$mount();
-
-      document.querySelector('#video-wrap').append(instance.$el);
+      this.peerIds.push(videoId);
     },
 
-    effectOthers: function (effectNumber, videoId) {
+    effectOthers: function (effectNumber, videoDomId) {
       //自分以外のビデオにエフェクトを追加する(websocketConn.onmessageから呼ばれる)
-      const tgRef = 'effectComponents' + videoId;
-      this.$refs.eval(tgRef).start(effectNumber);
+      const tgRef = 'effectComponents' + videoDomId;
+      this.$refs[tgRef][0].start(effectNumber);
     },
 
     effectOnMySelf: function (effectNumber) {
       //自分の画像にエフェクトを追加する
-      this.$refs.effectComponentsMyVideo.start(effectNumber);
+      this.$refs['effectComponentsvideomy-video'][0].start(effectNumber);
     }
   }
 };
@@ -179,17 +182,20 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    * {
+      flex: 1;
+      margin: 10px;
+      border-radius: 20px;
+      max-width: 480px;
+    }
+
+    .video-individual-focus {
+      border: solid 5px orange;
+    }
   }
 
   &-individual {
-    flex: 1;
-    margin: 10px;
-    border-radius: 20px;
-    max-width: 480px;
-
-    &-focus {
-      border: solid 5px orange;
-    }
   }
 }
 </style>

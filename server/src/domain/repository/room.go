@@ -7,7 +7,9 @@ type IRoomRepository interface {
 	SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error
 	DelMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error
 	DelAllMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name) error
-	GetMemberOfRoomId(roomId entity.RoomId) entity.Members
+	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
 	CheckExistsRoomAndInit(roomId entity.RoomId)
 	DeleteRoomOfRoomId(roomId entity.RoomId)
+	GetExistsRoomOfRoomId(roomId entity.RoomId) (*entity.Room, bool)
+	GetSumOfRoom() int
 }

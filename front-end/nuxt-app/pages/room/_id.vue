@@ -104,6 +104,7 @@ export default {
       drinkingCount: 0, // 飲んだ回数
       predictionCount: 0, // 推定結果の返却回数
       accuracy: {drinking: 0, noDrinking: 0},
+      isLoop: true,
     };
   },
 
@@ -504,11 +505,12 @@ export default {
     },
 
     beginEstimateDrinking: function () {
+      this.isLoop = true;
       this.initializeDrinkingModel();
     },
 
     endEstimateDrinking: function () {
-      this.loop = () => {};
+      this.isLoop = false;
     },
 
     initializeDrinkingModel: async function () {
@@ -522,8 +524,10 @@ export default {
     },
 
     loop: async function () {
-      await this.predictDrinking();
-      window.requestAnimationFrame(this.loop);
+      if (this.isLoop) {
+        await this.predictDrinking();
+        window.requestAnimationFrame(this.loop);
+      }
     },
 
     predictDrinking: async function () {

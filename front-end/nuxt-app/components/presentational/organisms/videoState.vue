@@ -34,6 +34,14 @@
             <v-icon color="black">mdi-cog-off-outline</v-icon>
           </v-btn>
         </v-avatar>
+
+        <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
+          <v-btn color="transparent" height="56" @click.native="drinkEstimatingFn">
+            <v-icon color="black" v-if="isEnableDrinkEstimating">mdi-glass-cocktail</v-icon>
+            <v-icon color="black" v-else>mdi-glass-cocktail-off</v-icon>
+          </v-btn>
+        </v-avatar>
+
       </div>
 
       <div class="adjustWebgazerContainer">
@@ -61,6 +69,8 @@ export default {
     'leavingFn',
     'isEnableGazeEstimating',
     'gazeEstimatingFn',
+    'isEnableDrinkEstimating',
+    'drinkEstimatingFn',
     'focusThisVideoAllLiftFn',
     'handleAdjustWebGazer',
     'isOpenAdjustWebGazerDialog',

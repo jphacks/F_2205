@@ -20,6 +20,8 @@
         :myVideoStatus="this.myVideoStatus"
         :myAudioStatus="this.myAudioStatus"
         :effectFn="this.effectFn"
+        :drinkEstimatingFn="this.switchDrinkEstimating"
+        :isEnableDrinkEstimating="this.isEnableDrinkEstimating"
       />
     </div>
     <!-- ビデオステータスバー -->
@@ -76,6 +78,7 @@ export default {
       isVisibleSwitchButton: false,
       isOpenAdjustWebGazerDialog: false,
       isEnableGazeEstimating: false,
+      isEnableDrinkEstimating: false,
       isFirstGazeEstimating: true,
       elementUnderGazeCount: 0,
       myVideoStatus: true,
@@ -323,6 +326,10 @@ export default {
       this.isEnableGazeEstimating = !this.isEnableGazeEstimating;
     },
 
+    switchDrinkEstimating: function () {
+      this.isEnableDrinkEstimating = !this.isEnableDrinkEstimating;
+    },
+
     focusThisVideo: function (id) {
       //ビデオをフォーカスする(自分のビデオ以外)
       if (id == 'my-video') return;
@@ -425,7 +432,15 @@ export default {
 
     loaderOperation: function () {
       this.isVisibleLoader = !this.isVisibleLoader;
-    }
+    },
+
+    beginEstimateDrinking: function () {
+      console.log("begin");
+    },
+
+    endEstimateDrinking: function () {
+      console.log("end");
+    },
   },
 
   mounted: async function () {
@@ -506,7 +521,18 @@ export default {
       } else {
         this.pauseEstimateGaze();
       }
-    }
+    },
+
+    isEnableDrinkEstimating: function (isResumeButton) {
+      console.log('isResumeDrinkingButton', isResumeButton);
+      if (isResumeButton) {
+        this.beginEstimateDrinking();
+        console.log("beginEstimateDrinking");
+      } else {
+        this.endEstimateDrinking();
+        console.log("endEstimateDrinking");
+      }
+    },
   }
 };
 </script>

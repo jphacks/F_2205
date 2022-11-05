@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jphacks/F_2205/server/src/web/router"
+	"github.com/jphacks/F_2205/server/src/presentation/router"
 )
 
 func main() {

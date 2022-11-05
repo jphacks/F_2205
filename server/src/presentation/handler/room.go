@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/presentation/ws"
 	"github.com/jphacks/F_2205/server/src/usecase"
-	"github.com/jphacks/F_2205/server/src/web/ws"
 
 	"github.com/gin-gonic/gin"
 )

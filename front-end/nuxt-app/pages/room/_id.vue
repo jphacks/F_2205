@@ -272,7 +272,7 @@ export default {
           this.websocketConn.send(data);
         } else {
           const response = await axios.delete(
-            'https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id
+            'https://f-2205-server-chhumpv4gq-de.a.run.app/room/' + this.$route.params.id
           );
           console.log(response);
         }

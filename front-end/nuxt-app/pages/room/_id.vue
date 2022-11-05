@@ -1,5 +1,7 @@
 <template>
   <section>
+    <!-- TODO: 認識精度の確認用：エフェクトと連携したら削除 -->
+    <!-- <div class=drinking>飲んだ秒数: {{ this.drinkingCount }}秒 / drinking: {{ this.accuracy.drinking }} / noDrinking: {{ this.accuracy.noDrinking }}</div> -->
     <div id="capture">
       <Video ref="videoComponents" :roomMemberNum="this.roomMemberNum" />
     </div>
@@ -59,6 +61,8 @@ import Loader from '~/components/presentational/organisms/loader';
 import ShareCard from '~/components/presentational/organisms/shareCard';
 
 import webgazer from 'webgazer';
+import * as tf from '@tensorflow/tfjs';
+import * as tmImage from '@teachablemachine/image';
 
 export default {
   components: {
@@ -90,7 +94,16 @@ export default {
       roomMemberNumCheckIntervalFn: null,
       roomLeavingCheckTimeoutFn: null,
       isVisibleLoader: true,
-      isConnectionRoom: false
+      isConnectionRoom: false,
+      // 飲み動作推定プロパティ
+      model: null,
+      webcam: null,
+      labelContainer: null,
+      maxPredictions: null,
+      baseURL: 'https://teachablemachine.withgoogle.com/models/x8mEWPGTZ/',
+      drinkingCount: 0, // 飲んだ回数
+      predictionCount: 0, // 推定結果の返却回数
+      accuracy: {drinking: 0, noDrinking: 0},
     };
   },
 
@@ -491,11 +504,44 @@ export default {
     },
 
     beginEstimateDrinking: function () {
-      console.log("begin");
+      this.initializeDrinkingModel();
     },
 
     endEstimateDrinking: function () {
-      console.log("end");
+      this.loop = () => {};
+    },
+
+    initializeDrinkingModel: async function () {
+      const modelURL = this.baseURL + "model.json";
+      const metadataURL = this.baseURL + "metadata.json";
+
+      // modelとmetadataのロード
+      this.model = await tmImage.load(modelURL, metadataURL);
+      this.maxPredictions = this.model.getTotalClasses();
+      window.requestAnimationFrame(this.loop);
+    },
+
+    loop: async function () {
+      await this.predictDrinking();
+      window.requestAnimationFrame(this.loop);
+    },
+
+    predictDrinking: async function () {
+      // 推定結果
+      const prediction = await this.model.predict(document.getElementById("videomy-video"));
+      this.accuracy.noDrinking = prediction[0].probability.toFixed(2);
+      this.accuracy.drinking = prediction[1].probability.toFixed(2);
+
+      // Drinking class の精度が8割以上の時、カウントを行う
+      if (prediction[1].probability.toFixed(2)>=0.80) {
+        this.predictionCount += 1
+
+        // 数ミリ秒単位でカウントしているため，50回カウントで1秒とする
+        if (this.predictionCount > 50) {
+          this.drinkingCount += 1;
+          this.predictionCount = 0;
+        } 
+      }
     },
   },
 

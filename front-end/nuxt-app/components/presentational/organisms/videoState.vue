@@ -47,7 +47,7 @@
 
         <div class="video-state-icon-wrap">
           <v-icon color="white" size="42" v-if="isEnableDrinkEstimating" @click.native="drinkEstimatingFn">mdi-glass-cocktail</v-icon>
-          <v-icon color="white" size="42" v-else @click.native="drinkEstimatingFn">mdi-glass-cocktail-off</v-icon>
+          <v-icon color="red" size="42" v-else @click.native="drinkEstimatingFn">mdi-glass-cocktail-off</v-icon>
           <h3 class="video-state-icon-info">飲み検知</h3>
         </div>
       </div>

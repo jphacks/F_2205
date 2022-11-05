@@ -25,7 +25,7 @@ export default {
 <style lang="scss">
 .open.share-card {
   position: fixed;
-  bottom: 72px;
+  bottom: 79px;
   right: 0;
 
   &::before {
@@ -41,7 +41,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   position: fixed;
-  bottom: 30px;
+  bottom: 36px;
   right: 0;
   padding: 5px 15px;
   padding-right: 45px;

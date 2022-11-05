@@ -36,10 +36,8 @@
         </v-avatar>
 
         <v-avatar color="white" size="56" class="mx-4 video-state-icon-avatar">
-          <v-btn color="transparent" height="56" @click.native="drinkEstimatingFn">
-            <v-icon color="black" v-if="isEnableDrinkEstimating">mdi-glass-cocktail</v-icon>
-            <v-icon color="black" v-else>mdi-glass-cocktail-off</v-icon>
-          </v-btn>
+            <v-icon color="black" @click.native="drinkEstimatingFn" v-if="isEnableDrinkEstimating">mdi-glass-cocktail</v-icon>
+            <v-icon color="black" @click.native="drinkEstimatingFn" v-else>mdi-glass-cocktail-off</v-icon>
         </v-avatar>
 
       </div>

@@ -540,7 +540,7 @@ export default {
       if (this.accuracy.drinking >= 0.80) {
         this.predictionCount += 1
 
-        // 数ミリ秒単位でカウントしているため，30回カウントで制御
+        // 数ミリ秒単位でカウントしているため，数回カウントで制御
         if (this.predictionCount > 10) {
           this.effectFn('3');
           this.drinkingCount += 1; // TODO: 廃止予定

@@ -100,7 +100,7 @@ export default {
       webcam: null,
       labelContainer: null,
       maxPredictions: null,
-      baseURL: 'https://teachablemachine.withgoogle.com/models/x8mEWPGTZ/',
+      baseURL: 'https://teachablemachine.withgoogle.com/models/F2AWA0Eay/',
       drinkingCount: 0, // 飲んだ回数
       predictionCount: 0, // 推定結果の返却回数
       accuracy: {drinking: 0, noDrinking: 0},
@@ -533,11 +533,11 @@ export default {
     predictDrinking: async function () {
       // 推定結果
       const prediction = await this.model.predict(document.getElementById("videomy-video"));
-      this.accuracy.noDrinking = prediction[0].probability.toFixed(2);
-      this.accuracy.drinking = prediction[1].probability.toFixed(2);
+      this.accuracy.drinking = prediction[0].probability.toFixed(2);
+      this.accuracy.noDrinking = prediction[1].probability.toFixed(2);
 
       // Drinking class の精度が8割以上の時、カウントを行う
-      if (prediction[1].probability.toFixed(2)>=0.80) {
+      if (this.accuracy.drinking >= 0.80) {
         this.predictionCount += 1
 
         // 数ミリ秒単位でカウントしているため，30回カウントで制御

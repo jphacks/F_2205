@@ -12,11 +12,11 @@ import (
 
 // TODO handlerがHubsに依存しているのが気になる。
 type RoomHandler struct {
-	uc   usecase.IRoomUseCase
+	uc   usecase.IRoomUsecase
 	Hubs *ws.Hubs
 }
 
-func NewRoomHandler(uc usecase.IRoomUseCase, hubs *ws.Hubs) *RoomHandler {
+func NewRoomHandler(uc usecase.IRoomUsecase, hubs *ws.Hubs) *RoomHandler {
 	return &RoomHandler{
 		uc:   uc,
 		Hubs: hubs,

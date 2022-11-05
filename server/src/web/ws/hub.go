@@ -26,6 +26,7 @@ type Hub struct {
 
 type Hubs map[entity.RoomId]*Hub
 
+// NewHubは新しいHubオブジェクトを生成します
 func NewHub(roomId entity.RoomId) *Hub {
 	return &Hub{
 		BroadcastRoomInfo: make(chan *entity.Room),
@@ -41,7 +42,7 @@ func NewHubs() *Hubs {
 	return &Hubs{}
 }
 
-// RunはHubを待ち受け状態にします
+// RunはHubを起動し、待ち受け状態にします
 func (h *Hub) Run() {
 	for {
 		select {
@@ -80,7 +81,8 @@ func (h *Hubs) getExistsHubOfRoomId(roomId entity.RoomId) (*Hub, bool) {
 	return hub, true
 }
 
-// CheckAndDeleteHubOfRoomIはroomIdのHubが存在するか確認し、存在した場合は削除し、存在しなかった場合はエラーを返します
+// CheckAndDeleteHubOfRoomIはroomIdのHubが存在するか確認し
+// 存在した場合は削除し、存在しなかった場合はエラーを返します
 func (h *Hubs) CheckAndDeleteHubOfRoomId(roomId entity.RoomId) error {
 	if _, found := h.getExistsHubOfRoomId(roomId); !found {
 		return fmt.Errorf("Hubs.CheckAndDeleteHubOfRoomId Error : roomId not found in Hubs")

@@ -71,6 +71,7 @@ import ScreenShotDialog from '~/components/presentational/organisms/screenShot/s
 import webgazer from 'webgazer';
 import * as tf from '@tensorflow/tfjs';
 import * as tmImage from '@teachablemachine/image';
+import shutter from '~/assets/music/camera.mp3';
 
 export default {
   components: {
@@ -125,12 +126,15 @@ export default {
     async captureImage() {
       this.isOpenScreenShotDialog = true;
 
+      const audio = new Audio(shutter);
+
       const timer = setInterval(
         async function () {
           this.currentScreenShotCount = this.currentScreenShotCount - 1;
 
           if (this.currentScreenShotCount < 1) {
             this.isOpenScreenShotDialog = false;
+            audio.play();
             await html2canvas(document.querySelector('#capture')).then((canvas) => {
               const link = document.createElement('a');
               link.href = canvas.toDataURL();
@@ -144,14 +148,6 @@ export default {
       );
 
       this.currentScreenShotCount = 3;
-    },
-    //スクショカウントダウン用
-    sleep(time) {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          resolve();
-        }, time);
-      });
     },
 
     setWebsocketEventListener: function (websocketConn) {

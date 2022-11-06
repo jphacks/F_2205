@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jphacks/F_2205/server/src/web/router"
+	"github.com/jphacks/F_2205/server/src/presentation/router"
 )
 
 func main() {
@@ -11,7 +11,7 @@ func main() {
 
 	// Routerの登録
 	r.InitHealthRouter()
-	r.InitWsRoomRouter()
+	r.InitRoomRouter()
 
 	// Routerの起動
 	r.Serve()

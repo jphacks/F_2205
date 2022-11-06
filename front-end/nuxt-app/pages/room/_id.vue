@@ -1,5 +1,7 @@
 <template>
   <section>
+    <!-- TODO: 認識精度の確認用：エフェクトと連携したら削除 -->
+    <!-- <div class=drinking>飲んだ秒数: {{ this.drinkingCount }}秒 / drinking: {{ this.accuracy.drinking }} / noDrinking: {{ this.accuracy.noDrinking }}</div> -->
     <div id="capture">
       <Video ref="videoComponents" :roomMemberNum="this.roomMemberNum" />
     </div>
@@ -22,6 +24,8 @@
         :myAudioStatus="this.myAudioStatus"
         :captureImage="this.captureImage"
         :effectFn="this.effectFn"
+        :drinkEstimatingFn="this.switchDrinkEstimating"
+        :isEnableDrinkEstimating="this.isEnableDrinkEstimating"
       />
     </div>
     <!-- ビデオステータスバー -->
@@ -57,6 +61,8 @@ import Loader from '~/components/presentational/organisms/loader';
 import ShareCard from '~/components/presentational/organisms/shareCard';
 
 import webgazer from 'webgazer';
+import * as tf from '@tensorflow/tfjs';
+import * as tmImage from '@teachablemachine/image';
 
 export default {
   components: {
@@ -79,6 +85,7 @@ export default {
       isVisibleSwitchButton: false,
       isOpenAdjustWebGazerDialog: false,
       isEnableGazeEstimating: false,
+      isEnableDrinkEstimating: false,
       isFirstGazeEstimating: true,
       elementUnderGazeCount: 0,
       myVideoStatus: true,
@@ -87,7 +94,17 @@ export default {
       roomMemberNumCheckIntervalFn: null,
       roomLeavingCheckTimeoutFn: null,
       isVisibleLoader: true,
-      isConnectionRoom: false
+      isConnectionRoom: false,
+      // 飲み動作推定プロパティ
+      model: null,
+      webcam: null,
+      labelContainer: null,
+      maxPredictions: null,
+      baseURL: 'https://teachablemachine.withgoogle.com/models/F2AWA0Eay/',
+      drinkingCount: 0, // 飲んだ回数
+      predictionCount: 0, // 推定結果の返却回数
+      accuracy: { drinking: 0, noDrinking: 0 },
+      isLoop: true
     };
   },
 
@@ -361,6 +378,10 @@ export default {
       this.isEnableGazeEstimating = !this.isEnableGazeEstimating;
     },
 
+    switchDrinkEstimating: function () {
+      this.isEnableDrinkEstimating = !this.isEnableDrinkEstimating;
+    },
+
     focusThisVideo: function (id) {
       //ビデオをフォーカスする(自分のビデオ以外)
       if (id == 'videomy-video') return;
@@ -481,6 +502,51 @@ export default {
 
     loaderOperation: function () {
       this.isVisibleLoader = !this.isVisibleLoader;
+    },
+
+    beginEstimateDrinking: function () {
+      this.isLoop = true;
+      this.initializeDrinkingModel();
+    },
+
+    endEstimateDrinking: function () {
+      this.isLoop = false;
+    },
+
+    initializeDrinkingModel: async function () {
+      const modelURL = this.baseURL + 'model.json';
+      const metadataURL = this.baseURL + 'metadata.json';
+
+      // modelとmetadataのロード
+      this.model = await tmImage.load(modelURL, metadataURL);
+      this.maxPredictions = this.model.getTotalClasses();
+      window.requestAnimationFrame(this.loop);
+    },
+
+    loop: async function () {
+      if (this.isLoop) {
+        await this.predictDrinking();
+        window.requestAnimationFrame(this.loop);
+      }
+    },
+
+    predictDrinking: async function () {
+      // 推定結果
+      const prediction = await this.model.predict(document.getElementById('videomy-video'));
+      this.accuracy.drinking = prediction[0].probability.toFixed(2);
+      this.accuracy.noDrinking = prediction[1].probability.toFixed(2);
+
+      // Drinking class の精度が8割以上の時、カウントを行う
+      if (this.accuracy.drinking >= 0.8) {
+        this.predictionCount += 1;
+
+        // 数ミリ秒単位でカウントしているため，数回カウントで制御
+        if (this.predictionCount > 10) {
+          this.effectFn('3');
+          this.drinkingCount += 1; // TODO: 廃止予定
+          this.predictionCount = 0;
+        }
+      }
     }
   },
 
@@ -494,8 +560,8 @@ export default {
     this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
     this.setWebsocketEventListener(this.websocketConn);
 
-    //ルーム接続時間制限(5分)
-    this.roomLeavingCheckTimeoutFn = setTimeout(this.roomLeaving, 300000);
+    //ルーム接続時間制限(50分)
+    this.roomLeavingCheckTimeoutFn = setTimeout(this.roomLeaving, 3000000);
 
     //ビデオ設定(解像度を落とす)
     let constraints = {
@@ -561,6 +627,17 @@ export default {
         this.resumeEstimateGaze();
       } else {
         this.pauseEstimateGaze();
+      }
+    },
+
+    isEnableDrinkEstimating: function (isResumeButton) {
+      console.log('isResumeDrinkingButton', isResumeButton);
+      if (isResumeButton) {
+        this.beginEstimateDrinking();
+        console.log('beginEstimateDrinking');
+      } else {
+        this.endEstimateDrinking();
+        console.log('endEstimateDrinking');
       }
     }
   }

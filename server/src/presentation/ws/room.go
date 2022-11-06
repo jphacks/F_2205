@@ -6,9 +6,47 @@ import (
 	"time"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/usecase"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
+
+type RoomWsHandler struct {
+	ucRoom  usecase.IRoomUsecase
+	ucEvent usecase.IEventUsecase
+	Hubs    *Hubs
+}
+
+// NewRoomWsHandlerはusecaseの依存を注入しRoomWsHandler構造体を返します
+func NewRoomWsHandler(ucRoom usecase.IRoomUsecase, ucEvent usecase.IEventUsecase, hubs *Hubs) *RoomWsHandler {
+	return &RoomWsHandler{
+		ucRoom:  ucRoom,
+		ucEvent: ucEvent,
+		Hubs:    hubs,
+	}
+}
+
+// ConnectWsRoomはwebsocket通信でserver内のRoomsオブジェクトとデータをやり取りします
+func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
+	roomId := (entity.RoomId)(ctx.Param("room_id"))
+	hub := h.getOrRegisterHub(roomId)
+	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
+}
+
+// getOrRegisterHubはHubがすでに登録されていた場合既存のHubを返し、なかった場合は新規登録します
+func (h *RoomWsHandler) getOrRegisterHub(roomId entity.RoomId) *Hub {
+	// もしすでにroomIdのHubが存在していた場合hubに入れる
+	hub, found := h.Hubs.getExistsHubOfRoomId(roomId)
+
+	// roomIdのHubが存在していなかったら新しく登録する
+	if !found {
+		hub = NewHub(roomId)
+		h.Hubs.setNewHubOfRoomId(hub, roomId)
+		go hub.Run()
+	}
+	return hub
+}
 
 // receiveEventInfoFromConnはクライアントからEvent情報が送られてきたとき、
 // Eventごとに処理を行い、新たなRoom情報をBroadcastRoomInfoに書き込みます
@@ -29,12 +67,12 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 			break
 		}
 		// eventを実行して、最新のroomオブジェクトを返す
-		room, err := h.uc.ExecEventOfEventType(e, c.Hub.RoomId)
+		room, err := h.ucEvent.SwitchExecEventByEventType(e, c.Hub.RoomId)
 		if err != nil {
 			log.Println("ExecEventOfEventType Error :", err)
 		}
 		// FocusMemberに最新の情報をいれる
-		room.FocusMembers = h.uc.GetFocusMembersOfRoomId(c.Hub.RoomId)
+		room.FocusMembers = h.ucRoom.GetFocusMembersOfRoomId(c.Hub.RoomId)
 		c.Hub.BroadcastRoomInfo <- room
 	}
 }
@@ -71,7 +109,7 @@ func (h *RoomWsHandler) sendRoomInfoToAllClients(c *Client) {
 }
 
 // serveWsConnOfHubはコネクションをwebsocket通信にアップグレードし、
-// Clientオブジェクトを用意してサーバーを起動します
+// Clientオブジェクトを用意してClientを受け取ったHubに登録します
 func (h *RoomWsHandler) serveWsConnOfHub(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {

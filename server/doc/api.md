@@ -1,29 +1,8 @@
 # API仕様書
 
-## 実装済みAPIについて
-- AddNewMember
-  - roomにmemberを新規追加する
-  - 部屋に参加したタイミングで使う
-
-- SetFocus
-  - to,fromにmember名をいれて、ユーザー同士を接続状態にする
-
-- DelFocus
-  - to,fromにmember名をいれて、ユーザー同士の接続状態を解除する
-
-- DelAllFocus
-  - fromにmember名をいれて、そのユーザーの持っている接続状態を解除する
-  - from以外のmemberがfromとの接続情報を持っていた場合、その情報も削除する
-
-- DelRoom
-  - 部屋の持っている接続情報をすべて削除する
-  - 部屋に誰もいなくなったタイミングで使用し、serverのオンメモリキャッシュを消す
-
-<br>
-
 ## Focus
 
-### AddNewMember
+### GET /ws/:room_id (AddNewMember)
 
 roomにmemberを新規追加する
 
@@ -60,7 +39,7 @@ response
 
 <br>
 
-### SetFocus
+### GET /ws/:room_id (SetFocus)
 
 to,fromにmember名をいれて、ユーザー同士を接続状態にする
 
@@ -110,7 +89,7 @@ response
 
 <br>
 
-### DelFocus
+### GET /ws/:room_id (DelFocus)
 
 to,fromにmember名をいれて、ユーザー同士の接続状態を解除する
 
@@ -151,7 +130,7 @@ response
 
 <br>
 
-### DelAllFocus
+### GET /ws/:room_id (DelAllFocus)
 
 fromにmember名をいれて、そのユーザーの持っている接続状態を解除する
 
@@ -191,17 +170,47 @@ response
 
 <br>
 
+### POST /room
 
-### DelRoom
+新しい部屋を作成する
 
-部屋の持っている接続情報をすべて削除する
+ここで作成した部屋以外ではイベント(Focus,Effect,...)を実行できない
 
-DELETE /ws/:room
+response
+
+```
+{
+    "data": {
+        "id": "cp4p"
+    }
+}
+```
+
+<br>
+
+### DELETE /room/:room_id
+
+サーバーで管理している部屋の情報を削除する
+
+部屋を閉じるタイミングでたたく
+
+正常
 
 response
 ```
 {
-    "ok": "delete room successful"
+    "ok": "delete hub of roomId successful"
+}
+```
+
+<br>
+
+指定したidの部屋がなかった場合
+
+response
+```
+{
+    "error": "Hubs.CheckAndDeleteHubOfRoomId Error : roomId not found in Hubs"
 }
 ```
 

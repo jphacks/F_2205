@@ -44,6 +44,12 @@
           <v-icon color="white" size="42" @click.native="captureImage">mdi-monitor-screenshot</v-icon>
           <h3 class="video-state-icon-info">撮影</h3>
         </div>
+
+        <div class="video-state-icon-wrap">
+          <v-icon color="white" size="42" v-if="isEnableDrinkEstimating" @click.native="drinkEstimatingFn">mdi-glass-cocktail</v-icon>
+          <v-icon color="red" size="42" v-else @click.native="drinkEstimatingFn">mdi-glass-cocktail-off</v-icon>
+          <h3 class="video-state-icon-info">飲み検知</h3>
+        </div>
       </div>
 
       <div class="adjustWebgazerContainer">
@@ -77,6 +83,8 @@ export default {
     'leavingFn',
     'isEnableGazeEstimating',
     'gazeEstimatingFn',
+    'isEnableDrinkEstimating',
+    'drinkEstimatingFn',
     'focusThisVideoAllLiftFn',
     'handleAdjustWebGazer',
     'isOpenAdjustWebGazerDialog',

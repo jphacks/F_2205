@@ -35,7 +35,7 @@ func (r *RoomRepository) AddNewMemberOfRoomId(roomId entity.RoomId, newMemberNam
 		room.FocusMembers,
 		&entity.FocusMember{
 			Name:     newMemberName,
-			Connects: []*entity.Connect{},
+			Connects: entity.Connects{},
 		},
 	)
 	return nil
@@ -135,6 +135,8 @@ func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from en
 	return nil
 }
 
+// GetFocusMembersOfRoomIdは指定したroomIdのRoomのFocusMemberを返します
+// もし見つからなかった場合は空のFocusMemberオブジェクトを返します
 func (r *RoomRepository) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
@@ -148,17 +150,17 @@ func (r *RoomRepository) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.Fo
 func (r *RoomRepository) CheckExistsRoomAndInit(roomId entity.RoomId) {
 	_, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
-		r.initRoomOfRoomId(roomId)
+		r.InitRoomOfRoomId(roomId)
 	}
 }
 
-// initRoomOfRoomIdはroomIdをkeyにRoomsに新しく空のRoomオブジェクトを登録します
-func (r *RoomRepository) initRoomOfRoomId(roomId entity.RoomId) {
+// InitRoomOfRoomIdはroomIdをkeyにRoomsに新しく空のRoomオブジェクトを登録します
+func (r *RoomRepository) InitRoomOfRoomId(roomId entity.RoomId) {
 	(*r.Rooms)[roomId] = &entity.Room{}
 }
 
-// setNewRoomOfRoomIdはroomIdをkeyにRoomsに新しくRoomを登録します
-func (r *RoomRepository) setNewRoomOfRoomId(room *entity.Room, roomId entity.RoomId) {
+// SetNewRoomOfRoomIdはroomIdをkeyにRoomsに新しくRoomを登録します
+func (r *RoomRepository) SetNewRoomOfRoomId(room *entity.Room, roomId entity.RoomId) {
 	(*r.Rooms)[roomId] = room
 }
 

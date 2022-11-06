@@ -4,19 +4,19 @@ import (
 	"net/http"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/presentation/ws"
 	"github.com/jphacks/F_2205/server/src/usecase"
-	"github.com/jphacks/F_2205/server/src/web/ws"
 
 	"github.com/gin-gonic/gin"
 )
 
 // TODO handlerがHubsに依存しているのが気になる。
 type RoomHandler struct {
-	uc   usecase.IRoomUseCase
+	uc   usecase.IRoomUsecase
 	Hubs *ws.Hubs
 }
 
-func NewRoomHandler(uc usecase.IRoomUseCase, hubs *ws.Hubs) *RoomHandler {
+func NewRoomHandler(uc usecase.IRoomUsecase, hubs *ws.Hubs) *RoomHandler {
 	return &RoomHandler{
 		uc:   uc,
 		Hubs: hubs,

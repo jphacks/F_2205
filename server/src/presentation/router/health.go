@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github.com/jphacks/F_2205/server/src/web/handler"
+	"github.com/jphacks/F_2205/server/src/presentation/handler"
 )
 
 // Healthはサーバーのヘルスチェックをするrouterです

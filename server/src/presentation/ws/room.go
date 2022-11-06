@@ -73,7 +73,7 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 		}
 		// FocusMemberに最新の情報をいれる
 		room.FocusMembers = h.ucRoom.GetFocusMembersOfRoomId(c.Hub.RoomId)
-		c.Hub.BroadcastRoomInfo <- room
+		c.Hub.BroadcastRoom <- room
 	}
 }
 

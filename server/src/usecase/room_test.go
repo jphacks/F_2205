@@ -6,7 +6,7 @@ import (
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 )
 
-func TestRoomUsecase_CreateRoom(t *testing.T) {
+func TestRoomUsecase_CreateRoomNumber(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
@@ -26,12 +26,12 @@ func TestRoomUsecase_CreateRoom(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ucRoom := NewRoomUsecase(&roomRepositoryMock{})
-			got, err := ucRoom.CreateRoom()
+			got, err := ucRoom.CreateRoomNumber()
 			if err != nil && err.Error() != tt.wantErr.Error() {
-				t.Errorf("TestRoomUsecase_CreateRoom Error : want %v, but got %v", tt.wantErr, err)
+				t.Errorf("TestRoomUsecase_CreateRoomNumber Error : want %v, but got %v", tt.wantErr, err)
 			}
 			if len(tt.wantInfo.Id) != len(got.Id) {
-				t.Errorf("TestRoomUsecase_CreateRoom Error : want %v, but got %v", len(tt.wantInfo.Id), len(got.Id))
+				t.Errorf("TestRoomUsecase_CreateRoomNumber Error : want %v, but got %v", len(tt.wantInfo.Id), len(got.Id))
 			}
 		})
 	}

@@ -50,12 +50,6 @@ export default {
       const videoDom = document.getElementById(`video${peerId}`);
       videoDom.remove();
 
-      if (roomMemberNum % 3 == 0) {
-        const videoLineDom = document.querySelectorAll('.video-line');
-        console.log(videoLineDom);
-        videoLineDom[videoLineDom.length - 1].remove();
-      }
-
       // resize
       this.videoResize(roomMemberNum);
     },
@@ -69,83 +63,116 @@ export default {
 
       const videoDoms = document.querySelectorAll('.video-individual');
 
+      // 初期化
+      document.querySelector('#video-wrap').style.padding = '10px 0';
+      for (let videoDom of videoDoms) {
+        videoDom.style.marginTop = '10px';
+        videoDom.style.marginBottom = '10px';
+      }
+
       let line;
+      let column;
       let margenPx;
+      let margenPxW;
+      let margenPxH;
       let videoSizeH;
       let videoSizeW;
+      let videoSizeWFromH;
+      let videoSizeWFromW;
+      let videoSizeWAverage;
+      let decreaseConstant;
 
       if (roomMemberNum >= 16) {
-        line = 6;
-        margenPx = 10 * (line + 1);
-
-        //ビデオの欲しい高さ
-        videoSizeH = DisplayVideoH / line - margenPx;
+        column = 5;
+        margenPx = 10 * (column * 2);
 
         //ビデオの幅
-        videoSizeW = Math.round(videoSizeH * 1.3);
+        videoSizeW = (windowSizeW - margenPx) / column;
+
+        document.querySelector('#video-wrap').style.padding = '1px 0';
 
         for (let videoDom of videoDoms) {
-          videoDom.style.maxWidth = videoSizeW + 'px';
+          videoDom.style.width = videoSizeW + 'px';
+          videoDom.style.marginTop = '1px';
+          videoDom.style.marginBottom = '1px';
         }
-
         return;
       }
 
       if (roomMemberNum >= 13) {
-        line = 5;
-        margenPx = 10 * (line + 1);
-
-        //ビデオの欲しい高さ
-        videoSizeH = DisplayVideoH / line - margenPx;
+        column = 5;
+        margenPx = 10 * (column * 2);
 
         //ビデオの幅
-        videoSizeW = Math.round(videoSizeH * 1.3);
+        videoSizeW = (windowSizeW - margenPx) / column;
 
         for (let videoDom of videoDoms) {
-          videoDom.style.maxWidth = videoSizeW + 'px';
+          videoDom.style.width = videoSizeW + 'px';
+          videoDom.style.marginTop = '4px';
+          videoDom.style.marginBottom = '4px';
         }
-
         return;
       }
 
       if (roomMemberNum >= 10) {
-        line = 4;
-        margenPx = 10 * (line + 1);
-
-        //ビデオの欲しい高さ
-        videoSizeH = DisplayVideoH / line - margenPx;
+        column = 4;
+        margenPx = 10 * (column * 2);
 
         //ビデオの幅
-        videoSizeW = Math.round(videoSizeH * 1.3);
+        videoSizeW = (windowSizeW - margenPx) / column;
 
         for (let videoDom of videoDoms) {
-          videoDom.style.maxWidth = videoSizeW + 'px';
+          videoDom.style.width = videoSizeW + 'px';
+          videoDom.style.marginTop = '4px';
+          videoDom.style.marginBottom = '4px';
         }
-
         return;
       }
 
       if (roomMemberNum >= 7) {
         line = 3;
-        margenPx = 10 * (line + 1);
+        column = 3;
+        decreaseConstant = 20;
+        margenPxH = 10 * (line * 2);
+        margenPxW = 10 * (column * 2);
 
-        //ビデオの欲しい高さ
-        videoSizeH = DisplayVideoH / line - margenPx;
+        // ビデオの欲しい高さ
+        videoSizeH = DisplayVideoH / line - margenPxH;
 
-        //ビデオの幅
-        videoSizeW = Math.round(videoSizeH * 1.3);
+        // ビデオの幅(高さ視点)
+        videoSizeWFromH = Math.round(videoSizeH * 1.3);
+
+        // ビデオの幅(幅視点)
+        videoSizeWFromW = (windowSizeW - margenPxW) / 3;
+
+        // 平均ビデオ幅(少しマイナス)
+        videoSizeWAverage = (videoSizeWFromH + videoSizeWFromW) / 2 - decreaseConstant;
 
         for (let videoDom of videoDoms) {
-          videoDom.style.maxWidth = videoSizeW + 'px';
+          videoDom.style.width = videoSizeWAverage + 'px';
+          videoDom.style.marginTop = '4px';
+          videoDom.style.marginBottom = '4px';
         }
 
         return;
       }
 
+      if (roomMemberNum >= 5) {
+        column = 3;
+        margenPx = 10 * (column * 2);
+
+        //ビデオの幅
+        videoSizeW = (windowSizeW - margenPx) / column;
+
+        for (let videoDom of videoDoms) {
+          videoDom.style.width = videoSizeW + 'px';
+        }
+        return;
+      }
+
       if (roomMemberNum >= 3) {
-        // 4人の場合
         line = 2;
-        margenPx = 10 * (line + 1);
+        margenPx = 10 * (line * 2);
 
         //ビデオの欲しい高さ
         videoSizeH = DisplayVideoH / line - margenPx;
@@ -161,6 +188,8 @@ export default {
 
       if (roomMemberNum == 2) {
         // 2人の場合
+        line = 1;
+        margenPx = 10 * (line * 2);
 
         //ビデオの欲しい高さ
         videoSizeH = DisplayVideoH - margenPx;

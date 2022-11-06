@@ -36,6 +36,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 import Btn from '~/components/presentational/atoms/btn';
 import Header from '~/components/presentational/organisms/header';
 
@@ -50,13 +52,11 @@ export default {
       const roomName = document.querySelector('#room-name').value;
       this.$router.push('/room/' + roomName);
     },
-    createRoom: function () {
-      const roomNumer = this.random(1000, 1000000);
-      this.$router.push('/room/' + roomNumer);
-    },
+    createRoom: async function () {
+      const response = await axios.post('https://f-2205-server-chhumpv4gq-de.a.run.app/room');
+      console.log(response);
 
-    random: function (min, max) {
-      return Math.floor(Math.random() * (max + 1 - min)) + min;
+      this.$router.push('/room/' + response.data.data.id);
     }
   }
 };

@@ -103,8 +103,8 @@ export default {
       baseURL: 'https://teachablemachine.withgoogle.com/models/F2AWA0Eay/',
       drinkingCount: 0, // 飲んだ回数
       predictionCount: 0, // 推定結果の返却回数
-      accuracy: {drinking: 0, noDrinking: 0},
-      isLoop: true,
+      accuracy: { drinking: 0, noDrinking: 0 },
+      isLoop: true
     };
   },
 
@@ -514,8 +514,8 @@ export default {
     },
 
     initializeDrinkingModel: async function () {
-      const modelURL = this.baseURL + "model.json";
-      const metadataURL = this.baseURL + "metadata.json";
+      const modelURL = this.baseURL + 'model.json';
+      const metadataURL = this.baseURL + 'metadata.json';
 
       // modelとmetadataのロード
       this.model = await tmImage.load(modelURL, metadataURL);
@@ -532,13 +532,13 @@ export default {
 
     predictDrinking: async function () {
       // 推定結果
-      const prediction = await this.model.predict(document.getElementById("videomy-video"));
+      const prediction = await this.model.predict(document.getElementById('videomy-video'));
       this.accuracy.drinking = prediction[0].probability.toFixed(2);
       this.accuracy.noDrinking = prediction[1].probability.toFixed(2);
 
       // Drinking class の精度が8割以上の時、カウントを行う
-      if (this.accuracy.drinking >= 0.80) {
-        this.predictionCount += 1
+      if (this.accuracy.drinking >= 0.8) {
+        this.predictionCount += 1;
 
         // 数ミリ秒単位でカウントしているため，数回カウントで制御
         if (this.predictionCount > 10) {
@@ -547,7 +547,7 @@ export default {
           this.predictionCount = 0;
         }
       }
-    },
+    }
   },
 
   mounted: async function () {
@@ -634,12 +634,12 @@ export default {
       console.log('isResumeDrinkingButton', isResumeButton);
       if (isResumeButton) {
         this.beginEstimateDrinking();
-        console.log("beginEstimateDrinking");
+        console.log('beginEstimateDrinking');
       } else {
         this.endEstimateDrinking();
-        console.log("endEstimateDrinking");
+        console.log('endEstimateDrinking');
       }
-    },
+    }
   }
 };
 </script>

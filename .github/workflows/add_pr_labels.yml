@@ -1,0 +1,15 @@
+# 参考 https://zenn.dev/sh090/articles/8291abdb1be48f5765ec
+
+name: "Pull Request Labeler"
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/labeler@v3
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        sync-labels: true

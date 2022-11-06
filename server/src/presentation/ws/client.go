@@ -5,9 +5,9 @@ package ws
 import (
 	"time"
 
-	"github.com/gorilla/websocket"
-
 	"github.com/jphacks/F_2205/server/src/domain/entity"
+
+	"github.com/gorilla/websocket"
 )
 
 // Clientはwebsocketとhubをつなぐ構造体です

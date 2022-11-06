@@ -1,0 +1,13 @@
+ci:
+  - '.github/*.yml'
+  - '.github/workflows/**/*'
+
+document:
+  - 'doc/*'
+  - 'server/doc*'
+
+server:
+  - 'server/*'
+
+front-end:
+  - 'front-end/*'

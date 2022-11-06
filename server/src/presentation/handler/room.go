@@ -28,11 +28,11 @@ func NewRoomHandler(uc usecase.IRoomUsecase, hubs *ws.Hubs) *RoomHandler {
 // GetSumOfRoomは存在する部屋の数を返すハンドラーです
 func (h *RoomHandler) GetCountSumOfRoom(ctx *gin.Context) {
 	cnt := h.uc.GetSumOfRoom()
-	cntJson := createCountRoomJson(cnt)
+	cntRoomJson := createCountRoomJson(cnt)
 
 	ctx.JSON(
 		http.StatusOK,
-		gin.H{"data": cntJson},
+		gin.H{"data": cntRoomJson},
 	)
 }
 

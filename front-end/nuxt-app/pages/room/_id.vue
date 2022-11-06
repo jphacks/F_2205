@@ -30,6 +30,10 @@
     </div>
     <!-- ビデオステータスバー -->
 
+    <!-- スクリーンショットカウントダウンDialog-->
+    <ScreenShotDialog />
+    <!-- スクリーンショットカウントダウンDialog-->
+
     <!-- モーダルウィンドウ -->
     <section class="modal-window">
       <div class="modal-window-back"></div>
@@ -59,6 +63,7 @@ import AdjustWebgazerDialog from '~/components/presentational/organisms/adjustWe
 import Video from '~/components/presentational/organisms/video';
 import Loader from '~/components/presentational/organisms/loader';
 import ShareCard from '~/components/presentational/organisms/shareCard';
+import ScreenShotDialog from '~/components/presentational/organisms/screenShot/screenShotDialog';
 
 import webgazer from 'webgazer';
 import * as tf from '@tensorflow/tfjs';
@@ -71,7 +76,8 @@ export default {
     AdjustWebgazerDialog,
     Video,
     Loader,
-    ShareCard
+    ShareCard,
+    ScreenShotDialog
   },
 
   data() {
@@ -104,7 +110,8 @@ export default {
       drinkingCount: 0, // 飲んだ回数
       predictionCount: 0, // 推定結果の返却回数
       accuracy: { drinking: 0, noDrinking: 0 },
-      isLoop: true
+      isLoop: true,
+      dialog: false
     };
   },
 
@@ -700,5 +707,17 @@ body {
       text-align: center;
     }
   }
+}
+
+.countContainer {
+  display: flex;
+  justify-content: center;
+  font-size: 300px;
+  opacity: 0.46;
+  background-color: #21212182;
+  border-color: #21212182;
+}
+.dialogContainer {
+  border-radius: 450px;
 }
 </style>

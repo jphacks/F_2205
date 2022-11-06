@@ -1,6 +1,6 @@
 <template>
   <section id="video-wrap" class="video">
-    <div class="video-line">
+    <div class="video-box">
       <video id="videomy-video" class="video-individual" autoplay muted playsinline></video>
     </div>
     <div v-for="peerId of peerIds" :key="peerId">
@@ -26,7 +26,7 @@ export default {
 
   methods: {
     addVideo: function (stream, roomMemberNum) {
-      const videoLineDoms = document.querySelectorAll('.video-line');
+      const videoBoxDom = document.querySelector('.video-box');
 
       const videoDom = document.createElement('video');
 
@@ -35,98 +35,13 @@ export default {
       videoDom.srcObject = stream;
       videoDom.play();
 
-      //append
-      let divDom;
-      if (roomMemberNum <= 3) {
-        videoLineDoms[0].append(videoDom);
+      // append
+      videoBoxDom.append(videoDom);
 
-        this.addEffectComponents(stream.peerId);
-        return;
-      }
+      // resize
+      this.videoResize(roomMemberNum);
 
-      if (roomMemberNum > 3 && roomMemberNum <= 6) {
-        if (roomMemberNum == 4) {
-          divDom = document.createElement('div');
-          divDom.classList.add('video-line');
-          divDom.append(videoDom);
-          document.getElementById('video-wrap').append(divDom);
-
-          this.addEffectComponents(stream.peerId);
-          return;
-        }
-
-        videoLineDoms[1].append(videoDom);
-        this.addEffectComponents(stream.peerId);
-
-        return;
-      }
-
-      if (roomMemberNum > 6 && roomMemberNum <= 9) {
-        if (roomMemberNum == 7) {
-          divDom = document.createElement('div');
-          divDom.classList.add('video-line');
-          divDom.append(videoDom);
-          document.getElementById('video-wrap').append(divDom);
-
-          this.addEffectComponents(stream.peerId);
-          return;
-        }
-
-        videoLineDoms[2].append(videoDom);
-        this.addEffectComponents(stream.peerId);
-        return;
-      }
-
-      if (roomMemberNum > 9 && roomMemberNum <= 12) {
-        if (roomMemberNum == 10) {
-          divDom = document.createElement('div');
-          divDom.classList.add('video-line');
-          divDom.append(videoDom);
-          document.getElementById('video-wrap').append(divDom);
-
-          this.addEffectComponents(stream.peerId);
-          return;
-        }
-
-        videoLineDoms[3].append(videoDom);
-        this.addEffectComponents(stream.peerId);
-
-        return;
-      }
-
-      if (roomMemberNum > 12 && roomMemberNum <= 15) {
-        if (roomMemberNum == 13) {
-          divDom = document.createElement('div');
-          divDom.classList.add('video-line');
-          divDom.append(videoDom);
-          document.getElementById('video-wrap').append(divDom);
-
-          this.addEffectComponents(stream.peerId);
-          return;
-        }
-
-        videoLineDoms[4].append(videoDom);
-        this.addEffectComponents(stream.peerId);
-
-        return;
-      }
-
-      if (roomMemberNum > 15 && roomMemberNum <= 18) {
-        if (roomMemberNum == 16) {
-          divDom = document.createElement('div');
-          divDom.classList.add('video-line');
-          divDom.append(videoDom);
-          document.getElementById('video-wrap').append(divDom);
-
-          this.addEffectComponents(stream.peerId);
-          return;
-        }
-
-        videoLineDoms[5].append(videoDom);
-        this.addEffectComponents(stream.peerId);
-
-        return;
-      }
+      return;
     },
 
     removeVideo: function (peerId, roomMemberNum) {
@@ -140,6 +55,132 @@ export default {
         console.log(videoLineDom);
         videoLineDom[videoLineDom.length - 1].remove();
       }
+
+      // resize
+      this.videoResize(roomMemberNum);
+    },
+
+    videoResize: function (roomMemberNum) {
+      console.log('resize video size');
+
+      const windowSizeH = document.body.clientHeight;
+      const windowSizeW = document.body.clientWidth;
+      const DisplayVideoH = windowSizeH - 79;
+
+      const videoDoms = document.querySelectorAll('.video-individual');
+
+      let line;
+      let margenPx;
+      let videoSizeH;
+      let videoSizeW;
+
+      if (roomMemberNum >= 16) {
+        line = 6;
+        margenPx = 10 * (line + 1);
+
+        //ビデオの欲しい高さ
+        videoSizeH = DisplayVideoH / line - margenPx;
+
+        //ビデオの幅
+        videoSizeW = Math.round(videoSizeH * 1.3);
+
+        for (let videoDom of videoDoms) {
+          videoDom.style.maxWidth = videoSizeW + 'px';
+        }
+
+        return;
+      }
+
+      if (roomMemberNum >= 13) {
+        line = 5;
+        margenPx = 10 * (line + 1);
+
+        //ビデオの欲しい高さ
+        videoSizeH = DisplayVideoH / line - margenPx;
+
+        //ビデオの幅
+        videoSizeW = Math.round(videoSizeH * 1.3);
+
+        for (let videoDom of videoDoms) {
+          videoDom.style.maxWidth = videoSizeW + 'px';
+        }
+
+        return;
+      }
+
+      if (roomMemberNum >= 10) {
+        line = 4;
+        margenPx = 10 * (line + 1);
+
+        //ビデオの欲しい高さ
+        videoSizeH = DisplayVideoH / line - margenPx;
+
+        //ビデオの幅
+        videoSizeW = Math.round(videoSizeH * 1.3);
+
+        for (let videoDom of videoDoms) {
+          videoDom.style.maxWidth = videoSizeW + 'px';
+        }
+
+        return;
+      }
+
+      if (roomMemberNum >= 7) {
+        line = 3;
+        margenPx = 10 * (line + 1);
+
+        //ビデオの欲しい高さ
+        videoSizeH = DisplayVideoH / line - margenPx;
+
+        //ビデオの幅
+        videoSizeW = Math.round(videoSizeH * 1.3);
+
+        for (let videoDom of videoDoms) {
+          videoDom.style.maxWidth = videoSizeW + 'px';
+        }
+
+        return;
+      }
+
+      if (roomMemberNum >= 3) {
+        // 4人の場合
+        line = 2;
+        margenPx = 10 * (line + 1);
+
+        //ビデオの欲しい高さ
+        videoSizeH = DisplayVideoH / line - margenPx;
+
+        //ビデオの幅
+        videoSizeW = Math.round(videoSizeH * 1.3);
+
+        for (let videoDom of videoDoms) {
+          videoDom.style.width = videoSizeW + 'px';
+        }
+        return;
+      }
+
+      if (roomMemberNum == 2) {
+        // 2人の場合
+
+        //ビデオの欲しい高さ
+        videoSizeH = DisplayVideoH - margenPx;
+
+        //ビデオの幅
+        videoSizeW = Math.round(videoSizeH * 1.3);
+
+        for (let videoDom of videoDoms) {
+          videoDom.style.width = videoSizeW + 'px';
+        }
+        return;
+      }
+
+      // デフォルト
+      let defaultVideoSize = 480;
+      for (let videoDom of videoDoms) {
+        videoDom.style.width = defaultVideoSize + 'px';
+      }
+
+      return;
     },
 
     addEffectComponents: function (videoId) {
@@ -167,7 +208,7 @@ export default {
   align-items: center;
   width: 100vw;
   padding: 10px 0;
-  height: calc(100vh - 72px);
+  height: calc(100vh - 79px);
   background-color: #d3be9a;
   overflow-y: scroll;
   -ms-overflow-style: none !important; /* IE, Edge 対応 */
@@ -177,17 +218,19 @@ export default {
     display: none !important;
   }
 
-  &-line {
+  &-box {
     width: 100vw;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: center;
 
     * {
-      flex: 1;
+      // flex: 1;
       margin: 10px;
       border-radius: 20px;
-      max-width: 480px;
+      max-width: 620px;
+      width: 100%;
     }
 
     .video-individual-focus {

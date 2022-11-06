@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-// MakeRandomStrFromLettersは指定したlengthの長さの文字列を生成します
+// MakeRandomStrFromLettersは指定したlengthの長さの数字の文字列を生成します
 func MakeRandomStrFromLetters(length int) (string, error) {
-	const letters = "abcdefghijklmnopqrstuvwxyz0123456789"
+	const letters = "0123456789"
 
 	// 乱数を生成
 	b := make([]byte, length) // ex: [123 242 ...]

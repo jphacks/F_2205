@@ -560,8 +560,8 @@ export default {
     this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
     this.setWebsocketEventListener(this.websocketConn);
 
-    //ルーム接続時間制限(5分)
-    this.roomLeavingCheckTimeoutFn = setTimeout(this.roomLeaving, 300000);
+    //ルーム接続時間制限(50分)
+    this.roomLeavingCheckTimeoutFn = setTimeout(this.roomLeaving, 3000000);
 
     //ビデオ設定(解像度を落とす)
     let constraints = {

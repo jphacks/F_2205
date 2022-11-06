@@ -31,7 +31,10 @@
     <!-- ビデオステータスバー -->
 
     <!-- スクリーンショットカウントダウンDialog-->
-    <ScreenShotDialog />
+    <ScreenShotDialog
+      :currentScreenShotCount="this.currentScreenShotCount"
+      :isOpenScreenShotDialog="this.isOpenScreenShotDialog"
+    />
     <!-- スクリーンショットカウントダウンDialog-->
 
     <!-- モーダルウィンドウ -->
@@ -90,6 +93,8 @@ export default {
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
       isOpenAdjustWebGazerDialog: false,
+      currentScreenShotCount: 3,
+      isOpenScreenShotDialog: false,
       isEnableGazeEstimating: false,
       isEnableDrinkEstimating: false,
       isFirstGazeEstimating: true,
@@ -117,14 +122,38 @@ export default {
 
   methods: {
     //スクリーンショット起動
-    captureImage() {
-      html2canvas(document.querySelector('#capture')).then((canvas) => {
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL();
-        link.download = `export_image.png`;
-        link.click();
+    async captureImage() {
+      this.isOpenScreenShotDialog = true;
+
+      const timer = setInterval(
+        async function () {
+          this.currentScreenShotCount = this.currentScreenShotCount - 1;
+
+          if (this.currentScreenShotCount < 1) {
+            this.isOpenScreenShotDialog = false;
+            await html2canvas(document.querySelector('#capture')).then((canvas) => {
+              const link = document.createElement('a');
+              link.href = canvas.toDataURL();
+              link.download = `export_image.png`;
+              link.click();
+            });
+            clearInterval(timer);
+          }
+        }.bind(this),
+        1000
+      );
+
+      this.currentScreenShotCount = 3;
+    },
+    //スクショカウントダウン用
+    sleep(time) {
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve();
+        }, time);
       });
     },
+
     setWebsocketEventListener: function (websocketConn) {
       websocketConn.onopen = function (e) {
         console.log('websocket connection');
@@ -707,17 +736,5 @@ body {
       text-align: center;
     }
   }
-}
-
-.countContainer {
-  display: flex;
-  justify-content: center;
-  font-size: 300px;
-  opacity: 0.46;
-  background-color: #21212182;
-  border-color: #21212182;
-}
-.dialogContainer {
-  border-radius: 450px;
 }
 </style>

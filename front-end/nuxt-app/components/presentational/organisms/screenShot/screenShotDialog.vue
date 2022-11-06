@@ -1,23 +1,42 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="dialog" width="450" content-class="dialogContainer">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn color="red lighten-2" dark v-bind="attrs" v-on="on"> Click Me </v-btn>
-      </template>
+    <v-dialog v-model="isOpenScreenShotDialog" width="450" content-class="dialogContainer">
       <div class="countContainer">
-        <div>3</div>
+        <div>{{ this.currentScreenShotCount }}</div>
       </div>
     </v-dialog>
   </div>
 </template>
 
+<style>
+.countContainer {
+  display: flex;
+  justify-content: center;
+  font-size: 300px;
+  opacity: 0.46;
+  background-color: #21212182;
+  border-color: #21212182;
+}
+.dialogContainer {
+  border-radius: 450px;
+}
+</style>
+
 <script>
 export default {
+  props: ['currentScreenShotCount', 'isOpenScreenShotDialog'],
   data() {
     return {
       dialog: false
     };
   },
-  methods: {}
+
+  watch: {
+    isOpenScreenShotDialog: function (newState, oldState) {
+      if (newState) {
+        console.log(newState);
+      }
+    }
+  }
 };
 </script>

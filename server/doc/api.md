@@ -1,5 +1,15 @@
 # API仕様書
 
+APIの仕様を直接触って確かめたい場合は
+
+以下のコマンドでAPIのテストサーバーを起動する
+
+```shell
+cd ./server && make test-api
+```
+
+<br>
+
 ## Room
 ### POST /room
 
@@ -8,8 +18,7 @@
 ここで作成した部屋以外ではイベント(Focus,Effect,...)を実行できない
 
 response
-
-```
+```json
 {
     "data": {
         "id": "1111"
@@ -28,7 +37,7 @@ response
 正常
 
 response
-```
+```json
 {
     "ok": "delete hub of roomId successful"
 }
@@ -39,7 +48,7 @@ response
 指定したidの部屋がなかった場合
 
 response
-```
+```json
 {
     "error": "Hubs.CheckAndDeleteHubOfRoomId Error : roomId not found in Hubs"
 }
@@ -53,8 +62,12 @@ roomにmemberを新規追加する
 
 focus情報にもmemberを新規追加する
 
+またfocusと違いmembersは辞書型なので注意すること
+
+時間があればfocusも辞書型にしたい
+
 send
-```
+```json
 {
     "type": "ADD_NEW_MEMBER",
     "info": {
@@ -67,15 +80,15 @@ send
 ```
 
 response
-```
+```json
 {
     "event_type": "ADD_NEW_MEMBER",
-    "members": [
-        {
-            "peer_id": "peer_hoge1",
-            "name": "hoge1"
+    "members": {
+        "peer_hoge1": {
+            "name": "hoge1",
+            "isRestRoom": false
         }
-    ],
+    },
     "focus_members": [
         {
             "name": "hoge1",
@@ -104,7 +117,7 @@ to,fromにmember名をいれて、ユーザー同士を接続状態にする
 fromさんとtoさんが存在するものと仮定する
 
 send
-```
+```json
 {
     "type": "SET_FOCUS",
     "info": {
@@ -117,19 +130,19 @@ send
 ```
 
 response
-```
+```json
 {
     "event_type": "SET_FOCUS",
-    "members": [
-        {
-            "peer_id": "peer_hoge1",
-            "name": "hoge1"
+    "members": {
+        "peer_hoge1": {
+            "name": "hoge1",
+            "isRestRoom": false
         },
-        {
-            "peer_id": "peer_hoge2",
-            "name": "hoge2"
+        "peer_hoge2": {
+            "name": "hoge2",
+            "isRestRoom": false
         }
-    ],
+    },
     "focus_members": [
         {
             "name": "hoge1",
@@ -165,7 +178,7 @@ response
 to,fromにmember名をいれて、ユーザー同士の接続状態を解除する
 
 send
-```
+```json
 {
     "type": "DEL_FOCUS",
     "info": {
@@ -179,19 +192,19 @@ send
 
 
 response
-```
+```json
 {
     "event_type": "DEL_FOCUS",
-    "members": [
-        {
-            "peer_id": "peer_hoge1",
-            "name": "hoge1"
+    "members": {
+        "peer_hoge1": {
+            "name": "hoge1",
+            "isRestRoom": false
         },
-        {
-            "peer_id": "peer_hoge2",
-            "name": "hoge2"
+        "peer_hoge2": {
+            "name": "hoge2",
+            "isRestRoom": false
         }
-    ],
+    },
     "focus_members": [
         {
             "name": "hoge1",
@@ -219,7 +232,7 @@ response
 fromにmember名をいれて、そのユーザーの持っている接続状態を解除する
 
 send
-```
+```json
 {
     "type": "DEL_ALL_FOCUS",
     "info": {
@@ -232,19 +245,19 @@ send
 
 
 response
-```
+```json
 {
     "event_type": "DEL_ALL_FOCUS",
-    "members": [
-        {
-            "peer_id": "peer_hoge1",
-            "name": "hoge1"
+    "members": {
+        "peer_hoge1": {
+            "name": "hoge1",
+            "isRestRoom": false
         },
-        {
-            "peer_id": "peer_hoge2",
-            "name": "hoge2"
+        "peer_hoge2": {
+            "name": "hoge2",
+            "isRestRoom": false
         }
-    ],
+    },
     "focus_members": [
         {
             "name": "hoge1",
@@ -274,7 +287,7 @@ response
 スクリーンショットの開始を通知する
 
 send
-```
+```json
 {
     "type": "SET_SCREEN_SHOT"
 }
@@ -282,19 +295,19 @@ send
 
 
 response
-```
+```json
 {
     "event_type": "SET_SCREEN_SHOT",
-    "members": [
-        {
-            "peer_id": "peer_hoge1",
-            "name": "hoge1"
+    "members": {
+        "peer_hoge1": {
+            "name": "hoge1",
+            "isRestRoom": false
         },
-        {
-            "peer_id": "peer_hoge2",
-            "name": "hoge2"
+        "peer_hoge2": {
+            "name": "hoge2",
+            "isRestRoom": false
         }
-    ],
+    },
     "focus_members": [
         {
             "name": "hoge1",
@@ -326,7 +339,7 @@ response
 どのメンバーが何のエフェクトを使ったのかを通知する
 
 send
-```
+```json
 {
     "type": "SET_EFFECT",
     "info": {
@@ -340,19 +353,19 @@ send
 
 
 response
-```
+```json
 {
     "event_type": "SET_EFFECT",
-    "members": [
-        {
-            "peer_id": "peer_hoge1",
-            "name": "hoge1"
+    "members": {
+        "peer_hoge1": {
+            "name": "hoge1",
+            "isRestRoom": false
         },
-        {
-            "peer_id": "peer_hoge2",
-            "name": "hoge2"
+        "peer_hoge2": {
+            "name": "hoge2",
+            "isRestRoom": false
         }
-    ],
+    },
     "focus_members": [
         {
             "name": "hoge1",
@@ -381,7 +394,7 @@ response
 どの音楽を流すか通知する
 
 send
-```
+```json
 {
     "type": "SET_SOUND",
     "info": {
@@ -393,19 +406,19 @@ send
 ```
 
 response
-```
+```json
 {
     "event_type": "SET_SOUND",
-    "members": [
-        {
-            "peer_id": "peer_hoge1",
-            "name": "hoge1"
+    "members": {
+        "peer_hoge1": {
+            "name": "hoge1",
+            "isRestRoom": false
         },
-        {
-            "peer_id": "peer_hoge2",
-            "name": "hoge2"
+        "peer_hoge2": {
+            "name": "hoge2",
+            "isRestRoom": false
         }
-    ],
+    },
     "focus_members": [
         {
             "name": "hoge1",
@@ -422,6 +435,113 @@ response
     },
     "sound": {
         "type": "hoge1"
+    }
+}
+```
+
+<br>
+
+
+## RestRoom
+
+### SetRestRoom
+誰がお手洗い行ってるかを設定する
+
+peerId がpeer_hoge1の人がお手洗いに行っている状態にする
+
+send
+```json
+{
+    "type": "SET_REST_ROOM",
+    "info": {
+        "rest": {
+            "peer_id": "peer_hoge1",
+            "is_rest_room": true
+        }
+    }
+}
+```
+
+response
+```json
+{
+    "event_type": "SET_REST_ROOM",
+    "members": {
+        "peer_hoge1": {
+            "name": "hoge1",
+            "isRestRoom": true
+        },
+        "peer_hoge2": {
+            "name": "hoge2",
+            "isRestRoom": false
+        }
+    },
+    "focus_members": [
+        {
+            "name": "hoge1",
+            "connects": []
+        },
+        {
+            "name": "hoge2",
+            "connects": []
+        }
+    ],
+    "effect_member": {
+        "name": "",
+        "type": ""
+    },
+    "sound": {
+        "type": ""
+    }
+}
+```
+
+<br>
+
+お手洗いから戻ってきた状態にする
+send
+```json
+{
+    "type": "SET_REST_ROOM",
+    "info": {
+        "rest": {
+            "peer_id": "peer_hoge1",
+            "is_rest_room": false
+        }
+    }
+}
+```
+
+response
+```json
+{
+    "event_type": "SET_REST_ROOM",
+    "members": {
+        "peer_hoge1": {
+            "name": "hoge1",
+            "isRestRoom": false
+        },
+        "peer_hoge2": {
+            "name": "hoge2",
+            "isRestRoom": false
+        }
+    },
+    "focus_members": [
+        {
+            "name": "hoge1",
+            "connects": []
+        },
+        {
+            "name": "hoge2",
+            "connects": []
+        }
+    ],
+    "effect_member": {
+        "name": "",
+        "type": ""
+    },
+    "sound": {
+        "type": ""
     }
 }
 ```

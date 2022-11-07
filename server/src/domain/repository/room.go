@@ -4,7 +4,7 @@ import "github.com/jphacks/F_2205/server/src/domain/entity"
 
 type IRoomRepository interface {
 	// room.go
-	AddNewMemberOfRoomId(roomId entity.RoomId, member *entity.Member,peerId entity.PeerId) error 
+	AddNewMemberOfRoomId(roomId entity.RoomId, member *entity.Member, peerId entity.PeerId) error
 	CheckExistsRoomAndInit(roomId entity.RoomId)
 	DeleteRoomOfRoomId(roomId entity.RoomId)
 	GetExistsRoomOfRoomId(roomId entity.RoomId) (*entity.Room, bool)
@@ -19,5 +19,5 @@ type IRoomRepository interface {
 	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
 
 	// room_restroom.go
-	SetMemberRestRoomStateOfRoomId(roomId entity.RoomId,peerId entity.PeerId,isRestRoom bool) error
+	SetMemberRestRoomStateOfRoomId(roomId entity.RoomId, peerId entity.PeerId, isRestRoom bool) error
 }

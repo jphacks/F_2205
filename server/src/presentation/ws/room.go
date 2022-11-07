@@ -47,7 +47,6 @@ func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
 	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
 }
 
-
 // receiveEventInfoFromConnはクライアントからEvent情報が送られてきたとき、
 // Eventごとに処理を行い、新たなRoom情報をBroadcastRoomInfoに書き込みます
 func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {

@@ -29,11 +29,11 @@ type Hubs map[entity.RoomId]*Hub
 // NewHubは新しいHubオブジェクトを生成します
 func NewHub(roomId entity.RoomId) *Hub {
 	return &Hub{
-		BroadcastRoom:     make(chan *entity.Room),
-		Register:          make(chan *Client),
-		Unregister:        make(chan *Client),
-		Clients:           make(map[*Client]bool),
-		RoomId:            roomId,
+		BroadcastRoom: make(chan *entity.Room),
+		Register:      make(chan *Client),
+		Unregister:    make(chan *Client),
+		Clients:       make(map[*Client]bool),
+		RoomId:        roomId,
 	}
 }
 

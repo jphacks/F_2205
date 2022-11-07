@@ -19,13 +19,13 @@ func NewRoomRepository(rooms *entity.Rooms) *RoomRepository {
 	}
 }
 
-func (r *RoomRepository) AddNewMemberOfRoomId(roomId entity.RoomId, member *entity.Member,peerId entity.PeerId) error {
+func (r *RoomRepository) AddNewMemberOfRoomId(roomId entity.RoomId, member *entity.Member, peerId entity.PeerId) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.AddNewMemberOfRoomId Error : room not found")
 	}
-	_,found = room.Members[peerId]
-	if found{
+	_, found = room.Members[peerId]
+	if found {
 		return fmt.Errorf("RoomRepository.AddNewMemberOfRoomId Error : peer_id already used")
 	}
 	room.Members[peerId] = member
@@ -43,7 +43,7 @@ func (r *RoomRepository) CheckExistsRoomAndInit(roomId entity.RoomId) {
 // InitRoomOfRoomIdはroomIdをkeyにRoomsに新しく空のRoomオブジェクトを登録します
 func (r *RoomRepository) InitRoomOfRoomId(roomId entity.RoomId) {
 	(*r.Rooms)[roomId] = &entity.Room{
-		Members: entity.Members{},
+		Members:      entity.Members{},
 		FocusMembers: entity.FocusMembers{},
 	}
 }

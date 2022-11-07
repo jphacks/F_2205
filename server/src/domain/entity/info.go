@@ -34,6 +34,6 @@ type MemberInfo struct {
 
 // RestRoomInfoはお手洗いに行っているかどうかを保持する構造体です
 type RestRoomInfo struct {
-	PeerId       PeerId  `json:"peer_id"`
-	IsRestRoom   bool    `json:"is_rest_room"`
+	PeerId     PeerId `json:"peer_id"`
+	IsRestRoom bool   `json:"is_rest_room"`
 }

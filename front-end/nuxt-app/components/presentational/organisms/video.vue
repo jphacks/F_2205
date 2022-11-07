@@ -37,6 +37,7 @@ export default {
 
       // append
       videoBoxDom.append(videoDom);
+      this.addEffectComponents(stream.peerId);
 
       // resize
       this.videoResize(roomMemberNum);

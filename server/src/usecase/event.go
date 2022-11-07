@@ -58,5 +58,13 @@ func (uc *EventUsecase) SwitchExecEventByEventType(e entity.Event, roomId entity
 		r.EffectMember = *m
 		return r, nil
 	}
+
+	// SoundEventの場合
+	if isSoundEvent(e.Type){
+		s,_ := uc.ExecSoundEvent(roomId,e.Info.Sound)
+		r.Sound = *s
+		return r,nil
+	}
+
 	return r, nil
 }

@@ -9,6 +9,7 @@ type Room struct {
 	Members      Members      `json:"members"`
 	FocusMembers FocusMembers `json:"focus_members"`
 	EffectMember EffectMember `json:"effect_member"`
+	Sound        Sound        `json:"sound"`
 }
 
 type Rooms map[RoomId]*Room

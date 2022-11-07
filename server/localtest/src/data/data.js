@@ -1,17 +1,19 @@
-export const NewMemberData1 = {
-    type:"NEW_MEMBER",
+export const AddNewMemberData1 = {
+    type:"ADD_NEW_MEMBER",
     info:{
-        focus:{
-            from:"hoge1"
+        member:{
+            name:"hoge1",
+            peer_id:"peer_hoge1"
         }
     }
 }
 
-export const NewMemberData2 = {
-    type:"NEW_MEMBER",
+export const AddNewMemberData2 = {
+    type:"ADD_NEW_MEMBER",
     info:{
-        focus:{
-            from:"hoge2"
+        member:{
+            name:"hoge2",
+            peer_id:"peer_hoge2"
         }
     }
 }

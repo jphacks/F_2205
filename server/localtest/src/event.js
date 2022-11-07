@@ -1,6 +1,6 @@
 import { 
-    NewMemberData1,
-    NewMemberData2,
+    AddNewMemberData1,
+    AddNewMemberData2,
     SetFocusData,
     DelFocusData,
     DelAllFocusData,
@@ -34,18 +34,17 @@ export const Event = ({roomId})=> {
 
 
     return (
-        <div className="mx-24 my-8">
+        <div className="">
+            <Title title={"MemberEvent"} />
+            <div className='mb-8 flex'>
+                <Button data={AddNewMemberData1} name={"memberデータ追加(hoge1)"} sendData={sendData} />
+                <Button data={AddNewMemberData2} name={"memberデータ追加(hoge2)"} sendData={sendData} />
+            </div>
             <Title title={"FocusEvent"} />
-            <div className='mb-8'>
-                <div className='flex'>
-                    <Button data={NewMemberData1} name={"memberデータ追加(hoge1)"} sendData={sendData} />
-                    <Button data={NewMemberData2} name={"memberデータ追加(hoge2)"} sendData={sendData} />
-                </div>
-                <div className='flex'>
-                    <Button data={SetFocusData} name={"hoge1とhoge2をfocusする"} sendData={sendData} />
-                    <Button data={DelFocusData} name={"hoge1とhoge2のfocusを削除する"} sendData={sendData} />
-                    <Button data={DelAllFocusData} name={"hoge1のすべてのfocusを削除する"} sendData={sendData} />
-                </div>
+            <div className='mb-8 flex'>
+                <Button data={SetFocusData} name={"hoge1とhoge2をfocusする"} sendData={sendData} />
+                <Button data={DelFocusData} name={"hoge1とhoge2のfocusを削除する"} sendData={sendData} />
+                <Button data={DelAllFocusData} name={"hoge1のすべてのfocusを削除する"} sendData={sendData} />
             </div>
 
             <Title title={"ScreenShotEvent"} />

@@ -17,11 +17,12 @@ function App() {
     }
 
     return (
-        <div className="mx-24 my-8">
+        <div className="mx-36 my-8">
             <p className='text-6xl font-bold text-gray-600 mb-12'>
                 API TEST
             </p>
 
+            <div className=''>
             {
                 roomId?
                 <>
@@ -45,6 +46,7 @@ function App() {
                     </div>
                 </>
             }
+            </div>
         </div>
     );
 }

@@ -29,6 +29,7 @@ export const Event = ({roomId})=> {
     }
 
     const sendData = (data)=>{
+        console.log("send : ",data)
         conn.send(JSON.stringify(data))
     }
 

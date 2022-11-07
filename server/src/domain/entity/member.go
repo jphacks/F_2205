@@ -8,4 +8,4 @@ type Member struct {
 	Name   Name   `json:"name"`
 }
 
-type Members []Member
+type Members []*Member

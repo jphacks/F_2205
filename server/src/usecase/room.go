@@ -16,6 +16,7 @@ type RoomUsecase struct {
 // IRoomUsecaseはRoomのユースケースをまとめたインターフェースです
 type IRoomUsecase interface {
 	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
+	GetMembersOfRoomId(roomId entity.RoomId) entity.Members
 	CheckExistsRoomAndInit(roomId entity.RoomId)
 	DeleteRoomOfRoomId(roomId entity.RoomId)
 	CreateRoomNumber() (*entity.RoomInfo, error)
@@ -55,6 +56,11 @@ func (uc *RoomUsecase) DeleteRoomOfRoomId(roomId entity.RoomId) {
 // GetFocusMembersOfRoomIdは受け取ったIDのRoomのフォーカスメンバーを返します
 func (uc *RoomUsecase) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers {
 	return uc.repo.GetFocusMembersOfRoomId(roomId)
+}
+
+// GetMembersOfRoomIdは受け取ったIDのRoomのメンバーを返します
+func (uc *RoomUsecase) GetMembersOfRoomId(roomId entity.RoomId) entity.Members {
+	return uc.repo.GetMembersOfRoomId(roomId)
 }
 
 // CheckExistsRoomAndInitは受け取ったIDのRoomが登録されているか確認し、

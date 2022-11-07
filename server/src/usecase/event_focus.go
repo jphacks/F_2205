@@ -11,10 +11,6 @@ import (
 // フォーカスイベントの中の、受け取った特定の処理を実行します
 func (uc *EventUsecase) SwitchExecFocusEventByEventType(eType entity.EventType, roomId entity.RoomId, info entity.FocusInfo) error {
 	switch eType {
-	case entity.NewMember:
-		if err := uc.AddNewMemberOfRoomId(roomId, info); err != nil {
-			return err
-		}
 	case entity.SetFocus:
 		if err := uc.SetMemberFocusOfRoomId(roomId, info); err != nil {
 			return err
@@ -32,15 +28,6 @@ func (uc *EventUsecase) SwitchExecFocusEventByEventType(eType entity.EventType, 
 		return fmt.Errorf("EventUsecase.SwitchExecFocusEventByEventType : not matched type")
 	}
 	return nil
-}
-
-// AddNewMemberOfRoomIdは指定されたRoomのFocusMemberに新規メンバーを追加します
-func (uc *EventUsecase) AddNewMemberOfRoomId(roomId entity.RoomId, info entity.FocusInfo) error {
-	newMemberName := info.From
-	if newMemberName == "" {
-		return fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : from is required")
-	}
-	return uc.repoRoom.AddNewMemberOfRoomId(roomId, newMemberName)
 }
 
 // SetMemberFocusOfRoomIdは指定されたRoomに新しくフォーカス状態のユーザーを追加します
@@ -74,8 +61,7 @@ func (uc *EventUsecase) DelAllMemberFocusOfRoomId(roomId entity.RoomId, info ent
 
 // isFocusEventは受け取ったイベントがフォーカスイベントか判定します
 func isFocusEvent(eType entity.EventType) bool {
-	if eType == entity.NewMember || eType == entity.SetFocus ||
-		eType == entity.DelFocus || eType == entity.DelAllFocus {
+	if eType == entity.SetFocus || eType == entity.DelFocus || eType == entity.DelAllFocus {
 		return true
 	}
 	return false

@@ -71,8 +71,14 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 		if err != nil {
 			log.Println("ExecEventOfEventType Error :", err)
 		}
+
+		// TODO けしてもいいんじゃね
 		// FocusMemberに最新の情報をいれる
 		room.FocusMembers = h.ucRoom.GetFocusMembersOfRoomId(c.Hub.RoomId)
+
+		// Membmerの最新情報を入れる
+		room.Members = h.ucRoom.GetMembersOfRoomId(c.Hub.RoomId)
+
 		c.Hub.BroadcastRoom <- room
 	}
 }

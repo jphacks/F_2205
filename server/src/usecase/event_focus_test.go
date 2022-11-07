@@ -12,43 +12,6 @@ func TestEventUsecase_SwitchExecFocusEventByEventType(t *testing.T) {
 	t.Skip()
 }
 
-func TestEventUsecase_AddNewMemberOfRoomId(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name      string
-		roomId    entity.RoomId
-		focusInfo entity.FocusInfo
-		wantRoom  *entity.Room
-		wantErr   error
-	}{
-		{
-			name:   "正常に動いている場合",
-			roomId: entity.RoomId("1234"),
-			focusInfo: entity.FocusInfo{
-				From: entity.Name("hoge"),
-			},
-			wantErr: nil,
-		},
-		{
-			name:      "Fromが空文字の場合、エラーを返す",
-			roomId:    entity.RoomId("1234"),
-			focusInfo: entity.FocusInfo{},
-			wantErr:   fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : from is required"),
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			ucEvent := NewEventUsecase(&roomRepositoryMock{})
-			err := ucEvent.AddNewMemberOfRoomId(tt.roomId, tt.focusInfo)
-			if err != nil && err.Error() != tt.wantErr.Error() {
-				t.Errorf("TestEventUsecase_AddNewMemberOfRoomId Error : want %v, but got %v", tt.wantErr, err)
-			}
-		})
-	}
-}
-
 func TestEventUsecase_SetMemberFocusOfRoomId(t *testing.T) {
 	t.Parallel()
 
@@ -203,11 +166,6 @@ func TestEventUsecase_isFocusEvent(t *testing.T){
 		eType entity.EventType
 		want bool
 	}{
-		{
-			Name: "フォーカスイベントだった場合(NewMember)、trueが返る",
-			eType: entity.NewMember,
-			want: true,
-		},
 		{
 			Name: "フォーカスイベントだった場合(SetFocus)、trueが返る",
 			eType: entity.SetFocus,

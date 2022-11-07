@@ -5,6 +5,8 @@ import (
 	"github.com/jphacks/F_2205/server/src/domain/repository"
 )
 
+var _ IEventUsecase = &EventUsecase{}
+
 // EventUsecaseはEventのユースケースの構造体です
 type EventUsecase struct {
 	repoRoom repository.IRoomRepository
@@ -12,22 +14,11 @@ type EventUsecase struct {
 
 // IEventUsecaseはEventのユースケースをまとめたインターフェースです
 type IEventUsecase interface {
-	// event.go
 	SwitchExecEventByEventType(e entity.Event, roomId entity.RoomId) (*entity.Room, error)
-
-	// event_focus.go
-	SwitchExecFocusEventByEventType(eType entity.EventType, roomId entity.RoomId, info entity.FocusInfo) error
-	AddNewMemberOfRoomId(roomId entity.RoomId, info entity.FocusInfo) error
-	SetMemberFocusOfRoomId(roomId entity.RoomId, info entity.FocusInfo) error
-	DelMemberFocusOfRoomId(roomId entity.RoomId, info entity.FocusInfo) error
-	DelAllMemberFocusOfRoomId(roomId entity.RoomId, info entity.FocusInfo) error
-
-	// event_effect.go
-	ExecEffectEvent(roomId entity.RoomId, info entity.EffectInfo) (*entity.EffectMember, error)
 }
 
 // NewEventUsecaseはIEventUsecaseを満たしたEventUsecase構造体を返します
-func NewEventUsecase(repoRoom repository.IRoomRepository) IEventUsecase {
+func NewEventUsecase(repoRoom repository.IRoomRepository) *EventUsecase {
 	return &EventUsecase{
 		repoRoom: repoRoom,
 	}
@@ -63,6 +54,15 @@ func (uc *EventUsecase) SwitchExecEventByEventType(e entity.Event, roomId entity
 	if isSoundEvent(e.Type){
 		s,_ := uc.ExecSoundEvent(roomId,e.Info.Sound)
 		r.Sound = *s
+		return r,nil
+	}
+
+	// MemberEventの場合
+	if isMemberEvent(e.Type){
+		err := uc.AddNewMemberOfRoomId(roomId,e.Info.Member)
+		if err != nil {
+			return r,err
+		}
 		return r,nil
 	}
 

@@ -47,9 +47,6 @@ response
 
 <br>
 
-
-## Focus
-
 ### GET /ws/:room_id (AddNewMember)
 
 roomにmemberを新規追加する
@@ -96,6 +93,9 @@ response
 ```
 
 <br>
+
+
+## Focus
 
 ### GET /ws/:room_id (SetFocus)
 

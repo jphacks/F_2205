@@ -1,0 +1,3 @@
+# localtest
+
+このディレクトリはlocalでのAPIのテスト用です

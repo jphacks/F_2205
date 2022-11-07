@@ -32,23 +32,21 @@ func NewRoomWsHandler(ucRoom usecase.IRoomUsecase, ucEvent usecase.IEventUsecase
 func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
 	roomIdString := ctx.Param("room_id")
 	roomId := service.StringToRoomId(roomIdString)
-	hub := h.getOrRegisterHub(roomId)
-	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
-}
 
-// getOrRegisterHubはHubがすでに登録されていた場合既存のHubを返し、なかった場合は新規登録します
-func (h *RoomWsHandler) getOrRegisterHub(roomId entity.RoomId) *Hub {
+	var hub *Hub
 	// もしすでにroomIdのHubが存在していた場合hubに入れる
 	hub, found := h.Hubs.getExistsHubOfRoomId(roomId)
 
-	// roomIdのHubが存在していなかったら新しく登録する
+	// roomIdのHubが存在していなかったら新しく登録し、Hubを起動する
 	if !found {
 		hub = NewHub(roomId)
 		h.Hubs.setNewHubOfRoomId(hub, roomId)
 		go hub.Run()
 	}
-	return hub
+
+	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
 }
+
 
 // receiveEventInfoFromConnはクライアントからEvent情報が送られてきたとき、
 // Eventごとに処理を行い、新たなRoom情報をBroadcastRoomInfoに書き込みます
@@ -61,7 +59,7 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 
 	for {
 		e := entity.Event{}
-		// ここで処理をまってるっぽい
+		// ここで処理をまつ
 		if err := c.Conn.ReadJSON(&e); err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("Error : %v", err)

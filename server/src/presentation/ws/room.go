@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/domain/service"
 	"github.com/jphacks/F_2205/server/src/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -29,24 +30,23 @@ func NewRoomWsHandler(ucRoom usecase.IRoomUsecase, ucEvent usecase.IEventUsecase
 
 // ConnectWsRoomはwebsocket通信でserver内のRoomsオブジェクトとデータをやり取りします
 func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
-	roomId := (entity.RoomId)(ctx.Param("room_id"))
-	hub := h.getOrRegisterHub(roomId)
-	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
-}
+	roomIdString := ctx.Param("room_id")
+	roomId := service.StringToRoomId(roomIdString)
 
-// getOrRegisterHubはHubがすでに登録されていた場合既存のHubを返し、なかった場合は新規登録します
-func (h *RoomWsHandler) getOrRegisterHub(roomId entity.RoomId) *Hub {
+	var hub *Hub
 	// もしすでにroomIdのHubが存在していた場合hubに入れる
 	hub, found := h.Hubs.getExistsHubOfRoomId(roomId)
 
-	// roomIdのHubが存在していなかったら新しく登録する
+	// roomIdのHubが存在していなかったら新しく登録し、Hubを起動する
 	if !found {
 		hub = NewHub(roomId)
 		h.Hubs.setNewHubOfRoomId(hub, roomId)
 		go hub.Run()
 	}
-	return hub
+
+	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
 }
+
 
 // receiveEventInfoFromConnはクライアントからEvent情報が送られてきたとき、
 // Eventごとに処理を行い、新たなRoom情報をBroadcastRoomInfoに書き込みます
@@ -59,7 +59,7 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 
 	for {
 		e := entity.Event{}
-		// ここで処理をまってるっぽい
+		// ここで処理をまつ
 		if err := c.Conn.ReadJSON(&e); err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("Error : %v", err)
@@ -71,8 +71,14 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 		if err != nil {
 			log.Println("ExecEventOfEventType Error :", err)
 		}
+
+		// TODO けしてもいいんじゃね
 		// FocusMemberに最新の情報をいれる
 		room.FocusMembers = h.ucRoom.GetFocusMembersOfRoomId(c.Hub.RoomId)
+
+		// Membmerの最新情報を入れる
+		room.Members = h.ucRoom.GetMembersOfRoomId(c.Hub.RoomId)
+
 		c.Hub.BroadcastRoom <- room
 	}
 }

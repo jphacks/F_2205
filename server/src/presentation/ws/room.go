@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/domain/service"
 	"github.com/jphacks/F_2205/server/src/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +30,8 @@ func NewRoomWsHandler(ucRoom usecase.IRoomUsecase, ucEvent usecase.IEventUsecase
 
 // ConnectWsRoomはwebsocket通信でserver内のRoomsオブジェクトとデータをやり取りします
 func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
-	roomId := (entity.RoomId)(ctx.Param("room_id"))
+	roomIdString := ctx.Param("room_id")
+	roomId := service.StringToRoomId(roomIdString)
 	hub := h.getOrRegisterHub(roomId)
 	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
 }

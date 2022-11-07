@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/domain/service"
 	"github.com/jphacks/F_2205/server/src/presentation/ws"
 	"github.com/jphacks/F_2205/server/src/usecase"
 
@@ -16,6 +17,7 @@ type RoomHandler struct {
 	Hubs *ws.Hubs
 }
 
+// NewRoomHandlerはRoomHandler構造体のポインタを返します
 func NewRoomHandler(uc usecase.IRoomUsecase, hubs *ws.Hubs) *RoomHandler {
 	return &RoomHandler{
 		uc:   uc,
@@ -26,16 +28,16 @@ func NewRoomHandler(uc usecase.IRoomUsecase, hubs *ws.Hubs) *RoomHandler {
 // GetSumOfRoomは存在する部屋の数を返すハンドラーです
 func (h *RoomHandler) GetCountSumOfRoom(ctx *gin.Context) {
 	cnt := h.uc.GetSumOfRoom()
-	cntJson := createCountRoomJson(cnt)
+	cntRoomJson := createCountRoomJson(cnt)
 
 	ctx.JSON(
 		http.StatusOK,
-		gin.H{"data": cntJson},
+		gin.H{"data": cntRoomJson},
 	)
 }
 
 func (h *RoomHandler) CreateRoom(ctx *gin.Context) {
-	roomInfo, err := h.uc.CreateRoom()
+	roomInfo, err := h.uc.CreateRoomNumber()
 	if err != nil {
 		ctx.JSON(
 			http.StatusBadRequest,
@@ -44,14 +46,16 @@ func (h *RoomHandler) CreateRoom(ctx *gin.Context) {
 		return
 	}
 	h.uc.CheckExistsRoomAndInit(roomInfo.Id)
+	roomInfoJson := roomInfoEntityToJson(roomInfo)
 	ctx.JSON(
 		http.StatusOK,
-		gin.H{"data": roomInfo},
+		gin.H{"data": roomInfoJson},
 	)
 }
 
 func (h *RoomHandler) DeleteHubAndRoomOfRoomId(ctx *gin.Context) {
-	roomId := (entity.RoomId)(ctx.Param("room_id"))
+	roomIdString := ctx.Param("room_id")
+	roomId := service.StringToRoomId(roomIdString)
 
 	// Roomの削除
 	h.uc.DeleteRoomOfRoomId(roomId)
@@ -71,10 +75,22 @@ func (h *RoomHandler) DeleteHubAndRoomOfRoomId(ctx *gin.Context) {
 	)
 }
 
+type roomInfoJson struct {
+	Id entity.RoomId `json:"id"`
+}
+
+// roomInfoEntityToJsonはRoomInfoエンティティをresponse用のオブジェクトに変換します
+func roomInfoEntityToJson(info *entity.RoomInfo) roomInfoJson {
+	return roomInfoJson{
+		Id: info.Id,
+	}
+}
+
 type countRoomJson struct {
 	Count int `json:"count"`
 }
 
+// createCountRoomJsonはcountを受け取り、response用のオブジェクトを生成します
 func createCountRoomJson(count int) countRoomJson {
 	return countRoomJson{
 		Count: count,

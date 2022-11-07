@@ -13,7 +13,7 @@ type Hub struct {
 	Clients map[*Client]bool
 
 	// Inbound messages from the clients.
-	BroadcastRoomInfo chan *entity.Room
+	BroadcastRoom chan *entity.Room
 
 	// Register requests from the clients.
 	Register chan *Client
@@ -29,7 +29,7 @@ type Hubs map[entity.RoomId]*Hub
 // NewHubは新しいHubオブジェクトを生成します
 func NewHub(roomId entity.RoomId) *Hub {
 	return &Hub{
-		BroadcastRoomInfo: make(chan *entity.Room),
+		BroadcastRoom:     make(chan *entity.Room),
 		Register:          make(chan *Client),
 		Unregister:        make(chan *Client),
 		Clients:           make(map[*Client]bool),
@@ -53,8 +53,8 @@ func (h *Hub) Run() {
 				delete(h.Clients, client)
 				close(client.SendRoomInfo)
 			}
-		// BroadcastRoomInfoにroom情報が来た時、各ClientのSendRoomInfoチャネルにroom情報を送る
-		case room := <-h.BroadcastRoomInfo:
+		// BroadcastRoomにroom情報が来た時、各ClientのSendRoomInfoチャネルにroom情報を送る
+		case room := <-h.BroadcastRoom:
 			for client := range h.Clients {
 				select {
 				case client.SendRoomInfo <- room:

@@ -9,10 +9,10 @@ func main() {
 	// Routerの初期化
 	r := router.NewRouter()
 
-	// Routerの登録
+	// Routerの準備
 	r.InitHealthRouter()
 	r.InitRoomRouter()
 
-	// Routerの起動
+	// サーバーの起動
 	r.Serve()
 }

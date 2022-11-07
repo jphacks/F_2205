@@ -18,7 +18,7 @@ type IRoomUsecase interface {
 	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
 	CheckExistsRoomAndInit(roomId entity.RoomId)
 	DeleteRoomOfRoomId(roomId entity.RoomId)
-	CreateRoom() (*entity.RoomInfo, error)
+	CreateRoomNumber() (*entity.RoomInfo, error)
 	GetSumOfRoom() int
 }
 
@@ -29,17 +29,17 @@ func NewRoomUsecase(repo repository.IRoomRepository) IRoomUsecase {
 	}
 }
 
-// CreateRoomはRoom番号を生成します
+// CreateRoomNumberはRoom番号を生成します
 // またそのRoom番号がすでに使われているか確認し、使われていた場合エラーを返します
-func (uc *RoomUsecase) CreateRoom() (*entity.RoomInfo, error) {
+func (uc *RoomUsecase) CreateRoomNumber() (*entity.RoomInfo, error) {
 	roomIdString, err := generate.MakeRandomStrFromLetters(4)
 	if err != nil {
-		return nil, fmt.Errorf("RoomUsecase.CreateRoom Error : %w", err)
+		return nil, fmt.Errorf("RoomUsecase.CreateRoomNumber Error : %w", err)
 	}
 	roomId := (entity.RoomId)(roomIdString)
 	_, found := uc.repo.GetExistsRoomOfRoomId(roomId)
 	if found {
-		return nil, fmt.Errorf("RoomUsecase.CreateRoom Error : roomId already used")
+		return nil, fmt.Errorf("RoomUsecase.CreateRoomNumber Error : roomId already used")
 	}
 	roomInfo := &entity.RoomInfo{
 		Id: roomId,

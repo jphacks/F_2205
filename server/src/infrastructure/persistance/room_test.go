@@ -76,10 +76,10 @@ func TestRoomRepository_AddNewMemberOfRoomId(t *testing.T) {
 			repoRoom := NewRoomRepository(roomMock)
 			err := repoRoom.AddNewMemberOfRoomId(tt.roomId, tt.newMemberName)
 			if err != nil && err.Error() != tt.wantErr.Error() {
-				t.Errorf("TestRoomUsecase_CreateRoom Error : want %v, but got %v", tt.wantErr, err)
+				t.Errorf("TestRoomUsecase_AddNewMemberOfRoomId Error : want %v, but got %v", tt.wantErr, err)
 			}
 			if !reflect.DeepEqual(tt.wantRoom, (*repoRoom.Rooms)[tt.roomId]) {
-				t.Errorf("TestRoomUsecase_CreateRoom Error : want %v, but got %v", tt.wantRoom, (*repoRoom.Rooms)[tt.roomId])
+				t.Errorf("TestRoomUsecase_AddNewMemberOfRoomId Error : want %v, but got %v", tt.wantRoom, (*repoRoom.Rooms)[tt.roomId])
 			}
 		})
 	}

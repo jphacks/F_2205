@@ -23,4 +23,7 @@ const (
 
 	// EffectEvent
 	SetEffect     EventType = "SET_EFFECT"      // エフェクトを設定する
+
+	// SoundEvent
+	SetSound      EventType = "SET_SOUND"       // サウンドの設定をする
 )

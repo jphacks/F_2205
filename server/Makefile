@@ -65,6 +65,10 @@ lint: ## goのコードを整形する
 test: ## テストを実行する
 	cd src/ && go test -v ./...
 
+.PHONY: api-test
+api-test: ## APIテストサーバーを起動する
+	cd localtest && npm run start
+
 .PHONY: deploy
 deploy: ## cloud run にdeployする
 	cd src && gcloud run deploy f-2205-server --source=. --region=asia-east1 --project=serious-timer-366017 --set-env-vars=ENVIROMENT=PRODUCTION --port=8080 --allow-unauthenticated

@@ -65,8 +65,8 @@ lint: ## goのコードを整形する
 test: ## テストを実行する
 	cd src/ && go test -v ./...
 
-.PHONY: api-test
-api-test: ## APIテストサーバーを起動する
+.PHONY: test-api
+test-api: ## APIテストサーバーを起動する
 	cd localtest && npm run start
 
 .PHONY: deploy

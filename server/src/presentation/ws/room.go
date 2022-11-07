@@ -43,7 +43,7 @@ func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
 		h.Hubs.setNewHubOfRoomId(hub, roomId)
 		go hub.Run()
 	}
-
+	h.ucRoom.CheckExistsRoomAndInit(roomId)
 	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
 }
 

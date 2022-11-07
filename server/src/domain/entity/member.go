@@ -2,10 +2,12 @@ package entity
 
 type Name string
 
+type PeerId string
+
 // MemberはRoomにいるユーザーの情報を保持します
 type Member struct {
-	PeerId string `json:"peer_id"`
-	Name   Name   `json:"name"`
+	Name         Name    `json:"name"`
+	IsRestRoom   bool    `json:"isRestRoom"`
 }
 
-type Members []*Member
+type Members map[PeerId]*Member

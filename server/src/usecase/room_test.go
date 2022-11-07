@@ -47,8 +47,10 @@ func (r *roomRepositoryMock) DelAllMemberFocusOfRoomId(roomId entity.RoomId, fro
 func (r *roomRepositoryMock) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers {return entity.FocusMembers{}}
 func (r *roomRepositoryMock) GetMembersOfRoomId(roomId entity.RoomId) entity.Members {return entity.Members{}}
 
-func (r *roomRepositoryMock) AddNewMemberOfRoomId(roomId entity.RoomId, member *entity.Member) error {return nil}
+func (r *roomRepositoryMock) AddNewMemberOfRoomId(roomId entity.RoomId, member *entity.Member,peerId entity.PeerId) error {return nil}
 func (r *roomRepositoryMock) CheckExistsRoomAndInit(roomId entity.RoomId) {}
 func (r *roomRepositoryMock) DeleteRoomOfRoomId(roomId entity.RoomId)     {}
 func (r *roomRepositoryMock) GetExistsRoomOfRoomId(roomId entity.RoomId) (*entity.Room, bool) {return &entity.Room{}, false}
 func (r *roomRepositoryMock) GetSumOfRoom() int { return 0 }
+
+func (r *roomRepositoryMock) SetMemberRestRoomStateOfRoomId(roomId entity.RoomId,peerId entity.PeerId,isRestRoom bool) error {return nil}

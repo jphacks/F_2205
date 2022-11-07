@@ -28,4 +28,7 @@ const (
 
 	// SoundEvent
 	SetSound      EventType = "SET_SOUND"       // サウンドの設定をする
+
+	// RestRoomEvent
+	SetRestRoom   EventType = "SET_REST_ROOM"   // トイレで離席するイベントを設定する
 )

@@ -66,5 +66,14 @@ func (uc *EventUsecase) SwitchExecEventByEventType(e entity.Event, roomId entity
 		return r,nil
 	}
 
+	// RestRoomEventの場合
+	if isRestRoomEvent(e.Type){
+		err := uc.ExecRestRoomEvent(roomId,e.Info.Rest)
+		if err != nil {
+			return r,err
+		}
+		return r,nil
+	}
+
 	return r, nil
 }

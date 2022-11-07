@@ -32,9 +32,9 @@ func (uc *EventUsecase) AddNewMemberOfRoomId(roomId entity.RoomId, info entity.M
 	}
 	member := &entity.Member{
 		Name: name,
-		PeerId: peerId,
+		IsRestRoom: false,
 	}
-	if err := uc.repoRoom.AddNewMemberOfRoomId(roomId, member);err!=nil{
+	if err := uc.repoRoom.AddNewMemberOfRoomId(roomId, member,peerId);err!=nil{
 		return fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : %w",err)
 	}
 	if err := uc.repoRoom.AddNewFocusMemberOfRoomId(roomId,member.Name);err!=nil{

@@ -6,7 +6,6 @@ import (
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 )
 
-
 // SwitchExecFocusEventByEventTypeはフォーカスイベントを実行する関数です
 // フォーカスイベントの中の、受け取った特定の処理を実行します
 func (uc *EventUsecase) SwitchExecFocusEventByEventType(eType entity.EventType, roomId entity.RoomId, info entity.FocusInfo) error {

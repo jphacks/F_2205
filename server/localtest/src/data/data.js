@@ -70,3 +70,22 @@ export const SetSoundData = {
     }
 }
 
+export const SetRestRoomData1 = {
+    type:"SET_REST_ROOM",
+    info:{
+        rest:{
+            peer_id:"peer_hoge1",
+            is_rest_room:true
+        }
+    }
+}
+
+export const SetRestRoomData2 = {
+    type:"SET_REST_ROOM",
+    info:{
+        rest:{
+            peer_id:"peer_hoge1",
+            is_rest_room:false
+        }
+    }
+}

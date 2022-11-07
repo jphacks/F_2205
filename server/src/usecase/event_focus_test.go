@@ -157,40 +157,39 @@ func TestEventUsecase_DelAllMemberFocusOfRoomId(t *testing.T) {
 	}
 }
 
-
-func TestEventUsecase_isFocusEvent(t *testing.T){
+func TestEventUsecase_isFocusEvent(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct{
-		Name string
+	tests := []struct {
+		Name  string
 		eType entity.EventType
-		want bool
+		want  bool
 	}{
 		{
-			Name: "フォーカスイベントだった場合(SetFocus)、trueが返る",
+			Name:  "フォーカスイベントだった場合(SetFocus)、trueが返る",
 			eType: entity.SetFocus,
-			want: true,
+			want:  true,
 		},
 		{
-			Name: "フォーカスイベントだった場合(DelFocus)、trueが返る",
+			Name:  "フォーカスイベントだった場合(DelFocus)、trueが返る",
 			eType: entity.DelFocus,
-			want: true,
+			want:  true,
 		},
 		{
-			Name: "フォーカスイベントだった場合(DelAllFocus)、trueが返る",
+			Name:  "フォーカスイベントだった場合(DelAllFocus)、trueが返る",
 			eType: entity.DelAllFocus,
-			want: true,
+			want:  true,
 		},
 		{
-			Name: "スクリーンショットイベント以外の場合、falseが返る",
+			Name:  "スクリーンショットイベント以外の場合、falseが返る",
 			eType: entity.SetEffect,
-			want: false,
+			want:  false,
 		},
 	}
-	for _,tt := range tests {
-		t.Run(tt.Name,func(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
 			got := isFocusEvent(tt.eType)
-			if got!=tt.want {
+			if got != tt.want {
 				t.Errorf("TestEventUsecase_isFocusEvent Error : want %v, but got %v", tt.want, got)
 			}
 		})

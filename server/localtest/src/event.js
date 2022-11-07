@@ -7,6 +7,8 @@ import {
     SetScreenShotData,
     SetEffectData,
     SetSoundData,
+    SetRestRoomData1,
+    SetRestRoomData2,
 } from './data/data'
 
 import { Button } from './components/button'
@@ -61,6 +63,12 @@ export const Event = ({roomId})=> {
             <Title title={"SoundEvent"} />
             <div className='flex mb-8'>
                 <Button data={SetSoundData} name={"hoge1サウンドを設定する"} sendData={sendData} /> 
+            </div>
+
+            <Title title={"SetRestRoomEvent"} />
+            <div className='flex mb-8'>
+                <Button data={SetRestRoomData1} name={"peer_hoge1がお手洗いにいっている状態になる"} sendData={sendData} /> 
+                <Button data={SetRestRoomData2} name={"peer_hoge1がお手洗いから戻ってきた状態になる"} sendData={sendData} /> 
             </div>
 
         </div>

@@ -18,8 +18,11 @@ function App() {
 
     return (
         <div className="mx-36 my-8">
-            <p className='text-6xl font-bold text-gray-600 mb-12'>
-                API TEST
+            <p className='text-6xl font-bold text-gray-600 mb-4'>
+                API Test
+            </p>
+            <p className='text-xl text-gray-700 mb-12'>
+                検証ツールからconsoleを開き、テストをしてください
             </p>
 
             <div className=''>

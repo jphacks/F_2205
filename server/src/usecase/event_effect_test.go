@@ -46,29 +46,29 @@ func TestEventUsecase_ExecEffectEvent(t *testing.T) {
 	}
 }
 
-func TestEventUsecase_isEffectEvent(t *testing.T){
+func TestEventUsecase_isEffectEvent(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct{
-		Name string
+	tests := []struct {
+		Name  string
 		eType entity.EventType
-		want bool
+		want  bool
 	}{
 		{
-			Name: "エフェクトイベントだった場合、trueが返る",
+			Name:  "エフェクトイベントだった場合、trueが返る",
 			eType: entity.SetEffect,
-			want: true,
+			want:  true,
 		},
 		{
-			Name: "エフェクトイベント以外の場合、falseが返る",
+			Name:  "エフェクトイベント以外の場合、falseが返る",
 			eType: entity.SetFocus,
-			want: false,
+			want:  false,
 		},
 	}
-	for _,tt := range tests {
-		t.Run(tt.Name,func(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.Name, func(t *testing.T) {
 			got := isEffectEvent(tt.eType)
-			if got!=tt.want {
+			if got != tt.want {
 				t.Errorf("TestEventUsecase_isEffectEvent Error : want %v, but got %v", tt.want, got)
 			}
 		})

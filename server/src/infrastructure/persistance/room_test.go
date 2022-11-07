@@ -20,9 +20,12 @@ func TestRoomRepository_InitRoomOfRoomId(t *testing.T) {
 		wantRoom *entity.Room
 	}{
 		{
-			name:     "正常に動いている場合、指定されたRoomIdの部屋を生成する",
-			roomId:   entity.RoomId("1234"),
-			wantRoom: &entity.Room{},
+			name:   "正常に動いている場合、指定されたRoomIdの部屋を生成する",
+			roomId: entity.RoomId("1234"),
+			wantRoom: &entity.Room{
+				Members:      entity.Members{},
+				FocusMembers: entity.FocusMembers{},
+			},
 		},
 	}
 

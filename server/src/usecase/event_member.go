@@ -31,14 +31,14 @@ func (uc *EventUsecase) AddNewMemberOfRoomId(roomId entity.RoomId, info entity.M
 		return fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : peer_id is required")
 	}
 	member := &entity.Member{
-		Name: name,
-		PeerId: peerId,
+		Name:       name,
+		IsRestRoom: false,
 	}
-	if err := uc.repoRoom.AddNewMemberOfRoomId(roomId, member);err!=nil{
-		return fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : %w",err)
+	if err := uc.repoRoom.AddNewMemberOfRoomId(roomId, member, peerId); err != nil {
+		return fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : %w", err)
 	}
-	if err := uc.repoRoom.AddNewFocusMemberOfRoomId(roomId,member.Name);err!=nil{
-		return fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : %w",err)
+	if err := uc.repoRoom.AddNewFocusMemberOfRoomId(roomId, member.Name); err != nil {
+		return fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : %w", err)
 	}
 	return nil
 }

@@ -28,8 +28,6 @@ func (r *RoomRepository) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newMemb
 	return nil
 }
 
-
-
 func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {

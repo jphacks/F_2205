@@ -51,19 +51,28 @@ func (uc *EventUsecase) SwitchExecEventByEventType(e entity.Event, roomId entity
 	}
 
 	// SoundEventの場合
-	if isSoundEvent(e.Type){
-		s,_ := uc.ExecSoundEvent(roomId,e.Info.Sound)
+	if isSoundEvent(e.Type) {
+		s, _ := uc.ExecSoundEvent(roomId, e.Info.Sound)
 		r.Sound = *s
-		return r,nil
+		return r, nil
 	}
 
 	// MemberEventの場合
-	if isMemberEvent(e.Type){
-		err := uc.AddNewMemberOfRoomId(roomId,e.Info.Member)
+	if isMemberEvent(e.Type) {
+		err := uc.AddNewMemberOfRoomId(roomId, e.Info.Member)
 		if err != nil {
-			return r,err
+			return r, err
 		}
-		return r,nil
+		return r, nil
+	}
+
+	// RestRoomEventの場合
+	if isRestRoomEvent(e.Type) {
+		err := uc.ExecRestRoomEvent(roomId, e.Info.Rest)
+		if err != nil {
+			return r, err
+		}
+		return r, nil
 	}
 
 	return r, nil

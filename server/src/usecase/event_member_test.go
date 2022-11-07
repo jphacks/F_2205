@@ -1,8 +1,8 @@
 package usecase
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 )
@@ -22,7 +22,7 @@ func TestEventUsecase_AddNewMemberOfRoomId(t *testing.T) {
 			roomId: entity.RoomId("1234"),
 			memberInfo: entity.MemberInfo{
 				PeerId: "hoge",
-				Name: entity.Name("hoge"),
+				Name:   entity.Name("hoge"),
 			},
 			wantErr: nil,
 		},
@@ -43,10 +43,10 @@ func TestEventUsecase_AddNewMemberOfRoomId(t *testing.T) {
 			wantErr: fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : name is required"),
 		},
 		{
-			name:   "両方ない場合、エラーを返す",
-			roomId: entity.RoomId("1234"),
+			name:       "両方ない場合、エラーを返す",
+			roomId:     entity.RoomId("1234"),
 			memberInfo: entity.MemberInfo{},
-			wantErr: fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : name is required"),
+			wantErr:    fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : name is required"),
 		},
 	}
 

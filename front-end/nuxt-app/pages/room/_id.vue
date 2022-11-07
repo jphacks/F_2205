@@ -30,6 +30,13 @@
     </div>
     <!-- ビデオステータスバー -->
 
+    <!-- スクリーンショットカウントダウンDialog-->
+    <ScreenShotDialog
+      :currentScreenShotCount="this.currentScreenShotCount"
+      :isOpenScreenShotDialog="this.isOpenScreenShotDialog"
+    />
+    <!-- スクリーンショットカウントダウンDialog-->
+
     <!-- モーダルウィンドウ -->
     <section class="modal-window">
       <div class="modal-window-back"></div>
@@ -59,10 +66,12 @@ import AdjustWebgazerDialog from '~/components/presentational/organisms/adjustWe
 import Video from '~/components/presentational/organisms/video';
 import Loader from '~/components/presentational/organisms/loader';
 import ShareCard from '~/components/presentational/organisms/shareCard';
+import ScreenShotDialog from '~/components/presentational/organisms/screenShot/screenShotDialog';
 
 import webgazer from 'webgazer';
 import * as tf from '@tensorflow/tfjs';
 import * as tmImage from '@teachablemachine/image';
+import shutter from '~/assets/music/camera.mp3';
 
 export default {
   components: {
@@ -71,7 +80,8 @@ export default {
     AdjustWebgazerDialog,
     Video,
     Loader,
-    ShareCard
+    ShareCard,
+    ScreenShotDialog
   },
 
   data() {
@@ -84,6 +94,8 @@ export default {
       roomMemberNum: 1,
       isVisibleSwitchButton: false,
       isOpenAdjustWebGazerDialog: false,
+      currentScreenShotCount: 3,
+      isOpenScreenShotDialog: false,
       isEnableGazeEstimating: false,
       isEnableDrinkEstimating: false,
       isFirstGazeEstimating: true,
@@ -104,20 +116,40 @@ export default {
       drinkingCount: 0, // 飲んだ回数
       predictionCount: 0, // 推定結果の返却回数
       accuracy: { drinking: 0, noDrinking: 0 },
-      isLoop: true
+      isLoop: true,
+      dialog: false
     };
   },
 
   methods: {
     //スクリーンショット起動
-    captureImage() {
-      html2canvas(document.querySelector('#capture')).then((canvas) => {
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL();
-        link.download = `export_image.png`;
-        link.click();
-      });
+    async captureImage() {
+      this.isOpenScreenShotDialog = true;
+
+      const audio = new Audio(shutter);
+
+      const timer = setInterval(
+        async function () {
+          this.currentScreenShotCount = this.currentScreenShotCount - 1;
+
+          if (this.currentScreenShotCount < 1) {
+            this.isOpenScreenShotDialog = false;
+            audio.play();
+            await html2canvas(document.querySelector('#capture')).then((canvas) => {
+              const link = document.createElement('a');
+              link.href = canvas.toDataURL();
+              link.download = `export_image.png`;
+              link.click();
+            });
+            clearInterval(timer);
+          }
+        }.bind(this),
+        1000
+      );
+
+      this.currentScreenShotCount = 3;
     },
+
     setWebsocketEventListener: function (websocketConn) {
       websocketConn.onopen = function (e) {
         console.log('websocket connection');

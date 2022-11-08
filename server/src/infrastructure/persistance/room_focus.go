@@ -6,6 +6,7 @@ import (
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 )
 
+// AddNewFocusMemberOfRoomIdは指定されたRoomに新しくユーザーを追加します
 func (r *RoomRepository) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newMemberName entity.Name) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
@@ -28,6 +29,7 @@ func (r *RoomRepository) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newMemb
 	return nil
 }
 
+// SetMemberFocusOfRoomIdは指定されたRoomに新しくフォーカス状態のユーザーを追加します
 func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
@@ -64,6 +66,7 @@ func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entit
 	return nil
 }
 
+// DelMemberFocusOfRoomIdは指定されたRoomの特定のユーザー同士のフォーカスを解除します
 func (r *RoomRepository) DelMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
@@ -95,6 +98,7 @@ func (r *RoomRepository) DelMemberFocusOfRoomId(roomId entity.RoomId, from entit
 	return nil
 }
 
+// DelAllMemberFocusOfRoomIdは指定されたRoomの特定のユーザーのフォーカスをすべて解除します
 func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {

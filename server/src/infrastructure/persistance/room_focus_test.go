@@ -440,5 +440,42 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 }
 
 func TestRoomRepository_GetFocusMembersOfRoomId(t *testing.T) {
-	t.Skip()
+	t.Parallel()
+
+	tests := []struct {
+		name         string
+		roomId              entity.RoomId
+		rooms               *entity.Rooms
+		wantFocusMembers    entity.FocusMembers
+	}{
+		{
+			name: "正常に動いた場合",
+			roomId: entity.RoomId("1234"),
+			rooms: &entity.Rooms{
+				entity.RoomId("1234"):&entity.Room{
+					FocusMembers: entity.FocusMembers{
+						&entity.FocusMember{
+							Name: entity.Name("hoge"),
+							Connects: entity.Connects{},
+						},
+					},
+				},
+			},
+			wantFocusMembers: entity.FocusMembers{
+				&entity.FocusMember{
+					Name: entity.Name("hoge"),
+					Connects: entity.Connects{},
+				},
+			},
+		},
+	}
+	for _,tt := range tests {
+		t.Run(tt.name,func(t *testing.T) {
+			repoRoom := NewRoomRepository(tt.rooms)
+			gotFocusMembers := repoRoom.GetFocusMembersOfRoomId(tt.roomId)
+			if !reflect.DeepEqual(gotFocusMembers,tt.wantFocusMembers){
+				t.Errorf("TestRoomRepository_GetFocusMembersOfRoomId Error : want %v, but got %v", tt.wantFocusMembers, gotFocusMembers)
+			}
+		})
+	}
 }

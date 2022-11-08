@@ -67,6 +67,7 @@ func (r *RoomRepository) GetExistsRoomOfRoomId(roomId entity.RoomId) (*entity.Ro
 	return room, true
 }
 
+// GetSumOfRoomはサーバーの管理するRoomの数を取得します
 func (r *RoomRepository) GetSumOfRoom() int {
 	return len(*r.Rooms)
 }

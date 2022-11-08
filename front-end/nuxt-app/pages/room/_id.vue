@@ -176,6 +176,7 @@ export default {
           // 引数のメンバーをフォーカス
 
           if (focusMemberData.length == 0) {
+            // 誰もフォーカスしてない場合
             const videos = document.querySelectorAll('.video-individual');
 
             for (let video of videos) {
@@ -188,12 +189,11 @@ export default {
           document.querySelector('#videomy-video').classList.add('video-individual-focus');
 
           for (let tgMemberData of focusMemberData) {
-            let videoDom = document.getElementById(tgMemberData.name);
+            let videoDom = document.getElementById(tgMemberData.peer_id);
             videoDom.classList.add('video-individual-focus');
             videoDom.volume = 1;
           }
         };
-
         const focusRun = (data, myVideoDomName) => {
           // フォーカス起動
           focusThisVideoAllLift();
@@ -201,7 +201,7 @@ export default {
           const memberDatas = data.focus_members;
 
           for (let memberData of memberDatas) {
-            if (memberData.name == myVideoDomName) {
+            if (memberData.peer_id == myVideoDomName) {
               //引数のメンバーをフォーカスしてそれ以外を除外
               doFocus(memberData.connects);
             }
@@ -214,14 +214,16 @@ export default {
         // ======================================================================== //
         const effectRun = (data, myVideoDomName) => {
           // エフェクト起動
-          if (data.effect_member.name == myVideoDomName) return;
+          if (data.effect_member.peer_id == myVideoDomName) return;
 
-          this.$refs.videoComponents.effectOthers(data.effect_member.type, data.effect_member.name);
+          this.$refs.videoComponents.effectOthers(data.effect_member.type, data.effect_member.peer_id);
         };
         // ======================================================================== //
 
         const data = JSON.parse(evt.data);
         const myVideoDomName = document.querySelector('#videomy-video').getAttribute('name');
+
+        console.log(data);
 
         // フォーカス
         if (data.event_type == 'SET_FOCUS' || data.event_type == 'DEL_ALL_FOCUS' || data.event_type == 'DEL_FOCUS')
@@ -283,10 +285,11 @@ export default {
       this.roomMemberNumCheckIntervalFn = setInterval(this.roomMemberNumCheck, 60000);
 
       const data = {
-        type: 'NEW_MEMBER',
+        type: 'ADD_NEW_MEMBER',
         info: {
-          focus: {
-            from: `video${this.peer.id}`
+          member: {
+            name: `name${this.peer.id}`,
+            peer_id:`video${this.peer.id}`
           }
         }
       };
@@ -320,8 +323,13 @@ export default {
 
           this.websocketConn.send(data);
         } else {
-          const response = await axios.delete(
+          let response;
+          response = await axios.delete(
             'https://f-2205-server-chhumpv4gq-de.a.run.app/room/' + this.$route.params.id
+          );
+          console.log(response);
+          response = await axios.delete(
+            'https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id
           );
           console.log(response);
         }
@@ -522,7 +530,7 @@ export default {
         type: 'SET_EFFECT',
         info: {
           effect: {
-            name: `video${this.peer.id}`,
+            peer_id: `video${this.peer.id}`,
             type: `${effectNumber}`
           }
         }

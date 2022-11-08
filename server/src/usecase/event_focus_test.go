@@ -8,7 +8,6 @@ import (
 )
 
 func TestEventUsecase_SwitchExecFocusEventByEventType(t *testing.T) {
-	// TODO
 	t.Skip()
 }
 

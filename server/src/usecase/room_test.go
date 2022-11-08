@@ -37,6 +37,26 @@ func TestRoomUsecase_CreateRoomNumber(t *testing.T) {
 	}
 }
 
+func TestEventUsecase_DeleteRoomOfRoomId(t *testing.T) {
+	t.Skip()
+}
+
+func TestEventUsecase_GetFocusMembersOfRoomId(t *testing.T) {
+	t.Skip()
+}
+
+func TestEventUsecase_GetMembersOfRoomId(t *testing.T) {
+	t.Skip()
+}
+
+func TestEventUsecase_CheckExistsRoomAndInit(t *testing.T) {
+	t.Skip()
+}
+
+func TestEventUsecase_GetSumOfRoom(t *testing.T) {
+	t.Skip()
+}
+
 // roomRepositoryMockはroomRepositoryのmockの構造体です
 type roomRepositoryMock struct{}
 

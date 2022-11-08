@@ -47,6 +47,25 @@ func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
 	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
 }
 
+func (h *RoomWsHandler) DeleteHubOfRoomId(ctx *gin.Context) {
+	roomIdString := ctx.Param("room_id")
+	roomId := service.StringToRoomId(roomIdString)
+
+	// TODO 既存のクライアントのコネクションが残っているので直す
+	// Hubの削除
+	if err := h.Hubs.CheckAndDeleteHubOfRoomId(roomId); err != nil {
+		ctx.JSON(
+			http.StatusBadRequest,
+			gin.H{"error": err.Error()},
+		)
+		return
+	}
+	ctx.JSON(
+		http.StatusOK,
+		gin.H{"ok": "delete hub of roomId successful"},
+	)
+}
+
 // receiveEventInfoFromConnはクライアントからEvent情報が送られてきたとき、
 // Eventごとに処理を行い、新たなRoom情報をBroadcastRoomInfoに書き込みます
 func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
@@ -70,14 +89,7 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 		if err != nil {
 			log.Println("ExecEventOfEventType Error :", err)
 		}
-
-		// TODO けしてもいいんじゃね
-		// FocusMemberに最新の情報をいれる
-		room.FocusMembers = h.ucRoom.GetFocusMembersOfRoomId(c.Hub.RoomId)
-
-		// Membmerの最新情報を入れる
-		room.Members = h.ucRoom.GetMembersOfRoomId(c.Hub.RoomId)
-
+		h.ucRoom.SetRoomLatestMemberDataOfRoomId(c.Hub.RoomId, room, e)
 		c.Hub.BroadcastRoom <- room
 	}
 }

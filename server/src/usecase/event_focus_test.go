@@ -8,7 +8,6 @@ import (
 )
 
 func TestEventUsecase_SwitchExecFocusEventByEventType(t *testing.T) {
-	// TODO
 	t.Skip()
 }
 
@@ -19,15 +18,14 @@ func TestEventUsecase_SetMemberFocusOfRoomId(t *testing.T) {
 		name      string
 		roomId    entity.RoomId
 		focusInfo entity.FocusInfo
-		wantRoom  *entity.Room
 		wantErr   error
 	}{
 		{
 			name:   "正常に動いている場合",
 			roomId: entity.RoomId("1234"),
 			focusInfo: entity.FocusInfo{
-				From: entity.Name("hoge"),
-				To:   entity.Name("hoge"),
+				From: entity.PeerId("hoge"),
+				To:   entity.PeerId("hoge"),
 			},
 			wantErr: nil,
 		},
@@ -35,7 +33,7 @@ func TestEventUsecase_SetMemberFocusOfRoomId(t *testing.T) {
 			name:   "Fromが空文字の場合、エラーを返す",
 			roomId: entity.RoomId("1234"),
 			focusInfo: entity.FocusInfo{
-				To: entity.Name("hoge"),
+				To: entity.PeerId("hoge"),
 			},
 			wantErr: fmt.Errorf("EventUsecase.SetMemberFocusOfRoomId Error : from and to is required"),
 		},
@@ -43,7 +41,7 @@ func TestEventUsecase_SetMemberFocusOfRoomId(t *testing.T) {
 			name:   "Toが空文字の場合、エラーを返す",
 			roomId: entity.RoomId("1234"),
 			focusInfo: entity.FocusInfo{
-				From: entity.Name("hoge"),
+				From: entity.PeerId("hoge"),
 			},
 			wantErr: fmt.Errorf("EventUsecase.SetMemberFocusOfRoomId Error : from and to is required"),
 		},
@@ -73,15 +71,14 @@ func TestEventUsecase_DelMemberFocusOfRoomId(t *testing.T) {
 		name      string
 		roomId    entity.RoomId
 		focusInfo entity.FocusInfo
-		wantRoom  *entity.Room
 		wantErr   error
 	}{
 		{
 			name:   "正常に動いている場合",
 			roomId: entity.RoomId("1234"),
 			focusInfo: entity.FocusInfo{
-				From: entity.Name("hoge"),
-				To:   entity.Name("hoge"),
+				From: entity.PeerId("hoge"),
+				To:   entity.PeerId("hoge"),
 			},
 			wantErr: nil,
 		},
@@ -89,7 +86,7 @@ func TestEventUsecase_DelMemberFocusOfRoomId(t *testing.T) {
 			name:   "Fromが空文字の場合、エラーを返す",
 			roomId: entity.RoomId("1234"),
 			focusInfo: entity.FocusInfo{
-				To: entity.Name("hoge"),
+				To: entity.PeerId("hoge"),
 			},
 			wantErr: fmt.Errorf("EventUsecase.DelMemberFocusOfRoomId Error : from and to is required"),
 		},
@@ -97,7 +94,7 @@ func TestEventUsecase_DelMemberFocusOfRoomId(t *testing.T) {
 			name:   "Toが空文字の場合、エラーを返す",
 			roomId: entity.RoomId("1234"),
 			focusInfo: entity.FocusInfo{
-				From: entity.Name("hoge"),
+				From: entity.PeerId("hoge"),
 			},
 			wantErr: fmt.Errorf("EventUsecase.DelMemberFocusOfRoomId Error : from and to is required"),
 		},
@@ -134,7 +131,7 @@ func TestEventUsecase_DelAllMemberFocusOfRoomId(t *testing.T) {
 			name:   "正常に動いている場合",
 			roomId: entity.RoomId("1234"),
 			focusInfo: entity.FocusInfo{
-				From: entity.Name("hoge"),
+				From: entity.PeerId("hoge"),
 			},
 			wantErr: nil,
 		},

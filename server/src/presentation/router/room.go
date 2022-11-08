@@ -22,8 +22,9 @@ func (r Router) InitRoomRouter() {
 	// Room API
 	r.Engine.GET("/room/sum", h.GetCountSumOfRoom)
 	r.Engine.POST("/room", h.CreateRoom)
-	r.Engine.DELETE("/room/:room_id", h.DeleteHubAndRoomOfRoomId)
+	r.Engine.DELETE("/room/:room_id", h.DeleteRoomOfRoomId)
 
 	// WebSocket通信
 	r.Engine.GET("/ws/:room_id", hWs.ConnectWsRoom)
+	r.Engine.DELETE("/ws/:room_id", hWs.DeleteHubOfRoomId)
 }

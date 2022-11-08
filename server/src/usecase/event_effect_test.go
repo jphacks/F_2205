@@ -21,12 +21,12 @@ func TestEventUsecase_ExecEffectEvent(t *testing.T) {
 			name:   "正常に動いている場合",
 			roomId: entity.RoomId("1234"),
 			effectInfo: entity.EffectInfo{
-				Name: entity.Name("hoge"),
-				Type: entity.EffectType("happy"),
+				PeerId: entity.PeerId("hoge"),
+				Type:   entity.EffectType("happy"),
 			},
 			wantEffectMember: &entity.EffectMember{
-				Name: entity.Name("hoge"),
-				Type: entity.EffectType("happy"),
+				PeerId: entity.PeerId("hoge"),
+				Type:   entity.EffectType("happy"),
 			},
 			wantErr: nil,
 		},

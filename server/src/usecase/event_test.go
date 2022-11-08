@@ -5,6 +5,5 @@ import (
 )
 
 func TestEventUsecase_SwitchExecEventByEventType(t *testing.T) {
-	// TODO
 	t.Skip()
 }

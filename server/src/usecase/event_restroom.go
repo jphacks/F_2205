@@ -12,10 +12,10 @@ func (uc *EventUsecase) ExecRestRoomEvent(roomId entity.RoomId, info entity.Rest
 	isRestRoom := info.IsRestRoom
 
 	if peerId == "" {
-		return fmt.Errorf("EventUsecase.AddNewMemberOfRoomId Error : peer_id is required")
+		return fmt.Errorf("EventUsecase.ExecRestRoomEvent Error : peer_id is required")
 	}
 	if err := uc.repoRoom.SetMemberRestRoomStateOfRoomId(roomId, peerId, isRestRoom); err != nil {
-		return fmt.Errorf("EventUsecase.SetMemberRestRoomStateOfRoomId Error : %w", err)
+		return fmt.Errorf("EventUsecase.ExecRestRoomEvent Error : %w", err)
 	}
 	return nil
 }

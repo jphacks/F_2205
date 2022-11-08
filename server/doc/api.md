@@ -34,23 +34,10 @@ response
 
 部屋を閉じるタイミングでたたく
 
-正常
-
 response
 ```json
 {
-    "ok": "delete hub of roomId successful"
-}
-```
-
-<br>
-
-指定したidの部屋がなかった場合
-
-response
-```json
-{
-    "error": "Hubs.CheckAndDeleteHubOfRoomId Error : roomId not found in Hubs"
+    "ok": "delete room of roomId successful"
 }
 ```
 
@@ -91,17 +78,32 @@ response
     },
     "focus_members": [
         {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "connects": []
         }
     ],
     "effect_member": {
-        "name": "",
+        "peer_id": "",
         "type": ""
     },
     "sound": {
         "type": ""
     }
+}
+```
+
+<br>
+
+## Hub
+### DELETE /ws/:room_id
+サーバーで管理しているHubの情報を削除する
+
+部屋を閉じるタイミングでたたく
+
+response
+```json
+{
+    "ok": "delete hub of roomId successful"
 }
 ```
 
@@ -122,8 +124,8 @@ send
     "type": "SET_FOCUS",
     "info": {
         "focus": {
-            "from": "hoge1",
-            "to": "hoge2"
+            "from": "peer_hoge1",
+            "to": "peer_hoge2"
         }
     }
 }
@@ -145,24 +147,24 @@ response
     },
     "focus_members": [
         {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "connects": [
                 {
-                    "name": "hoge2"
+                    "peer_id": "peer_hoge2"
                 }
             ]
         },
         {
-            "name": "hoge2",
+            "peer_id": "peer_hoge2",
             "connects": [
                 {
-                    "name": "hoge1"
+                    "peer_id": "peer_hoge1"
                 }
             ]
         }
     ],
     "effect_member": {
-        "name": "",
+        "peer_id": "",
         "type": ""
     },
     "sound": {
@@ -183,8 +185,8 @@ send
     "type": "DEL_FOCUS",
     "info": {
         "focus": {
-            "from": "hoge1",
-            "to": "hoge2"
+            "from": "peer_hoge1",
+            "to": "peer_hoge2"
         }
     }
 }
@@ -207,16 +209,16 @@ response
     },
     "focus_members": [
         {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "connects": []
         },
         {
-            "name": "hoge2",
+            "peer_id": "peer_hoge2",
             "connects": []
         }
     ],
     "effect_member": {
-        "name": "",
+        "peer_id": "",
         "type": ""
     },
     "sound": {
@@ -237,7 +239,7 @@ send
     "type": "DEL_ALL_FOCUS",
     "info": {
         "focus": {
-            "from": "hoge1"
+            "from": "peer_hoge1"
         }
     }
 }
@@ -260,16 +262,16 @@ response
     },
     "focus_members": [
         {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "connects": []
         },
         {
-            "name": "hoge2",
+            "peer_id": "peer_hoge2",
             "connects": []
         }
     ],
     "effect_member": {
-        "name": "",
+        "peer_id": "",
         "type": ""
     },
     "sound": {
@@ -310,16 +312,16 @@ response
     },
     "focus_members": [
         {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "connects": []
         },
         {
-            "name": "hoge2",
+            "peer_id": "peer_hoge2",
             "connects": []
         }
     ],
     "effect_member": {
-        "name": "",
+        "peer_id": "",
         "type": ""
     },
     "sound": {
@@ -344,7 +346,7 @@ send
     "type": "SET_EFFECT",
     "info": {
         "effect": {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "type": "happy"
         }
     }
@@ -368,16 +370,16 @@ response
     },
     "focus_members": [
         {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "connects": []
         },
         {
-            "name": "hoge2",
+            "peer_id": "peer_hoge2",
             "connects": []
         }
     ],
     "effect_member": {
-        "name": "hoge1",
+        "peer_id": "peer_hoge1",
         "type": "happy"
     },
     "sound": {
@@ -399,7 +401,7 @@ send
     "type": "SET_SOUND",
     "info": {
         "sound": {
-            "type": "hoge1"
+            "type": "hoge_sound"
         }
     }
 }
@@ -421,20 +423,20 @@ response
     },
     "focus_members": [
         {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "connects": []
         },
         {
-            "name": "hoge2",
+            "peer_id": "peer_hoge2",
             "connects": []
         }
     ],
     "effect_member": {
-        "name": "",
+        "peer_id": "",
         "type": ""
     },
     "sound": {
-        "type": "hoge1"
+        "type": "hoge_sound"
     }
 }
 ```
@@ -478,16 +480,16 @@ response
     },
     "focus_members": [
         {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "connects": []
         },
         {
-            "name": "hoge2",
+            "peer_id": "peer_hoge2",
             "connects": []
         }
     ],
     "effect_member": {
-        "name": "",
+        "peer_id": "",
         "type": ""
     },
     "sound": {
@@ -528,16 +530,16 @@ response
     },
     "focus_members": [
         {
-            "name": "hoge1",
+            "peer_id": "peer_hoge1",
             "connects": []
         },
         {
-            "name": "hoge2",
+            "peer_id": "peer_hoge2",
             "connects": []
         }
     ],
     "effect_member": {
-        "name": "",
+        "peer_id": "",
         "type": ""
     },
     "sound": {

@@ -26,7 +26,7 @@ func Test_RandomStr(t *testing.T) {
 			if gotLength != tt.wantStrLength {
 				t.Errorf("Test_RandomStr Error : want %v, but got %v", tt.wantStrLength, gotLength)
 			}
-			if err != nil && tt.wantErr != nil && err.Error() != tt.wantErr.Error() {
+			if err != nil && err.Error() != tt.wantErr.Error() {
 				t.Errorf("Test_RandomStr Error : want %v, but got %v", tt.wantErr, err)
 			}
 		})

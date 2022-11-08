@@ -7,8 +7,8 @@ import (
 // ExecEffectEventはEffectMemberにinfoから受け取ったエフェクト情報をいれて返します
 func (uc *EventUsecase) ExecEffectEvent(roomId entity.RoomId, info entity.EffectInfo) (*entity.EffectMember, error) {
 	m := &entity.EffectMember{
-		Name: info.Name,
-		Type: info.Type,
+		PeerId: info.PeerId,
+		Type:   info.Type,
 	}
 	return m, nil
 }

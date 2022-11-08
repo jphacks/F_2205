@@ -13,15 +13,13 @@ import (
 
 // TODO handlerがHubsに依存しているのが気になる。
 type RoomHandler struct {
-	uc   usecase.IRoomUsecase
-	Hubs *ws.Hubs
+	uc usecase.IRoomUsecase
 }
 
 // NewRoomHandlerはRoomHandler構造体のポインタを返します
 func NewRoomHandler(uc usecase.IRoomUsecase, hubs *ws.Hubs) *RoomHandler {
 	return &RoomHandler{
-		uc:   uc,
-		Hubs: hubs,
+		uc: uc,
 	}
 }
 
@@ -53,25 +51,17 @@ func (h *RoomHandler) CreateRoom(ctx *gin.Context) {
 	)
 }
 
-func (h *RoomHandler) DeleteHubAndRoomOfRoomId(ctx *gin.Context) {
+func (h *RoomHandler) DeleteRoomOfRoomId(ctx *gin.Context) {
 	roomIdString := ctx.Param("room_id")
 	roomId := service.StringToRoomId(roomIdString)
 
 	// Roomの削除
 	h.uc.DeleteRoomOfRoomId(roomId)
+	// TODO 見つからなかった時にエラーを返す処理にしたい
 
-	// Hubの削除
-	// TODO Roomを正常に削除できても、Hubを作ってなかったらエラーが出るので、他の処理方法を考えたい
-	if err := h.Hubs.CheckAndDeleteHubOfRoomId(roomId); err != nil {
-		ctx.JSON(
-			http.StatusBadRequest,
-			gin.H{"error": err.Error()},
-		)
-		return
-	}
 	ctx.JSON(
 		http.StatusOK,
-		gin.H{"ok": "delete hub of roomId successful"},
+		gin.H{"ok": "delete room of roomId successful"},
 	)
 }
 

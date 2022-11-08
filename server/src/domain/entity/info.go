@@ -11,14 +11,14 @@ type Info struct {
 
 // FocusInfoはFocusEventの際のMember同士の情報を保持する構造体です
 type FocusInfo struct {
-	From Name `json:"from"`
-	To   Name `json:"to"`
+	From PeerId `json:"from"`
+	To   PeerId `json:"to"`
 }
 
 // EffectInfoはMemberのエフェクトを保持する構造体です
 type EffectInfo struct {
-	Name Name       `json:"name"`
-	Type EffectType `json:"type"`
+	PeerId PeerId     `json:"peer_id"`
+	Type   EffectType `json:"type"`
 }
 
 // SoundInfoは受け取ったSoundの情報を保持する構造体です
@@ -36,4 +36,9 @@ type MemberInfo struct {
 type RestRoomInfo struct {
 	PeerId     PeerId `json:"peer_id"`
 	IsRestRoom bool   `json:"is_rest_room"`
+}
+
+// RoomInfoはRoomのメタデータを保持します
+type RoomInfo struct {
+	Id RoomId
 }

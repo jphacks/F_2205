@@ -20,7 +20,7 @@
 |--domain
 |  |--entity       # ドメインのオブジェクトを管理します
 |  |--repository   # infrastructure/repositoryのインターフェースを管理します
-|  |--service
+|  |--service      # handlerなどdomainに依存してない層からdomainのオブジェクトを利用する際に使います
 |--infrastructure
 |  |--database     # データベースと接続します
 |  |--persistance  # データの永続化を責務とします
@@ -30,7 +30,7 @@
 |  |--router       # ルーターを管理します
 |  |--ws           # websocket通信を管理します
 |--usecase         # ユースケースを管理します
-|--utils           # 共通で使う関数をまとめてあります
+|--utils           # サーバー内で共通で使う関数をまとめてあります
 ```
 
 ## API仕様書

@@ -21,6 +21,7 @@ type IRoomUsecase interface {
 	DeleteRoomOfRoomId(roomId entity.RoomId)
 	CreateRoomNumber() (*entity.RoomInfo, error)
 	GetSumOfRoom() int
+	SetRoomLatestMemberDataOfRoomId(roomID entity.RoomId,room *entity.Room, e entity.Event)
 }
 
 // NewRoomUsecaseはIRoomUsecaseを満たしたRoomUsecase構造体を返します
@@ -72,4 +73,9 @@ func (uc *RoomUsecase) CheckExistsRoomAndInit(roomId entity.RoomId) {
 // GetSumOfRoomは存在するRoomの合計数を返します
 func (uc *RoomUsecase) GetSumOfRoom() int {
 	return uc.repo.GetSumOfRoom()
+}
+
+func (uc *RoomUsecase) SetRoomLatestMemberDataOfRoomId(roomID entity.RoomId,room *entity.Room, e entity.Event) {
+	room.FocusMembers = uc.GetFocusMembersOfRoomId(roomID)
+	room.Members = uc.GetMembersOfRoomId(roomID)
 }

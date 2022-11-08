@@ -22,11 +22,11 @@ func TestEventUsecase_ExecEffectEvent(t *testing.T) {
 			roomId: entity.RoomId("1234"),
 			effectInfo: entity.EffectInfo{
 				PeerId: entity.PeerId("hoge"),
-				Type: entity.EffectType("happy"),
+				Type:   entity.EffectType("happy"),
 			},
 			wantEffectMember: &entity.EffectMember{
 				PeerId: entity.PeerId("hoge"),
-				Type: entity.EffectType("happy"),
+				Type:   entity.EffectType("happy"),
 			},
 			wantErr: nil,
 		},

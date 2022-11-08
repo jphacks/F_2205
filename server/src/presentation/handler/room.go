@@ -13,13 +13,13 @@ import (
 
 // TODO handlerがHubsに依存しているのが気になる。
 type RoomHandler struct {
-	uc   usecase.IRoomUsecase
+	uc usecase.IRoomUsecase
 }
 
 // NewRoomHandlerはRoomHandler構造体のポインタを返します
 func NewRoomHandler(uc usecase.IRoomUsecase, hubs *ws.Hubs) *RoomHandler {
 	return &RoomHandler{
-		uc:   uc,
+		uc: uc,
 	}
 }
 

@@ -44,7 +44,7 @@ func TestEventUsecase_ExecRestRoomEvent(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ucEvent := NewEventUsecase(&roomRepositoryMock{})
 			err := ucEvent.ExecRestRoomEvent(tt.roomId, tt.info)
-			if  err!=nil && err.Error()!=tt.wantErr.Error(){
+			if err != nil && err.Error() != tt.wantErr.Error() {
 				t.Errorf("TestEventUsecase_ExecRestRoomEvent Error : want %v, but got %v", tt.wantErr, err)
 			}
 		})

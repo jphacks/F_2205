@@ -64,7 +64,7 @@ func TestEventUsecase_SetRoomLatestMemberDataOfRoomId(t *testing.T) {
 // roomRepositoryMockはroomRepositoryのmockの構造体です
 type roomRepositoryMock struct{}
 
-func (r *roomRepositoryMock) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newPeerId entity.PeerId) error{
+func (r *roomRepositoryMock) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newPeerId entity.PeerId) error {
 	return nil
 }
 func (r *roomRepositoryMock) SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId, to entity.PeerId) error {

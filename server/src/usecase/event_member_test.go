@@ -65,7 +65,6 @@ func TestEventUsecase_AddNewMemberOfRoomId(t *testing.T) {
 	}
 }
 
-
 func TestEventUsecase_isMemberEvent(t *testing.T) {
 	t.Parallel()
 

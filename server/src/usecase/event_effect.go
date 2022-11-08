@@ -8,7 +8,7 @@ import (
 func (uc *EventUsecase) ExecEffectEvent(roomId entity.RoomId, info entity.EffectInfo) (*entity.EffectMember, error) {
 	m := &entity.EffectMember{
 		PeerId: info.PeerId,
-		Type: info.Type,
+		Type:   info.Type,
 	}
 	return m, nil
 }

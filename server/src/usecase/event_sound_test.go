@@ -11,14 +11,14 @@ func TestEventUsecase_ExecSoundEvent(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name        string
-		roomId      entity.RoomId
-		info        entity.SoundInfo
-		wantSound   *entity.Sound
-		wantErr     error
+		name      string
+		roomId    entity.RoomId
+		info      entity.SoundInfo
+		wantSound *entity.Sound
+		wantErr   error
 	}{
 		{
-			name:  "正常に動いた場合、Soundオブジェクトを返す",
+			name:   "正常に動いた場合、Soundオブジェクトを返す",
 			roomId: entity.RoomId("1234"),
 			info: entity.SoundInfo{
 				SoundType: entity.SoundType("hoge"),
@@ -32,11 +32,11 @@ func TestEventUsecase_ExecSoundEvent(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			ucEvent := NewEventUsecase(&roomRepositoryMock{})
-			got,err := ucEvent.ExecSoundEvent(tt.roomId,tt.info)
+			got, err := ucEvent.ExecSoundEvent(tt.roomId, tt.info)
 			if err != tt.wantErr {
 				t.Errorf("TestEventUsecase_ExecSoundEvent Error : want %v, but got %v", tt.wantErr, err)
 			}
-			if !reflect.DeepEqual(got,tt.wantSound) {
+			if !reflect.DeepEqual(got, tt.wantSound) {
 				t.Errorf("TestEventUsecase_ExecSoundEvent Error : want %v, but got %v", tt.wantSound, got)
 			}
 		})

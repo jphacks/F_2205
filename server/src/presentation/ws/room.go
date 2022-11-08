@@ -88,7 +88,7 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 		if err != nil {
 			log.Println("ExecEventOfEventType Error :", err)
 		}
-		h.ucRoom.SetRoomLatestMemberDataOfRoomId(c.Hub.RoomId,room,e)
+		h.ucRoom.SetRoomLatestMemberDataOfRoomId(c.Hub.RoomId, room, e)
 		c.Hub.BroadcastRoom <- room
 	}
 }

@@ -20,13 +20,13 @@ func TestRoomRepository_AddNewFocusMemberOfRoomId(t *testing.T) {
 		wantErr         error
 	}{
 		{
-			name:          "正常に動いている場合、新しいメンバーを部屋に追加する",
-			roomId:        entity.RoomId("1234"),
+			name:            "正常に動いている場合、新しいメンバーを部屋に追加する",
+			roomId:          entity.RoomId("1234"),
 			newMemberPeerId: entity.PeerId("p2"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p1"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -34,11 +34,11 @@ func TestRoomRepository_AddNewFocusMemberOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p1"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p2"),
+						PeerId:   entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -46,13 +46,13 @@ func TestRoomRepository_AddNewFocusMemberOfRoomId(t *testing.T) {
 			wantErr: nil,
 		},
 		{
-			name:          "すでに同じ名前の人がいた場合、エラーを返す",
-			roomId:        entity.RoomId("1234"),
-			newMemberPeerId:   entity.PeerId("p1"),
+			name:            "すでに同じ名前の人がいた場合、エラーを返す",
+			roomId:          entity.RoomId("1234"),
+			newMemberPeerId: entity.PeerId("p1"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p1"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -60,7 +60,7 @@ func TestRoomRepository_AddNewFocusMemberOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p1"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -105,11 +105,11 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p1"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p2"),
+						PeerId:   entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -117,7 +117,7 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:   entity.PeerId("p1"),
+						PeerId: entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
 								PeerId: entity.PeerId("p2"),
@@ -128,7 +128,7 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								PeerId:   entity.PeerId("p1"),
+								PeerId: entity.PeerId("p1"),
 							},
 						},
 					},
@@ -144,7 +144,7 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:   entity.PeerId("p1"),
+						PeerId: entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
 								PeerId: entity.PeerId("p2"),
@@ -152,7 +152,7 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 						},
 					},
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p2"),
+						PeerId:   entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -160,7 +160,7 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:   entity.PeerId("p1"),
+						PeerId: entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
 								PeerId: entity.PeerId("p2"),
@@ -168,7 +168,7 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 						},
 					},
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p2"),
+						PeerId:   entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -183,14 +183,14 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p1"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
 						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								PeerId:   entity.PeerId("p1"),
+								PeerId: entity.PeerId("p1"),
 							},
 						},
 					},
@@ -199,7 +199,7 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:   entity.PeerId("p1"),
+						PeerId: entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
 								PeerId: entity.PeerId("p2"),
@@ -210,7 +210,7 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								PeerId:   entity.PeerId("p1"),
+								PeerId: entity.PeerId("p1"),
 							},
 						},
 					},
@@ -258,7 +258,7 @@ func TestRoomRepository_DelMemberFocusOfRoomId(t *testing.T) {
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:   entity.PeerId("p1"),
+						PeerId: entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
 								PeerId: entity.PeerId("p2"),
@@ -269,7 +269,7 @@ func TestRoomRepository_DelMemberFocusOfRoomId(t *testing.T) {
 						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								PeerId:   entity.PeerId("p1"),
+								PeerId: entity.PeerId("p1"),
 							},
 						},
 					},
@@ -278,11 +278,11 @@ func TestRoomRepository_DelMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p1"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p2"),
+						PeerId:   entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -327,7 +327,7 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:   entity.PeerId("p1"),
+						PeerId: entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
 								PeerId: entity.PeerId("p2"),
@@ -338,7 +338,7 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								PeerId:   entity.PeerId("p1"),
+								PeerId: entity.PeerId("p1"),
 							},
 						},
 					},
@@ -347,11 +347,11 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p1"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p2"),
+						PeerId:   entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -365,7 +365,7 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:   entity.PeerId("p1"),
+						PeerId: entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
 								PeerId: entity.PeerId("p2"),
@@ -379,7 +379,7 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								PeerId:   entity.PeerId("p1"),
+								PeerId: entity.PeerId("p1"),
 							},
 						},
 					},
@@ -390,7 +390,7 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 								PeerId: entity.PeerId("p2"),
 							},
 							&entity.Connect{
-								PeerId:   entity.PeerId("p1"),
+								PeerId: entity.PeerId("p1"),
 							},
 						},
 					},
@@ -399,11 +399,11 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p1"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						PeerId:     entity.PeerId("p2"),
+						PeerId:   entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
@@ -443,16 +443,16 @@ func TestRoomRepository_GetFocusMembersOfRoomId(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name         string
-		roomId              entity.RoomId
-		rooms               *entity.Rooms
-		wantFocusMembers    entity.FocusMembers
+		name             string
+		roomId           entity.RoomId
+		rooms            *entity.Rooms
+		wantFocusMembers entity.FocusMembers
 	}{
 		{
-			name: "正常に動いた場合",
+			name:   "正常に動いた場合",
 			roomId: entity.RoomId("1234"),
 			rooms: &entity.Rooms{
-				entity.RoomId("1234"):&entity.Room{
+				entity.RoomId("1234"): &entity.Room{
 					FocusMembers: entity.FocusMembers{
 						&entity.FocusMember{
 							PeerId:   entity.PeerId("p1"),
@@ -469,11 +469,11 @@ func TestRoomRepository_GetFocusMembersOfRoomId(t *testing.T) {
 			},
 		},
 	}
-	for _,tt := range tests {
-		t.Run(tt.name,func(t *testing.T) {
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
 			repoRoom := NewRoomRepository(tt.rooms)
 			gotFocusMembers := repoRoom.GetFocusMembersOfRoomId(tt.roomId)
-			if !reflect.DeepEqual(gotFocusMembers,tt.wantFocusMembers){
+			if !reflect.DeepEqual(gotFocusMembers, tt.wantFocusMembers) {
 				t.Errorf("TestRoomRepository_GetFocusMembersOfRoomId Error : want %v, but got %v", tt.wantFocusMembers, gotFocusMembers)
 			}
 		})

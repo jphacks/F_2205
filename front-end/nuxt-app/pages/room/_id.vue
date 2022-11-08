@@ -128,24 +128,25 @@ export default {
 
       const audio = new Audio(shutter);
 
-      const timer = setInterval(
-        async function () {
+      const countDown = () => {
+        const time = setTimeout(countDown, 1000);
+        if (this.currentScreenShotCount < 1) {
+          this.isOpenScreenShotDialog = false;
+          audio.play();
+          html2canvas(document.querySelector('#capture')).then((canvas) => {
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL();
+            link.download = `export_image.png`;
+            link.click();
+          });
+          clearTimeout(time);
+        }
+        if (this.currentScreenShotCount > 0) {
           this.currentScreenShotCount = this.currentScreenShotCount - 1;
+        }
+      };
 
-          if (this.currentScreenShotCount < 1) {
-            this.isOpenScreenShotDialog = false;
-            audio.play();
-            await html2canvas(document.querySelector('#capture')).then((canvas) => {
-              const link = document.createElement('a');
-              link.href = canvas.toDataURL();
-              link.download = `export_image.png`;
-              link.click();
-            });
-            clearInterval(timer);
-          }
-        }.bind(this),
-        1000
-      );
+      countDown();
 
       this.currentScreenShotCount = 3;
     },

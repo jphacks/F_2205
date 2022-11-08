@@ -136,8 +136,9 @@ export default {
             audio.play();
             html2canvas(document.querySelector('#capture')).then((canvas) => {
               const link = document.createElement('a');
+              const number = Math.floor(Math.random() * 10000);
               link.href = canvas.toDataURL();
-              link.download = `export_image.png`;
+              link.download = `export_image_${number}.png`;
               link.click();
             });
             return;

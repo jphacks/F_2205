@@ -124,34 +124,11 @@ export default {
   methods: {
     //スクリーンショット起動
     captureImage() {
-      this.isOpenScreenShotDialog = true;
-
-      const audio = new Audio(shutter);
-
-      const countDown = () => {
-        setTimeout(() => {
-          console.log(this.currentScreenShotCount);
-          if (this.currentScreenShotCount < 1) {
-            this.isOpenScreenShotDialog = false;
-            audio.play();
-            html2canvas(document.querySelector('#capture')).then((canvas) => {
-              const link = document.createElement('a');
-              const number = Math.floor(Math.random() * 10000);
-              link.href = canvas.toDataURL();
-              link.download = `export_image_${number}.png`;
-              link.click();
-            });
-            return;
-          }
-          if (this.currentScreenShotCount > 0) {
-            this.currentScreenShotCount = this.currentScreenShotCount - 1;
-          }
-          countDown();
-        }, 1000);
+      const data = {
+        type: 'SET_SCREEN_SHOT'
       };
 
-      countDown();
-      this.currentScreenShotCount = 3;
+      this.websocketConn.send(JSON.stringify(data));
     },
 
     setWebsocketEventListener: function (websocketConn) {
@@ -224,6 +201,41 @@ export default {
         };
         // ======================================================================== //
 
+        // ======================================================================== //
+        // screenshot function
+        // ======================================================================== //
+        const screenShotRun = () => {
+          // エフェクト起動
+          this.isOpenScreenShotDialog = true;
+
+          const audio = new Audio(shutter);
+
+          const countDown = () => {
+            setTimeout(() => {
+              if (this.currentScreenShotCount < 1) {
+                this.isOpenScreenShotDialog = false;
+                audio.play();
+                html2canvas(document.querySelector('#capture')).then((canvas) => {
+                  const link = document.createElement('a');
+                  const number = Math.floor(Math.random() * 10000);
+                  link.href = canvas.toDataURL();
+                  link.download = `export_image_${number}.png`;
+                  link.click();
+                });
+                return;
+              }
+              if (this.currentScreenShotCount > 0) {
+                this.currentScreenShotCount = this.currentScreenShotCount - 1;
+              }
+              countDown();
+            }, 1000);
+          };
+
+          countDown();
+          this.currentScreenShotCount = 3;
+        };
+        // ======================================================================== //
+
         const data = JSON.parse(evt.data);
         const myVideoDomName = document.querySelector('#videomy-video').getAttribute('name');
 
@@ -233,6 +245,9 @@ export default {
 
         // エフェクト
         if (data.event_type == 'SET_EFFECT') effectRun(data, myVideoDomName);
+
+        //スクショ
+        if (data.event_type == 'SET_SCREEN_SHOT') screenShotRun();
 
         return;
       }.bind(this);

@@ -51,6 +51,7 @@ func (h *RoomWsHandler) DeleteHubOfRoomId(ctx *gin.Context) {
 	roomIdString := ctx.Param("room_id")
 	roomId := service.StringToRoomId(roomIdString)
 
+	// TODO 既存のクライアントのコネクションが残っているので直す
 	// Hubの削除
 	if err := h.Hubs.CheckAndDeleteHubOfRoomId(roomId); err != nil {
 		ctx.JSON(

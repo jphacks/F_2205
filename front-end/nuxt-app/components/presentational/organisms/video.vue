@@ -58,8 +58,9 @@ export default {
     videoResize: function (roomMemberNum) {
       console.log('resize video size');
 
+      let windowSizeW;
       const windowSizeH = document.body.clientHeight;
-      const windowSizeW = document.body.clientWidth;
+      document.body.clientWidth > 1400 ? (windowSizeW = 1400) : (windowSizeW = document.body.clientWidth);
       const DisplayVideoH = windowSizeH - 79;
 
       const videoDoms = document.querySelectorAll('.video-individual');
@@ -189,17 +190,16 @@ export default {
 
       if (roomMemberNum == 2) {
         // 2人の場合
-        line = 1;
-        margenPx = 10 * (line * 2);
-
-        //ビデオの欲しい高さ
-        videoSizeH = DisplayVideoH - margenPx;
+        column = 2;
+        margenPx = 10 * (column * 2);
 
         //ビデオの幅
-        videoSizeW = Math.round(videoSizeH * 1.3);
+        videoSizeW = (windowSizeW - margenPx) / column;
 
         for (let videoDom of videoDoms) {
           videoDom.style.width = videoSizeW + 'px';
+          videoDom.style.marginTop = '4px';
+          videoDom.style.marginBottom = '4px';
         }
         return;
       }
@@ -254,9 +254,10 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    max-width: 1400px;
+    margin: 0 auto;
 
     * {
-      // flex: 1;
       margin: 10px;
       border-radius: 20px;
       max-width: 620px;

@@ -142,22 +142,8 @@ func TestRoomRepository_SetNewRoomOfRoomId(t *testing.T) {
 		{
 			name:   "正常に動いている場合、指定されたRoomIdの部屋を生成する",
 			roomId: entity.RoomId("1234"),
-			room: &entity.Room{
-				FocusMembers: entity.FocusMembers{
-					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
-						Connects: entity.Connects{},
-					},
-				},
-			},
-			wantRoom: &entity.Room{
-				FocusMembers: entity.FocusMembers{
-					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
-						Connects: entity.Connects{},
-					},
-				},
-			},
+			room: &entity.Room{},
+			wantRoom: &entity.Room{},
 		},
 	}
 
@@ -186,14 +172,7 @@ func TestRoomRepository_DeleteRoomOfRoomId(t *testing.T) {
 			name:   "正常に動いている場合、指定されたRoomIdの部屋を削除する",
 			roomId: entity.RoomId("1234"),
 			rooms: &entity.Rooms{
-				entity.RoomId("1234"): &entity.Room{
-					FocusMembers: entity.FocusMembers{
-						&entity.FocusMember{
-							Name:     entity.Name("hoge"),
-							Connects: entity.Connects{},
-						},
-					},
-				},
+				entity.RoomId("1234"): &entity.Room{},
 			},
 			wantRooms: &entity.Rooms{},
 		},
@@ -225,37 +204,16 @@ func TestRoomRepository_GetExistsRoomOfRoomId(t *testing.T) {
 			name:   "正常に動いている場合、指定されたRoomIdの部屋を取得する",
 			roomId: entity.RoomId("1234"),
 			rooms: &entity.Rooms{
-				entity.RoomId("1234"): &entity.Room{
-					FocusMembers: entity.FocusMembers{
-						&entity.FocusMember{
-							Name:     entity.Name("hoge"),
-							Connects: entity.Connects{},
-						},
-					},
-				},
+				entity.RoomId("1234"): &entity.Room{},
 			},
-			wantRoom: &entity.Room{
-				FocusMembers: entity.FocusMembers{
-					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
-						Connects: entity.Connects{},
-					},
-				},
-			},
+			wantRoom: &entity.Room{},
 			wantFound: true,
 		},
 		{
 			name:   "指定されたRoomIdの部屋が存在しなければnilが返る",
 			roomId: entity.RoomId("4321"),
 			rooms: &entity.Rooms{
-				entity.RoomId("1234"): &entity.Room{
-					FocusMembers: entity.FocusMembers{
-						&entity.FocusMember{
-							Name:     entity.Name("hoge"),
-							Connects: entity.Connects{},
-						},
-					},
-				},
+				entity.RoomId("1234"): &entity.Room{},
 			},
 			wantRoom:  nil,
 			wantFound: false,
@@ -288,22 +246,8 @@ func TestRoomRepository_GetSumOfRoom(t *testing.T) {
 		{
 			name: "正常に動いている場合、Roomの数を返す",
 			rooms: &entity.Rooms{
-				entity.RoomId("1234"): &entity.Room{
-					FocusMembers: entity.FocusMembers{
-						&entity.FocusMember{
-							Name:     entity.Name("hoge"),
-							Connects: entity.Connects{},
-						},
-					},
-				},
-				entity.RoomId("4321"): &entity.Room{
-					FocusMembers: entity.FocusMembers{
-						&entity.FocusMember{
-							Name:     entity.Name("hoge"),
-							Connects: entity.Connects{},
-						},
-					},
-				},
+				entity.RoomId("1234"): &entity.Room{},
+				entity.RoomId("4321"): &entity.Room{},
 			},
 			wantRoomLen: 2,
 		},

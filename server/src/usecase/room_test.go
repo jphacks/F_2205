@@ -60,16 +60,16 @@ func TestEventUsecase_GetSumOfRoom(t *testing.T) {
 // roomRepositoryMockはroomRepositoryのmockの構造体です
 type roomRepositoryMock struct{}
 
-func (r *roomRepositoryMock) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newMemberName entity.Name) error {
+func (r *roomRepositoryMock) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newPeerId entity.PeerId) error{
 	return nil
 }
-func (r *roomRepositoryMock) SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error {
+func (r *roomRepositoryMock) SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId, to entity.PeerId) error {
 	return nil
 }
-func (r *roomRepositoryMock) DelMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error {
+func (r *roomRepositoryMock) DelMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId, to entity.PeerId) error {
 	return nil
 }
-func (r *roomRepositoryMock) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name) error {
+func (r *roomRepositoryMock) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId) error {
 	return nil
 }
 func (r *roomRepositoryMock) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers {

@@ -7,14 +7,14 @@ import (
 )
 
 // AddNewFocusMemberOfRoomIdは指定されたRoomに新しくユーザーを追加します
-func (r *RoomRepository) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newMemberName entity.Name) error {
+func (r *RoomRepository) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newPeerId entity.PeerId) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.AddNewFocusMemberOfRoomId Error : room not found")
 	}
 
 	for _, member := range room.FocusMembers {
-		if member.Name == newMemberName {
+		if member.PeerId == newPeerId {
 			return fmt.Errorf("RoomRepository.AddNewFocusMemberOfRoomId Error : new member name already exist")
 		}
 	}
@@ -22,7 +22,7 @@ func (r *RoomRepository) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newMemb
 	room.FocusMembers = append(
 		room.FocusMembers,
 		&entity.FocusMember{
-			Name:     newMemberName,
+			PeerId:   newPeerId,
 			Connects: entity.Connects{},
 		},
 	)
@@ -30,16 +30,16 @@ func (r *RoomRepository) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newMemb
 }
 
 // SetMemberFocusOfRoomIdは指定されたRoomに新しくフォーカス状態のユーザーを追加します
-func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error {
+func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId, to entity.PeerId) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.SetMemberFocusOfRoomId Error : room not found")
 	}
 
 	for _, member := range room.FocusMembers {
-		if member.Name == from {
+		if member.PeerId == from {
 			for _, connect := range member.Connects {
-				if connect != nil && connect.Name == to {
+				if connect != nil && connect.PeerId == to {
 					return fmt.Errorf("RoomRepository.SetFocus Error : already connected")
 				}
 			}
@@ -47,11 +47,11 @@ func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entit
 			// FromさんのConnectにToさんを追加
 			member.Connects = append(
 				member.Connects,
-				&entity.Connect{Name: to},
+				&entity.Connect{PeerId: to},
 			)
-		} else if member.Name == to {
+		} else if member.PeerId == to {
 			for _, connect := range member.Connects {
-				if connect != nil && connect.Name == from {
+				if connect != nil && connect.PeerId == from {
 					return fmt.Errorf("RoomRepository.SetFocus Error : already connected")
 				}
 			}
@@ -59,7 +59,7 @@ func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entit
 			// ToさんのConnectにFromさんを追加
 			member.Connects = append(
 				member.Connects,
-				&entity.Connect{Name: from},
+				&entity.Connect{PeerId: from},
 			)
 		}
 	}
@@ -67,26 +67,26 @@ func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entit
 }
 
 // DelMemberFocusOfRoomIdは指定されたRoomの特定のユーザー同士のフォーカスを解除します
-func (r *RoomRepository) DelMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error {
+func (r *RoomRepository) DelMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId, to entity.PeerId) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.DelMemberFocusOfRoomId Error : room not found")
 	}
 	for _, member := range room.FocusMembers {
-		if member.Name == from {
+		if member.PeerId == from {
 			// FromさんのConnectからToさんを削除
 			for i, connect := range member.Connects {
-				if connect != nil && connect.Name == to {
+				if connect != nil && connect.PeerId == to {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
 					member.Connects[len(member.Connects)-1] = nil
 					member.Connects = member.Connects[:len(member.Connects)-1]
 				}
 			}
-		} else if member.Name == to {
+		} else if member.PeerId == to {
 			// ToさんのConnectからFromさんを削除
 			for i, connect := range member.Connects {
-				if connect != nil && connect.Name == from {
+				if connect != nil && connect.PeerId == from {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
 					member.Connects[len(member.Connects)-1] = nil
@@ -99,14 +99,14 @@ func (r *RoomRepository) DelMemberFocusOfRoomId(roomId entity.RoomId, from entit
 }
 
 // DelAllMemberFocusOfRoomIdは指定されたRoomの特定のユーザーのフォーカスをすべて解除します
-func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name) error {
+func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.DelAllMemberFocusOfRoomId Error : room not found")
 	}
 
 	for _, member := range room.FocusMembers {
-		if member.Name == from {
+		if member.PeerId == from {
 			// fromさんのConnectをリセット
 			member.Connects = []*entity.Connect{}
 		} else {
@@ -114,7 +114,7 @@ func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from en
 			for i, connect := range member.Connects {
 				// TODO こちらのISSUEの対応、なぜnilが入っているのかは調査中
 				// https://github.com/jphacks/F_2205/issues/95
-				if connect != nil && connect.Name == from {
+				if connect != nil && connect.PeerId == from {
 					// 削除
 					member.Connects[i] = member.Connects[len(member.Connects)-1]
 					member.Connects[len(member.Connects)-1] = nil

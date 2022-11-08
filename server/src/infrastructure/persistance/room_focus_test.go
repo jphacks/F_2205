@@ -12,21 +12,21 @@ func TestRoomRepository_AddNewFocusMemberOfRoomId(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name          string
-		roomId        entity.RoomId
-		newMemberName entity.Name
-		room          *entity.Room // 関数実行前のroomの状態
-		wantRoom      *entity.Room // 関数実行後の期待するroomの状態
-		wantErr       error
+		name            string
+		roomId          entity.RoomId
+		newMemberPeerId entity.PeerId
+		room            *entity.Room // 関数実行前のroomの状態
+		wantRoom        *entity.Room // 関数実行後の期待するroomの状態
+		wantErr         error
 	}{
 		{
 			name:          "正常に動いている場合、新しいメンバーを部屋に追加する",
 			roomId:        entity.RoomId("1234"),
-			newMemberName: entity.Name("piyo"),
+			newMemberPeerId: entity.PeerId("p2"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
+						PeerId:     entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -34,11 +34,11 @@ func TestRoomRepository_AddNewFocusMemberOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
+						PeerId:     entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						Name:     entity.Name("piyo"),
+						PeerId:     entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -48,11 +48,11 @@ func TestRoomRepository_AddNewFocusMemberOfRoomId(t *testing.T) {
 		{
 			name:          "すでに同じ名前の人がいた場合、エラーを返す",
 			roomId:        entity.RoomId("1234"),
-			newMemberName: entity.Name("hoge"),
+			newMemberPeerId:   entity.PeerId("p1"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
+						PeerId:     entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -60,7 +60,7 @@ func TestRoomRepository_AddNewFocusMemberOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
+						PeerId:     entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -74,7 +74,7 @@ func TestRoomRepository_AddNewFocusMemberOfRoomId(t *testing.T) {
 			// roomMockはroomのmockです
 			roomMock := &entity.Rooms{entity.RoomId("1234"): tt.room}
 			repoRoom := NewRoomRepository(roomMock)
-			err := repoRoom.AddNewFocusMemberOfRoomId(tt.roomId, tt.newMemberName)
+			err := repoRoom.AddNewFocusMemberOfRoomId(tt.roomId, tt.newMemberPeerId)
 			if err != nil && err.Error() != tt.wantErr.Error() {
 				t.Errorf("TestRoomUsecase_AddNewFocusMemberOfRoomId Error : want %v, but got %v", tt.wantErr, err)
 			}
@@ -91,8 +91,8 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 	tests := []struct {
 		name     string
 		roomId   entity.RoomId
-		from     entity.Name
-		to       entity.Name
+		from     entity.PeerId
+		to       entity.PeerId
 		room     *entity.Room // 関数実行前のroomの状態
 		wantRoom *entity.Room // 関数実行後の期待するroomの状態
 		wantErr  error
@@ -100,16 +100,16 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 		{
 			name:   "正常に動いている場合、新しいメンバーを部屋に追加する",
 			roomId: entity.RoomId("1234"),
-			from:   entity.Name("hoge"),
-			to:     entity.Name("piyo"),
+			from:   entity.PeerId("p1"),
+			to:     entity.PeerId("p2"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
+						PeerId:     entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						Name:     entity.Name("piyo"),
+						PeerId:     entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -117,18 +117,18 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name: entity.Name("hoge"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("piyo"),
+								PeerId: entity.PeerId("p2"),
 							},
 						},
 					},
 					&entity.FocusMember{
-						Name: entity.Name("piyo"),
+						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("hoge"),
+								PeerId:   entity.PeerId("p1"),
 							},
 						},
 					},
@@ -139,20 +139,20 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 		{
 			name:   "すでにfocus状態だった場合(fromさんのConnectsにtoさんがいた場合)、エラーを返す",
 			roomId: entity.RoomId("1234"),
-			from:   entity.Name("hoge"),
-			to:     entity.Name("piyo"),
+			from:   entity.PeerId("p1"),
+			to:     entity.PeerId("p2"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name: entity.Name("hoge"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("piyo"),
+								PeerId: entity.PeerId("p2"),
 							},
 						},
 					},
 					&entity.FocusMember{
-						Name:     entity.Name("piyo"),
+						PeerId:     entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -160,15 +160,15 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name: entity.Name("hoge"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("piyo"),
+								PeerId: entity.PeerId("p2"),
 							},
 						},
 					},
 					&entity.FocusMember{
-						Name:     entity.Name("piyo"),
+						PeerId:     entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -178,19 +178,19 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 		{
 			name:   "すでにfocus状態だった場合(toさんのConnectsにfromさんがいた場合)、エラーを返す",
 			roomId: entity.RoomId("1234"),
-			from:   entity.Name("hoge"),
-			to:     entity.Name("piyo"),
+			from:   entity.PeerId("p1"),
+			to:     entity.PeerId("p2"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
+						PeerId:     entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						Name: entity.Name("piyo"),
+						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("hoge"),
+								PeerId:   entity.PeerId("p1"),
 							},
 						},
 					},
@@ -199,18 +199,18 @@ func TestRoomRepository_SetMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name: entity.Name("hoge"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("piyo"),
+								PeerId: entity.PeerId("p2"),
 							},
 						},
 					},
 					&entity.FocusMember{
-						Name: entity.Name("piyo"),
+						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("hoge"),
+								PeerId:   entity.PeerId("p1"),
 							},
 						},
 					},
@@ -244,8 +244,8 @@ func TestRoomRepository_DelMemberFocusOfRoomId(t *testing.T) {
 	tests := []struct {
 		name     string
 		roomId   entity.RoomId
-		from     entity.Name
-		to       entity.Name
+		from     entity.PeerId
+		to       entity.PeerId
 		room     *entity.Room // 関数実行前のroomの状態
 		wantRoom *entity.Room // 関数実行後の期待するroomの状態
 		wantErr  error
@@ -253,23 +253,23 @@ func TestRoomRepository_DelMemberFocusOfRoomId(t *testing.T) {
 		{
 			name:   "正常に動いている場合、指定されたメンバーを削除する",
 			roomId: entity.RoomId("1234"),
-			from:   entity.Name("hoge"),
-			to:     entity.Name("piyo"),
+			from:   entity.PeerId("p1"),
+			to:     entity.PeerId("p2"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name: entity.Name("hoge"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("piyo"),
+								PeerId: entity.PeerId("p2"),
 							},
 						},
 					},
 					&entity.FocusMember{
-						Name: entity.Name("piyo"),
+						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("hoge"),
+								PeerId:   entity.PeerId("p1"),
 							},
 						},
 					},
@@ -278,11 +278,11 @@ func TestRoomRepository_DelMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
+						PeerId:     entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						Name:     entity.Name("piyo"),
+						PeerId:     entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -315,7 +315,7 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 	tests := []struct {
 		name     string
 		roomId   entity.RoomId
-		from     entity.Name
+		from     entity.PeerId
 		room     *entity.Room // 関数実行前のroomの状態
 		wantRoom *entity.Room // 関数実行後の期待するroomの状態
 		wantErr  error
@@ -323,22 +323,22 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 		{
 			name:   "正常に動いている場合指定されたメンバーを削除する、さらにほかのユーザーとfocus状態だった場合そのfocusも削除する",
 			roomId: entity.RoomId("1234"),
-			from:   entity.Name("hoge"),
+			from:   entity.PeerId("p1"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name: entity.Name("hoge"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("piyo"),
+								PeerId: entity.PeerId("p2"),
 							},
 						},
 					},
 					&entity.FocusMember{
-						Name: entity.Name("piyo"),
+						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("hoge"),
+								PeerId:   entity.PeerId("p1"),
 							},
 						},
 					},
@@ -347,11 +347,11 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
+						PeerId:     entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						Name:     entity.Name("piyo"),
+						PeerId:     entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 				},
@@ -361,36 +361,36 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 		{
 			name:   "正常に動いている場合指定されたメンバーを削除する、さらにほかの複数のユーザーとfocus状態だった場合そのfocusも削除する",
 			roomId: entity.RoomId("1234"),
-			from:   entity.Name("hoge"),
+			from:   entity.PeerId("p1"),
 			room: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name: entity.Name("hoge"),
+						PeerId:   entity.PeerId("p1"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("piyo"),
+								PeerId: entity.PeerId("p2"),
 							},
 							&entity.Connect{
-								Name: entity.Name("fuga"),
+								PeerId: entity.PeerId("p3"),
 							},
 						},
 					},
 					&entity.FocusMember{
-						Name: entity.Name("piyo"),
+						PeerId: entity.PeerId("p2"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("hoge"),
+								PeerId:   entity.PeerId("p1"),
 							},
 						},
 					},
 					&entity.FocusMember{
-						Name: entity.Name("fuga"),
+						PeerId: entity.PeerId("p3"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("piyo"),
+								PeerId: entity.PeerId("p2"),
 							},
 							&entity.Connect{
-								Name: entity.Name("hoge"),
+								PeerId:   entity.PeerId("p1"),
 							},
 						},
 					},
@@ -399,18 +399,18 @@ func TestRoomRepository_DelAllMemberFocusOfRoomId(t *testing.T) {
 			wantRoom: &entity.Room{
 				FocusMembers: entity.FocusMembers{
 					&entity.FocusMember{
-						Name:     entity.Name("hoge"),
+						PeerId:     entity.PeerId("p1"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						Name:     entity.Name("piyo"),
+						PeerId:     entity.PeerId("p2"),
 						Connects: entity.Connects{},
 					},
 					&entity.FocusMember{
-						Name: entity.Name("fuga"),
+						PeerId: entity.PeerId("p3"),
 						Connects: entity.Connects{
 							&entity.Connect{
-								Name: entity.Name("piyo"),
+								PeerId: entity.PeerId("p2"),
 							},
 						},
 					},
@@ -455,7 +455,7 @@ func TestRoomRepository_GetFocusMembersOfRoomId(t *testing.T) {
 				entity.RoomId("1234"):&entity.Room{
 					FocusMembers: entity.FocusMembers{
 						&entity.FocusMember{
-							Name: entity.Name("hoge"),
+							PeerId:   entity.PeerId("p1"),
 							Connects: entity.Connects{},
 						},
 					},
@@ -463,7 +463,7 @@ func TestRoomRepository_GetFocusMembersOfRoomId(t *testing.T) {
 			},
 			wantFocusMembers: entity.FocusMembers{
 				&entity.FocusMember{
-					Name: entity.Name("hoge"),
+					PeerId:   entity.PeerId("p1"),
 					Connects: entity.Connects{},
 				},
 			},

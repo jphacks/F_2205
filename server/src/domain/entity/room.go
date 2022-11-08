@@ -13,8 +13,3 @@ type Room struct {
 }
 
 type Rooms map[RoomId]*Room
-
-// RoomInfoはRoomのメタデータを保持します
-type RoomInfo struct {
-	Id RoomId
-}

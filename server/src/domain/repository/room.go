@@ -12,10 +12,10 @@ type IRoomRepository interface {
 	GetMembersOfRoomId(roomId entity.RoomId) entity.Members
 
 	// room_focus.go
-	AddNewFocusMemberOfRoomId(roomId entity.RoomId, newMemberName entity.Name) error
-	SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error
-	DelMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name, to entity.Name) error
-	DelAllMemberFocusOfRoomId(roomId entity.RoomId, from entity.Name) error
+	AddNewFocusMemberOfRoomId(roomId entity.RoomId, newPeerId entity.PeerId) error
+	SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId, to entity.PeerId) error
+	DelMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId, to entity.PeerId) error
+	DelAllMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId) error
 	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
 
 	// room_restroom.go

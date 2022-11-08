@@ -123,31 +123,33 @@ export default {
 
   methods: {
     //スクリーンショット起動
-    async captureImage() {
+    captureImage() {
       this.isOpenScreenShotDialog = true;
 
       const audio = new Audio(shutter);
 
       const countDown = () => {
-        const time = setTimeout(countDown, 1000);
-        if (this.currentScreenShotCount < 1) {
-          this.isOpenScreenShotDialog = false;
-          audio.play();
-          html2canvas(document.querySelector('#capture')).then((canvas) => {
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL();
-            link.download = `export_image.png`;
-            link.click();
-          });
-          clearTimeout(time);
-        }
-        if (this.currentScreenShotCount > 0) {
-          this.currentScreenShotCount = this.currentScreenShotCount - 1;
-        }
+        setTimeout(() => {
+          console.log(this.currentScreenShotCount);
+          if (this.currentScreenShotCount < 1) {
+            this.isOpenScreenShotDialog = false;
+            audio.play();
+            html2canvas(document.querySelector('#capture')).then((canvas) => {
+              const link = document.createElement('a');
+              link.href = canvas.toDataURL();
+              link.download = `export_image.png`;
+              link.click();
+            });
+            return;
+          }
+          if (this.currentScreenShotCount > 0) {
+            this.currentScreenShotCount = this.currentScreenShotCount - 1;
+          }
+          countDown();
+        }, 1000);
       };
 
       countDown();
-
       this.currentScreenShotCount = 3;
     },
 

@@ -1,6 +1,6 @@
 <template>
   <div class="text-center">
-    <v-dialog v-model="isOpenScreenShotDialog" width="450" content-class="dialogContainer">
+    <v-dialog v-model="isOpenScreenShotDialog" persistent width="450" content-class="dialogContainer">
       <div class="countContainer">
         <div>{{ this.currentScreenShotCount }}</div>
       </div>
@@ -33,9 +33,7 @@ export default {
 
   watch: {
     isOpenScreenShotDialog: function (newState, oldState) {
-      if (newState) {
-        console.log(newState);
-      }
+      console.log(newState);
     }
   }
 };

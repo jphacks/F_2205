@@ -57,6 +57,10 @@ func TestEventUsecase_GetSumOfRoom(t *testing.T) {
 	t.Skip()
 }
 
+func TestEventUsecase_SetRoomLatestMemberDataOfRoomId(t *testing.T) {
+	t.Skip()
+}
+
 // roomRepositoryMockはroomRepositoryのmockの構造体です
 type roomRepositoryMock struct{}
 

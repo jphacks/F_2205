@@ -294,8 +294,6 @@ export default {
         }
       };
 
-      console.log(data);
-
       this.websocketConn.send(JSON.stringify(data));
     },
 

@@ -507,7 +507,6 @@ export default {
           }
         }
       };
-      console.log(data);
       this.websocketConn.send(JSON.stringify(data));
 
       const videos = document.querySelectorAll('.video-individual');

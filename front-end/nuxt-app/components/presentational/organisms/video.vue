@@ -1,21 +1,34 @@
 <template>
   <section id="video-wrap" class="video">
+    <!-- ビデオレイヤー -->
     <div class="video-box">
       <video id="videomy-video" class="video-individual" autoplay muted playsinline></video>
     </div>
-    <div v-for="peerId of peerIds" :key="peerId">
-      <VideoEffect :ref="`effectComponentsvideo${peerId}`" :videoId="peerId" />
+    <!-- ビデオレイヤー -->
+
+    <!-- 名前レイヤー -->
+    <div v-for="(peerId, index) of peerIds" :key="`${peerId}Name-${index}`">
+      <VideoName v-if="peerId != undefined" :ref="`nameComponentsvideo${peerId}`" :videoId="peerId" />
     </div>
+    <!-- 名前レイヤー -->
+
+    <!-- エフェクトレイヤー -->
+    <div v-for="(peerId, index) of peerIds" :key="`${peerId}Effect-${index}`">
+      <VideoEffect v-if="peerId != undefined" :ref="`effectComponentsvideo${peerId}`" :videoId="peerId" />
+    </div>
+    <!-- エフェクトレイヤー -->
   </section>
 </template>
 
 <script>
 import VideoEffect from '~/components/presentational/organisms/videoEffect';
+import VideoName from '~/components/presentational/organisms/videoName';
 
 export default {
   props: ['roomMemberNum'],
   components: {
-    VideoEffect
+    VideoEffect,
+    VideoName
   },
 
   data() {
@@ -26,6 +39,8 @@ export default {
 
   methods: {
     addVideo: function (stream, roomMemberNum) {
+      this.videoNameAllRePositionWaitDisplay();
+
       const videoBoxDom = document.querySelector('.video-box');
 
       const videoDom = document.createElement('video');
@@ -37,10 +52,12 @@ export default {
 
       // append
       videoBoxDom.append(videoDom);
-      this.addEffectComponents(stream.peerId);
+      this.addComponents(stream.peerId);
 
       // resize
       this.videoResize(roomMemberNum);
+      // reposition
+      setTimeout(this.videoNameAllRePosition, 5000);
 
       return;
     },
@@ -48,11 +65,22 @@ export default {
     removeVideo: function (peerId, roomMemberNum) {
       console.log(roomMemberNum);
 
+      // ビデオを削除
       const videoDom = document.getElementById(`video${peerId}`);
       videoDom.remove();
 
+      // ビデオネームを削除
+      const tgRef = 'nameComponents' + 'video' + peerId;
+      this.$refs[tgRef][0].remove();
+
+      // peerIds配列から削除
+      const deleteTgIndex = this.peerIds.indexOf(peerId);
+      delete this.peerIds[deleteTgIndex];
+
       // resize
       this.videoResize(roomMemberNum);
+      // reposition
+      this.videoNameAllRePosition();
     },
 
     videoResize: function (roomMemberNum) {
@@ -213,7 +241,7 @@ export default {
       return;
     },
 
-    addEffectComponents: function (videoId) {
+    addComponents: function (videoId) {
       this.peerIds.push(videoId);
     },
 
@@ -226,6 +254,23 @@ export default {
     effectOnMySelf: function (effectNumber) {
       //自分の画像にエフェクトを追加する
       this.$refs['effectComponentsvideomy-video'][0].start(effectNumber);
+    },
+
+    videoNameAllRePositionWaitDisplay: function () {
+      let tgRef;
+      for (let peerId of this.peerIds) {
+        if (peerId == undefined) continue;
+        tgRef = 'nameComponentsvideo' + peerId;
+        this.$refs[tgRef][0].setPositionWaitDisplay();
+      }
+    },
+    videoNameAllRePosition: function () {
+      let tgRef;
+      for (let peerId of this.peerIds) {
+        if (peerId == undefined) continue;
+        tgRef = 'nameComponentsvideo' + peerId;
+        this.$refs[tgRef][0].setPosition();
+      }
     }
   }
 };

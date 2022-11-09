@@ -3,6 +3,11 @@
     <div class="video-state-inner pa-2 d-flex align-center">
       <div class="video-state-icon">
         <div class="video-state-icon-wrap">
+          <v-icon color="white" size="42" @click.native="captureImage">mdi-monitor-screenshot</v-icon>
+          <h3 class="video-state-icon-info">撮影</h3>
+        </div>
+
+        <div class="video-state-icon-wrap">
           <v-icon color="white" size="42" @click="this.effectOperation" id="effect-icon">mdi-thumb-up</v-icon>
           <h3 class="video-state-icon-info">エフェクト</h3>
         </div>
@@ -38,11 +43,6 @@
           >
           <v-icon color="red" size="42" v-else @click.native="handleAdjustWebGazer">mdi-cog-off-outline</v-icon>
           <h3 class="video-state-icon-info">視線調整</h3>
-        </div>
-
-        <div class="video-state-icon-wrap">
-          <v-icon color="white" size="42" @click.native="captureImage">mdi-monitor-screenshot</v-icon>
-          <h3 class="video-state-icon-info">撮影</h3>
         </div>
 
         <div class="video-state-icon-wrap">

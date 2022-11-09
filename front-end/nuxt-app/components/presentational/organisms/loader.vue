@@ -37,12 +37,20 @@
 </template>
 
 <script>
+import pour from '~/assets/music/pour.mp3';
+import bell from '~/assets/music/bell.mp3';
 export default {
   props: ['autoDelete'],
   mounted: function () {
     if (!this.autoDelete) return;
 
+    const pourSound = new Audio(pour);
+    const bellSound = new Audio(bell);
+    pourSound.play();
+
     setTimeout(() => {
+      pourSound.pause();
+      bellSound.play();
       this.$emit('loaderOperationFn');
     }, 4000);
   }

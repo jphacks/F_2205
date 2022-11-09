@@ -300,6 +300,9 @@ export default {
       document.querySelector('body').classList.remove('modal-open');
       this.isVisibleSwitchButton = true;
 
+      //クリックしたときのイベントを設定(フォーカス)
+      this.setClickEvent();
+
       //人数制限チェック
       setTimeout(this.roomMemberNumCheck, 5000);
       this.roomMemberNumCheckIntervalFn = setInterval(this.roomMemberNumCheck, 60000);
@@ -504,6 +507,7 @@ export default {
           }
         }
       };
+      console.log(data);
       this.websocketConn.send(JSON.stringify(data));
 
       const videos = document.querySelectorAll('.video-individual');
@@ -612,6 +616,20 @@ export default {
           this.predictionCount = 0;
         }
       }
+    },
+
+    setClickEvent: function () {
+      document.body.onclick = (e) => {
+        const x = e.pageX;
+        const y = e.pageY;
+
+        const elementUnderMouse = document.elementFromPoint(x, y);
+
+        if (elementUnderMouse.tagName == 'VIDEO' && elementUnderMouse.id != 'videomy-video')
+          this.focusThisVideo(elementUnderMouse.id);
+
+        if (elementUnderMouse.id == 'video-wrap' || elementUnderMouse.id == 'video-box') this.focusThisVideoAllLift();
+      };
     }
   },
 
@@ -666,9 +684,13 @@ export default {
       const y = e.pageY;
 
       const elementUnderMouse = document.elementFromPoint(x, y);
-      if (elementUnderMouse.tagName == 'VIDEO') {
+
+      if (elementUnderMouse.tagName == 'VIDEO' && elementUnderMouse.id != 'videomy-video')
         this.focusThisVideo(elementUnderMouse.id);
-      }
+
+      if (elementUnderMouse.id == 'videomy-video') this.focusThisVideoAllLift();
+
+      if (elementUnderMouse.id == 'video-wrap') this.focusThisVideoAllLift();
     };
 
     window.onpopstate = function () {

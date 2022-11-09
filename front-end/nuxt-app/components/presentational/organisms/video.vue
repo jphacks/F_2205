@@ -1,7 +1,7 @@
 <template>
   <section id="video-wrap" class="video">
     <!-- ビデオレイヤー -->
-    <div class="video-box">
+    <div class="video-box" id="video-box">
       <video id="videomy-video" class="video-individual" autoplay muted playsinline></video>
     </div>
     <!-- ビデオレイヤー -->

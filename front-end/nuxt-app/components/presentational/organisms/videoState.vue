@@ -13,11 +13,6 @@
         </div>
 
         <div class="video-state-icon-wrap">
-          <v-icon color="white" size="42" @click.native="focusThisVideoAllLiftFn">mdi-account-group</v-icon>
-          <h3 class="video-state-icon-info">フォーカス解除</h3>
-        </div>
-
-        <div class="video-state-icon-wrap">
           <v-icon color="white" size="42" @click.native="audioMuteFn" v-if="myAudioStatus">mdi-microphone</v-icon>
           <v-icon color="red" size="42" @click.native="audioMuteFn" v-if="!myAudioStatus">mdi-microphone-off</v-icon>
           <h3 class="video-state-icon-info">マイク</h3>

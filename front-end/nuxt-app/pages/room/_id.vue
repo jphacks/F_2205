@@ -286,6 +286,11 @@ export default {
 
     roomConnection: function () {
       //ルーム作成 or ルーム参加
+      if (document.querySelector('#inputName').value.length >= 10) {
+        alert('最大文字数は10文字です');
+        return;
+      }
+
       this.isConnectionRoom = true;
 
       console.log('my peer id: ' + this.peer.id);

@@ -9,11 +9,14 @@
     <section class="main-contents">
       <div class="max-width">
         <div class="main-contents-img">
-          <img src="~/assets/img/beer.png" />
+          <img src="~/assets/img/nomipara_top.png" />
         </div>
 
         <div class="main-contents-card">
-          <h2>のみぱらを始める</h2>
+          <h2>部屋を作成する</h2>
+          <div class="main-contents-card-sub-msg">
+            <p>今すぐオンライン飲み会を始める！🍻</p>
+          </div>
           <div class="main-contents-card-btn">
             <Btn text="部屋を作成" color="orange" :clickedfn="this.createRoom" />
           </div>
@@ -27,7 +30,8 @@
             <Btn text="部屋に参加" color="blue" :clickedfn="this.joinRoom" />
           </div>
           <p class="main-contents-card-point-ms">
-            1ルーム最大18人まで参加できます<br />18人以上でのご利用はしないでください
+            1ルーム最大18人まで参加できます<br/>
+            推奨環境 (PC, Google Chrome)
           </p>
         </div>
       </div>
@@ -91,10 +95,11 @@ body {
     width: 40%;
     text-align: center;
     & img {
-      width: 200px;
+      width: 500px;
     }
   }
   &-card {
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     position: relative;
     width: 40%;
     max-width: 900px;
@@ -105,8 +110,11 @@ body {
     border-radius: 8px;
     & h2 {
       padding: 0 0 15px;
-      font-size: 22px;
+      font-size: 30px;
       font-weight: bold;
+    }
+    &-sub-msg{
+        color: #5a5a5a;
     }
     &-input-box {
       margin: 50px 0 20px;

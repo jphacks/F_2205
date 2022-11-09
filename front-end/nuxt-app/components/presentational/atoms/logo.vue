@@ -1,5 +1,5 @@
 <template>
-    <span>のみぱら<img src="~/assets/img/beer.png" /></span>
+    <span>のみぱら！</span>
 </template>
 
 <style lang="scss">

@@ -115,6 +115,13 @@ body {
       border-bottom: solid 2px #ccc;
       background-color: #fff;
       outline: none !important;
+      transition: all 0.4s;
+      &:hover {
+        border-bottom: solid 2px orange;
+      }
+      &:focus {
+        border-bottom: solid 2px orange;
+      }
     }
     &-btn {
       margin: 15px 0;

@@ -42,6 +42,7 @@
       <div class="modal-window-back"></div>
       <div class="modal-window-front">
         <h3>部屋に接続する</h3>
+        <input type="text" placeholder="名前を入力" class="modal-window-front-input" id="inputName" />
         <div class="modal-window-front_btn-wrap">
           <Btn text="接続" color="orange" :clickedfn="this.roomConnection" />
         </div>
@@ -159,6 +160,17 @@ export default {
         const unfocusedVolume = 0.15;
 
         // ======================================================================== //
+        // add new member function
+        // ======================================================================== //
+        const addNewMemberRun = (data) => {
+          // 新規メンバーを追加する(localStorage)
+          for (let member in data.members) {
+            localStorage.setItem(member, data.members[member].name);
+          }
+        };
+        // ======================================================================== //
+
+        // ======================================================================== //
         // focus function
         // ======================================================================== //
         const focusThisVideoAllLift = () => {
@@ -225,6 +237,9 @@ export default {
 
         console.log(data);
 
+        // メンバー新規追加(自分含む)
+        if (data.event_type == 'ADD_NEW_MEMBER') addNewMemberRun(data);
+
         // フォーカス
         if (data.event_type == 'SET_FOCUS' || data.event_type == 'DEL_ALL_FOCUS' || data.event_type == 'DEL_FOCUS')
           focusRun(data, myVideoDomName);
@@ -284,12 +299,16 @@ export default {
       setTimeout(this.roomMemberNumCheck, 5000);
       this.roomMemberNumCheckIntervalFn = setInterval(this.roomMemberNumCheck, 60000);
 
+      //nameを取得
+      let name = document.querySelector('#inputName').value;
+      if (!name) name = '未設定';
+
       const data = {
         type: 'ADD_NEW_MEMBER',
         info: {
           member: {
-            name: `name${this.peer.id}`,
-            peer_id:`video${this.peer.id}`
+            name: name,
+            peer_id: `video${this.peer.id}`
           }
         }
       };
@@ -304,6 +323,9 @@ export default {
       //peerIDを破棄
       this.peer.destroy();
 
+      //localStorageにあるmember情報を破棄
+      localStorage.clear();
+
       //人数チェック処理を解除(Interval)
       clearInterval(this.roomMemberNumCheckIntervalFn);
       //強制退出処理を解除(Timeout)
@@ -316,21 +338,19 @@ export default {
             type: 'DEL_ALL_FOCUS',
             info: {
               focus: {
-                from: `video${this.peer}`
+                from: `video${this.peer.id}`
               }
             }
           };
 
+          console.log(data);
+
           this.websocketConn.send(data);
         } else {
           let response;
-          response = await axios.delete(
-            'https://f-2205-server-chhumpv4gq-de.a.run.app/room/' + this.$route.params.id
-          );
+          response = await axios.delete('https://f-2205-server-chhumpv4gq-de.a.run.app/room/' + this.$route.params.id);
           console.log(response);
-          response = await axios.delete(
-            'https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id
-          );
+          response = await axios.delete('https://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
           console.log(response);
         }
       }
@@ -734,6 +754,20 @@ body {
     color: #000;
     font-size: 18px;
     font-weight: bold;
+
+    &-input {
+      margin: 40px 0 10px;
+      border-bottom: solid 2px #ccc;
+      background-color: #fff;
+      outline: none !important;
+      transition: all 0.4s;
+      &:hover {
+        border-bottom: solid 2px orange;
+      }
+      &:focus {
+        border-bottom: solid 2px orange;
+      }
+    }
 
     &_btn-wrap {
       margin: 20px 0 0;

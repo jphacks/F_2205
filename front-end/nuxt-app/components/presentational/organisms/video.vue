@@ -272,6 +272,19 @@ export default {
         this.$refs[tgRef][0].setPosition();
       }
     }
+  },
+
+  mounted: function () {
+    // resizeイベント登録
+    window.addEventListener('resize', () => {
+      console.log('resize');
+
+      // videoNameのリサイズ
+      this.videoNameAllRePosition();
+
+      // videoのリサイズ
+      this.videoResize(this.roomMemberNum);
+    });
   }
 };
 </script>

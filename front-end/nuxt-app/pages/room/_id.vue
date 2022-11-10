@@ -227,7 +227,9 @@ export default {
               if (this.currentScreenShotCount < 1) {
                 this.isOpenScreenShotDialog = false;
                 audio.play();
-                html2canvas(document.querySelector('#capture')).then((canvas) => {
+                html2canvas(document.querySelector('#capture'), {
+                  useCORS: true
+                }).then((canvas) => {
                   const link = document.createElement('a');
                   const number = Math.floor(Math.random() * 10000);
                   link.href = canvas.toDataURL();

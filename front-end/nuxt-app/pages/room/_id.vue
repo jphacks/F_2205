@@ -26,6 +26,9 @@
         :effectFn="this.effectFn"
         :drinkEstimatingFn="this.switchDrinkEstimating"
         :isEnableDrinkEstimating="this.isEnableDrinkEstimating"
+        :restRoomStartFn="this.restRoomStart"
+        :restRoomEndFn="this.restRoomEnd"
+        :restRoomState="this.restRoomState"
       />
     </div>
     <!-- ビデオステータスバー -->
@@ -118,7 +121,8 @@ export default {
       predictionCount: 0, // 推定結果の返却回数
       accuracy: { drinking: 0, noDrinking: 0 },
       isLoop: true,
-      dialog: false
+      dialog: false,
+      restRoomState: false
     };
   },
 
@@ -248,6 +252,22 @@ export default {
         };
         // ======================================================================== //
 
+        // ======================================================================== //
+        // restRoom function
+        // ======================================================================== //
+        const restRoomRun = (data, myVideoDomName) => {
+          // トイレ起動
+          for (let member in data.members) {
+            if (member == myVideoDomName) {
+              this.$refs.videoComponents.restRoomOperationOnMySelf(data.members[member].isRestRoom);
+              continue;
+            }
+
+            this.$refs.videoComponents.restRoomOperationOthers(member, data.members[member].isRestRoom);
+          }
+        };
+        // ======================================================================== //
+
         const data = JSON.parse(evt.data);
         const myVideoDomName = document.querySelector('#videomy-video').getAttribute('name');
 
@@ -263,8 +283,11 @@ export default {
         // エフェクト
         if (data.event_type == 'SET_EFFECT') effectRun(data, myVideoDomName);
 
-        //スクショ
+        // スクショ
         if (data.event_type == 'SET_SCREEN_SHOT') screenShotRun();
+
+        // トイレ
+        if (data.event_type == 'SET_REST_ROOM') restRoomRun(data, myVideoDomName);
 
         return;
       }.bind(this);
@@ -648,6 +671,44 @@ export default {
 
         if (elementUnderMouse.id == 'video-wrap' || elementUnderMouse.id == 'video-box') this.focusThisVideoAllLift();
       };
+    },
+
+    restRoomStart: function () {
+      // トイレ機能開始
+      const data = {
+        type: 'SET_REST_ROOM',
+        info: {
+          rest: {
+            peer_id: `video${this.peer.id}`,
+            is_rest_room: true
+          }
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
+
+      this.videoMute();
+      this.audioMute();
+
+      this.restRoomState = true;
+    },
+
+    restRoomEnd: function () {
+      // トイレ機能終了
+      const data = {
+        type: 'SET_REST_ROOM',
+        info: {
+          rest: {
+            peer_id: `video${this.peer.id}`,
+            is_rest_room: false
+          }
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
+
+      this.videoMute();
+      this.audioMute();
+
+      this.restRoomState = false;
     }
   },
 

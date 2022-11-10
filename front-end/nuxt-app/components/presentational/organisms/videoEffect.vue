@@ -18,6 +18,11 @@
       <img src="~/assets/img/gokuImg.svg" class="video-effect-goku-img-2" />
       <img src="~/assets/img/gokuImg.svg" class="video-effect-goku-img-3" />
     </section>
+
+    <section class="video-effect-rest-room" v-if="isRestRoom">
+      <img src="~/assets/img/flowerImg.jpg" class="video-effect-rest-room-img" />
+      <h3 class="video-effect-rest-room-ms">～お花を摘んでいます～</h3>
+    </section>
   </section>
 </template>
 
@@ -27,7 +32,8 @@ export default {
   data() {
     return {
       effectNumber: null,
-      isCurrentEffect: false
+      isCurrentEffect: false,
+      isRestRoom: false
     };
   },
   methods: {
@@ -53,10 +59,56 @@ export default {
 
       setTimeout(this.remove, 5000);
     },
+    restRoomStart: function () {
+      if (this.isCurrentEffect) return;
+
+      this.effectNumber = null;
+      this.isRestRoom = true;
+      this.isCurrentEffect = true;
+
+      const videoDom = document.querySelector(`#video${this.videoId}`);
+      const width = videoDom.clientWidth;
+      const height = videoDom.clientHeight;
+      const x = videoDom.getBoundingClientRect().left;
+      const y = videoDom.getBoundingClientRect().top;
+
+      const tgDom = document.querySelector(`#video${this.videoId}-effect`);
+
+      tgDom.classList.add('open');
+      tgDom.style.width = width + 'px';
+      tgDom.style.height = height + 'px';
+      tgDom.style.top = y + 'px';
+      tgDom.style.left = x + 'px';
+    },
+    restRoomEnd: function () {
+      document.querySelector(`#video${this.videoId}-effect`).classList.remove('open');
+      this.isRestRoom = false;
+      this.isCurrentEffect = false;
+    },
+    resize: function () {
+      if (!this.isCurrentEffect) return;
+
+      const videoDom = document.querySelector(`#video${this.videoId}`);
+      const width = videoDom.clientWidth;
+      const height = videoDom.clientHeight;
+      const x = videoDom.getBoundingClientRect().left;
+      const y = videoDom.getBoundingClientRect().top;
+
+      const tgDom = document.querySelector(`#video${this.videoId}-effect`);
+
+      tgDom.style.width = width + 'px';
+      tgDom.style.height = height + 'px';
+      tgDom.style.top = y + 'px';
+      tgDom.style.left = x + 'px';
+    },
     remove: function () {
       const tgDom = document.querySelector(`#video${this.videoId}-effect`);
       tgDom.classList.remove('open');
       this.isCurrentEffect = false;
+    },
+    thisDomRemove: function () {
+      const tgDom = document.querySelector(`#video${this.videoId}-effect`);
+      tgDom.remove();
     }
   },
 
@@ -70,7 +122,6 @@ export default {
   z-index: 100;
 }
 .video-effect {
-  //   background-color: red;
   position: fixed;
   top: 0;
   left: 0;
@@ -80,6 +131,7 @@ export default {
   opacity: 0;
   transition: opacity 0.4s;
   z-index: -100;
+  overflow: hidden;
 
   &-waiwai {
     &-img-1 {
@@ -165,6 +217,21 @@ export default {
       width: 30%;
       transform: rotate(10deg);
       animation: goku linear 0.4s infinite;
+    }
+  }
+
+  &-rest-room {
+    &-img {
+      width: 130%;
+      height: 1;
+      opacity: 0.7;
+    }
+    &-ms {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 18px;
     }
   }
 }

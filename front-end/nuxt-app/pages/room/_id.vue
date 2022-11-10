@@ -297,7 +297,7 @@ export default {
 
         if (!this.websocketNormalTermination) {
           console.log('websocketが異常終了したため再接続します');
-          new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
+          this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
         }
       }.bind(this);
       websocketConn.onerror = function (evt) {

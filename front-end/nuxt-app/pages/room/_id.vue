@@ -297,11 +297,19 @@ export default {
         console.log('websocket connection closed');
 
         if (!this.websocketNormalTermination) {
+          // 異常終了
           this.websocketAbnormalTermination = true;
+
           console.log('websocketが異常終了したため再接続します');
-          this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
-          this.setWebsocketEventListener(this.websocketConn);
-          this.websocketAbnormalTermination = false;
+
+          setTimeout(() => {
+            console.log('再接続');
+            this.websocketConn = new WebSocket(
+              'wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id
+            );
+            this.setWebsocketEventListener(this.websocketConn);
+            this.websocketAbnormalTermination = false;
+          }, 5000);
         }
       }.bind(this);
       websocketConn.onerror = function (evt) {

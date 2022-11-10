@@ -56,6 +56,7 @@ export default {
 
       // resize
       this.videoResize(roomMemberNum);
+      setTimeout(this.effectAllReSize, 3000);
       // reposition
       setTimeout(this.videoNameAllRePosition, 5000);
 
@@ -69,9 +70,14 @@ export default {
       const videoDom = document.getElementById(`video${peerId}`);
       videoDom.remove();
 
+      let tgRef;
       // ビデオネームを削除
-      const tgRef = 'nameComponents' + 'video' + peerId;
+      tgRef = 'nameComponents' + 'video' + peerId;
       this.$refs[tgRef][0].remove();
+
+      // エフェクトを削除
+      tgRef = 'effectComponents' + 'video' + peerId;
+      this.$refs[tgRef][0].thisDomRemove();
 
       // peerIds配列から削除
       const deleteTgIndex = this.peerIds.indexOf(peerId);
@@ -79,6 +85,7 @@ export default {
 
       // resize
       this.videoResize(roomMemberNum);
+      this.effectAllReSize();
       // reposition
       this.videoNameAllRePosition();
     },
@@ -256,6 +263,31 @@ export default {
       this.$refs['effectComponentsvideomy-video'][0].start(effectNumber);
     },
 
+    restRoomOperationOthers: function (videoDomId, isRestRoom) {
+      // トイレ機能(自分以外)
+
+      //削除済みpeerIdをはじく
+      const peerId = videoDomId.replace('video', '');
+      if (this.peerIds.indexOf(peerId) == -1) return;
+
+      const tgRef = 'effectComponents' + videoDomId;
+
+      if (isRestRoom) {
+        this.$refs[tgRef][0].restRoomStart();
+      } else {
+        this.$refs[tgRef][0].restRoomEnd();
+      }
+    },
+
+    restRoomOperationOnMySelf: function (isRestRoom) {
+      // トイレ機能(自分)
+      if (isRestRoom) {
+        this.$refs['effectComponentsvideomy-video'][0].restRoomStart();
+      } else {
+        this.$refs['effectComponentsvideomy-video'][0].restRoomEnd();
+      }
+    },
+
     videoNameAllRePositionWaitDisplay: function () {
       let tgRef;
       for (let peerId of this.peerIds) {
@@ -271,6 +303,14 @@ export default {
         tgRef = 'nameComponentsvideo' + peerId;
         this.$refs[tgRef][0].setPosition();
       }
+    },
+    effectAllReSize: function () {
+      let tgRef;
+      for (let peerId of this.peerIds) {
+        if (peerId == undefined) continue;
+        tgRef = 'effectComponentsvideo' + peerId;
+        this.$refs[tgRef][0].resize();
+      }
     }
   },
 
@@ -284,6 +324,9 @@ export default {
 
       // videoのリサイズ
       this.videoResize(this.roomMemberNum);
+
+      // effectのリサイズ
+      this.effectAllReSize();
     });
   }
 };

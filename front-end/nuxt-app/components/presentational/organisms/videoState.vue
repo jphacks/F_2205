@@ -13,8 +13,14 @@
         </div>
 
         <div class="video-state-icon-wrap">
-          <v-icon color="white" size="42" style="margin-right: -10px !important">mdi-human-female</v-icon>
-          <v-icon color="white" size="42" style="margin-left: -10px !important">mdi-human-male</v-icon>
+          <div @click="this.restRoomStartFn" v-if="!restRoomState">
+            <v-icon color="white" size="42" style="margin-right: -10px !important">mdi-human-female</v-icon>
+            <v-icon color="white" size="42" style="margin-left: -10px !important">mdi-human-male</v-icon>
+          </div>
+          <div @click="this.restRoomEndFn" v-if="restRoomState">
+            <v-icon color="red" size="42" style="margin-right: -10px !important">mdi-human-female</v-icon>
+            <v-icon color="red" size="42" style="margin-left: -10px !important">mdi-human-male</v-icon>
+          </div>
           <h3 class="video-state-icon-info">トイレ</h3>
         </div>
 
@@ -101,7 +107,10 @@ export default {
     'myAudioStatus',
     'myVideoStatus',
     'captureImage',
-    'effectFn'
+    'effectFn',
+    'restRoomStartFn',
+    'restRoomEndFn',
+    'restRoomState'
   ],
   components: {
     Btn,

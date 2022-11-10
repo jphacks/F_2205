@@ -53,11 +53,11 @@
           <v-icon color="red" size="42" v-else @click.native="drinkEstimatingFn">mdi-glass-cocktail-off</v-icon>
           <h3 class="video-state-icon-info">飲み検知</h3>
         </div>
-      </div>
 
-      <div class="video-state-icon-wrap">
-        <v-icon color="red" size="42" @click.native="leavingFn">mdi-exit-run </v-icon>
-        <h3 class="video-state-icon-info">退出</h3>
+        <div class="video-state-icon-wrap">
+          <v-icon color="red" size="42" @click.native="leavingFn">mdi-exit-run </v-icon>
+          <h3 class="video-state-icon-info">退出</h3>
+        </div>
       </div>
 
       <div class="adjustWebgazerContainer">
@@ -136,7 +136,7 @@ export default {
   &-icon {
     text-align: center;
     width: 100%;
-    transform: translateX(5%);
+    // transform: translateX(5%);
     display: flex;
     justify-content: center;
 

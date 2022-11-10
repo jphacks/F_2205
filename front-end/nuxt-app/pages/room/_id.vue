@@ -122,7 +122,8 @@ export default {
       accuracy: { drinking: 0, noDrinking: 0 },
       isLoop: true,
       dialog: false,
-      restRoomState: false
+      restRoomState: false,
+      websocketNormalTermination: false
     };
   },
 
@@ -293,7 +294,12 @@ export default {
       }.bind(this);
       websocketConn.onclose = function (evt) {
         console.log('websocket connection closed');
-      };
+
+        if (!this.websocketNormalTermination) {
+          console.log('websocketが異常終了したため再接続します');
+          new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
+        }
+      }.bind(this);
       websocketConn.onerror = function (evt) {
         console.log('websocket error: ' + evt);
       };
@@ -367,6 +373,8 @@ export default {
     },
 
     roomLeaving: async function () {
+      this.websocketNormalTermination = true;
+
       //ルーム退出
       console.log('room leaving start');
 
@@ -651,7 +659,8 @@ export default {
         this.predictionCount += 1;
 
         // 数ミリ秒単位でカウントしているため，数回カウントで制御
-        if (this.predictionCount > 100) { // 4秒程度
+        if (this.predictionCount > 100) {
+          // 4秒程度
           this.effectFn('3'); // 後ほど4に変更
           this.drinkingCount += 1; // TODO: 廃止予定
           this.predictionCount = 0;

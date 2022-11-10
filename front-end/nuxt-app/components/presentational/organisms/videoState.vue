@@ -13,6 +13,12 @@
         </div>
 
         <div class="video-state-icon-wrap">
+          <v-icon color="white" size="42" style="margin-right: -10px !important">mdi-human-female</v-icon>
+          <v-icon color="white" size="42" style="margin-left: -10px !important">mdi-human-male</v-icon>
+          <h3 class="video-state-icon-info">トイレ</h3>
+        </div>
+
+        <div class="video-state-icon-wrap">
           <v-icon color="white" size="42" @click.native="audioMuteFn" v-if="myAudioStatus">mdi-microphone</v-icon>
           <v-icon color="red" size="42" @click.native="audioMuteFn" v-if="!myAudioStatus">mdi-microphone-off</v-icon>
           <h3 class="video-state-icon-info">マイク</h3>
@@ -49,6 +55,11 @@
         </div>
       </div>
 
+      <div class="video-state-icon-wrap">
+        <v-icon color="red" size="42" @click.native="leavingFn">mdi-exit-run </v-icon>
+        <h3 class="video-state-icon-info">退出</h3>
+      </div>
+
       <div class="adjustWebgazerContainer">
         <AdjustWebgazerDialog
           :isOpenAdjustWebGazerDialog="this.isOpenAdjustWebGazerDialog"
@@ -58,9 +69,9 @@
         />
       </div>
 
-      <div>
+      <!-- <div>
         <Btn text="退出" color="red" :clickedfn="leavingFn" />
-      </div>
+      </div> -->
     </div>
 
     <div class="effect-select-box">

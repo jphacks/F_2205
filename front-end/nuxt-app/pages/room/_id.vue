@@ -123,7 +123,8 @@ export default {
       isLoop: true,
       dialog: false,
       restRoomState: false,
-      websocketNormalTermination: false
+      websocketNormalTermination: false,
+      websocketAbnormalTermination: false
     };
   },
 
@@ -296,9 +297,11 @@ export default {
         console.log('websocket connection closed');
 
         if (!this.websocketNormalTermination) {
+          this.websocketAbnormalTermination = true;
           console.log('websocketが異常終了したため再接続します');
           this.websocketConn = new WebSocket('wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id);
           this.setWebsocketEventListener(this.websocketConn);
+          this.websocketAbnormalTermination = false;
         }
       }.bind(this);
       websocketConn.onerror = function (evt) {
@@ -769,6 +772,8 @@ export default {
 
     //クリックからフォーカス
     document.body.onclick = (e) => {
+      if (this.websocketAbnormalTermination) return;
+
       const x = e.pageX;
       const y = e.pageY;
 

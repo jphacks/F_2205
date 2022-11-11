@@ -70,7 +70,7 @@ func (h *RoomWsHandler) GetConnCountOfRoomId(ctx *gin.Context) {
 	roomIdString := ctx.Param("room_id")
 	roomId := service.StringToRoomId(roomIdString)
 
-	cnt,err := h.Hubs.GetConnCountOfRoomId(roomId)
+	cnt, err := h.Hubs.GetConnCountOfRoomId(roomId)
 	if err != nil {
 		ctx.JSON(
 			http.StatusBadRequest,

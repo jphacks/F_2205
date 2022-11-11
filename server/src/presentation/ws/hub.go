@@ -93,11 +93,11 @@ func (h *Hubs) CheckAndDeleteHubOfRoomId(roomId entity.RoomId) error {
 
 // GetConnCountOfRoomIdは受け取ったroomIdのRoomの
 // Hubに接続しているClientsの数を返します
-func (h *Hubs) GetConnCountOfRoomId(roomId entity.RoomId) (int,error ){
-	_,found := h.GetExistsHubOfRoomId(roomId)
-	if !found{
-		return 0,fmt.Errorf("hub not found (roomId:%s)",(string)(roomId))
+func (h *Hubs) GetConnCountOfRoomId(roomId entity.RoomId) (int, error) {
+	_, found := h.GetExistsHubOfRoomId(roomId)
+	if !found {
+		return 0, fmt.Errorf("hub not found (roomId:%s)", (string)(roomId))
 	}
 	cntConn := len((*h)[roomId].Clients)
-	return cntConn,nil
+	return cntConn, nil
 }

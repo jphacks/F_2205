@@ -35,12 +35,12 @@ func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
 
 	var hub *Hub
 	// もしすでにroomIdのHubが存在していた場合hubに入れる
-	hub, found := h.Hubs.getExistsHubOfRoomId(roomId)
+	hub, found := h.Hubs.GetExistsHubOfRoomId(roomId)
 
 	// roomIdのHubが存在していなかったら新しく登録し、Hubを起動する
 	if !found {
 		hub = NewHub(roomId)
-		h.Hubs.setNewHubOfRoomId(hub, roomId)
+		h.Hubs.SetNewHubOfRoomId(hub, roomId)
 		go hub.Run()
 	}
 	h.ucRoom.CheckExistsRoomAndInit(roomId)
@@ -63,6 +63,26 @@ func (h *RoomWsHandler) DeleteHubOfRoomId(ctx *gin.Context) {
 	ctx.JSON(
 		http.StatusOK,
 		gin.H{"ok": "delete hub of roomId successful"},
+	)
+}
+
+func (h *RoomWsHandler) GetConnCountOfRoomId(ctx *gin.Context) {
+	roomIdString := ctx.Param("room_id")
+	roomId := service.StringToRoomId(roomIdString)
+
+	cnt,err := h.Hubs.GetConnCountOfRoomId(roomId)
+	if err != nil {
+		ctx.JSON(
+			http.StatusBadRequest,
+			gin.H{"error": err.Error()},
+		)
+		return
+	}
+
+	cntRoomConnJson := createcountRoomConnJson(cnt)
+	ctx.JSON(
+		http.StatusOK,
+		gin.H{"data": cntRoomConnJson},
 	)
 }
 
@@ -145,4 +165,15 @@ func (h *RoomWsHandler) serveWsConnOfHub(hub *Hub, w http.ResponseWriter, r *htt
 
 	go h.sendRoomInfoToAllClients(client)
 	go h.receiveEventInfoFromConn(client)
+}
+
+type countRoomConnJson struct {
+	Count int `json:"count"`
+}
+
+// createRoomConnJsonはcountを受け取り、response用のオブジェクトを生成します
+func createcountRoomConnJson(count int) countRoomConnJson {
+	return countRoomConnJson{
+		Count: count,
+	}
 }

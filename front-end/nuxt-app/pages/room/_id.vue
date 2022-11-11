@@ -466,16 +466,16 @@ export default {
             this.elementUnderGazeCount++;
             this.focusThisVideoAllLiftCount = 0;
             // TODO: 試験的にカウントを10以上に設定, 後ほど適切な値・実装方法に変える
-            if (this.elementUnderGazeCount > 10) {
-              console.log('elementUnderGazeCount is 10 count');
+            if (this.elementUnderGazeCount > 30) {
+              console.log('elementUnderGazeCount is 30 count');
               this.focusThisVideoLineOfSight(elementUnderGaze.id);
             }
           } else {
             this.focusThisVideoAllLiftCount++;
             this.elementUnderGazeCount = 0;
             //フォーカス全外し(この関数を呼ぶことでサーバー側にリクエスト飛ぶ)
-            if (this.focusThisVideoAllLiftCount > 10) {
-              console.log('focusThisVideoAllLift is 10 count');
+            if (this.focusThisVideoAllLiftCount > 30) {
+              console.log('focusThisVideoAllLift is 30 count');
               this.focusThisVideoAllLift();
             }
           }

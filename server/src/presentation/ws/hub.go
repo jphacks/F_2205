@@ -67,13 +67,13 @@ func (h *Hub) Run() {
 	}
 }
 
-// setNewHubOfRoomIdはRoomIdをKeyにHubsに新しいHubを登録します
-func (h *Hubs) setNewHubOfRoomId(hub *Hub, roomId entity.RoomId) {
+// SetNewHubOfRoomIdはRoomIdをKeyにHubsに新しいHubを登録します
+func (h *Hubs) SetNewHubOfRoomId(hub *Hub, roomId entity.RoomId) {
 	(*h)[roomId] = hub
 }
 
-// getExistsHubOfRoomIdはroomIdのHubが存在するか確認し、存在した場合は取得したHubを返します
-func (h *Hubs) getExistsHubOfRoomId(roomId entity.RoomId) (*Hub, bool) {
+// GetExistsHubOfRoomIdはroomIdのHubが存在するか確認し、存在した場合は取得したHubを返します
+func (h *Hubs) GetExistsHubOfRoomId(roomId entity.RoomId) (*Hub, bool) {
 	hub, ok := (*h)[roomId]
 	if !ok {
 		return nil, false
@@ -84,9 +84,20 @@ func (h *Hubs) getExistsHubOfRoomId(roomId entity.RoomId) (*Hub, bool) {
 // CheckAndDeleteHubOfRoomIはroomIdのHubが存在するか確認し
 // 存在した場合は削除し、存在しなかった場合はエラーを返します
 func (h *Hubs) CheckAndDeleteHubOfRoomId(roomId entity.RoomId) error {
-	if _, found := h.getExistsHubOfRoomId(roomId); !found {
+	if _, found := h.GetExistsHubOfRoomId(roomId); !found {
 		return fmt.Errorf("Hubs.CheckAndDeleteHubOfRoomId Error : roomId not found in Hubs")
 	}
 	delete(*h, roomId)
 	return nil
+}
+
+// GetConnCountOfRoomIdは受け取ったroomIdのRoomの
+// Hubに接続しているClientsの数を返します
+func (h *Hubs) GetConnCountOfRoomId(roomId entity.RoomId) (int, error) {
+	_, found := h.GetExistsHubOfRoomId(roomId)
+	if !found {
+		return 0, fmt.Errorf("hub not found (roomId:%s)", (string)(roomId))
+	}
+	cntConn := len((*h)[roomId].Clients)
+	return cntConn, nil
 }

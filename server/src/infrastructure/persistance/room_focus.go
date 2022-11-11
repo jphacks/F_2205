@@ -29,6 +29,7 @@ func (r *RoomRepository) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newPeer
 	return nil
 }
 
+// TODO membersのようにmapで管理したい
 // SetMemberFocusOfRoomIdは指定されたRoomに新しくフォーカス状態のユーザーを追加します
 func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entity.PeerId, to entity.PeerId) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)

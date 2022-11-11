@@ -20,11 +20,13 @@ func (r Router) InitRoomRouter() {
 	hWs := ws.NewRoomWsHandler(ucRoom, ucEvent, hubs)
 
 	// Room API
-	r.Engine.GET("/room/sum", h.GetCountSumOfRoom)
+	r.Engine.GET("/room/:room_id", h.GetRoomOfRoomId)
 	r.Engine.POST("/room", h.CreateRoom)
 	r.Engine.DELETE("/room/:room_id", h.DeleteRoomOfRoomId)
+	r.Engine.GET("/room/sum", h.GetCountSumOfRoom) //debug用
 
-	// WebSocket通信
+	// WebSocket関係
 	r.Engine.GET("/ws/:room_id", hWs.ConnectWsRoom)
+	r.Engine.GET("/ws/conn/:room_id", hWs.GetConnCountOfRoomId) //debug用
 	r.Engine.DELETE("/ws/:room_id", hWs.DeleteHubOfRoomId)
 }

@@ -9,8 +9,6 @@ type Event struct {
 	Info Info      `json:"info"`
 }
 
-type Events map[RoomId]*Event
-
 const (
 	// MembmerEvent
 	AddNewMember EventType = "ADD_NEW_MEMBER" // 新しいmemberを部屋に追加する

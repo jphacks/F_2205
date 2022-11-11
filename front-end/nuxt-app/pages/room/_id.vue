@@ -250,7 +250,7 @@ export default {
 
           const countDown = () => {
             setTimeout(() => {
-              if (this.currentScreenShotCount < 1) {
+              if (this.currentScreenShotCount < 2) {
                 this.isOpenScreenShotDialog = false;
                 audio.play();
 
@@ -275,7 +275,7 @@ export default {
                 });
                 return;
               }
-              if (this.currentScreenShotCount > 0) {
+              if (this.currentScreenShotCount > 1) {
                 this.currentScreenShotCount = this.currentScreenShotCount - 1;
               }
               countDown();

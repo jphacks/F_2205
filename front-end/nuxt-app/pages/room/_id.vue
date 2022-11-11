@@ -26,6 +26,9 @@
         :effectFn="this.effectFn"
         :drinkEstimatingFn="this.switchDrinkEstimating"
         :isEnableDrinkEstimating="this.isEnableDrinkEstimating"
+        :restRoomStartFn="this.restRoomStart"
+        :restRoomEndFn="this.restRoomEnd"
+        :restRoomState="this.restRoomState"
       />
     </div>
     <!-- ビデオステータスバー -->
@@ -121,7 +124,11 @@ export default {
       predictionCount: 0, // 推定結果の返却回数
       accuracy: { drinking: 0, noDrinking: 0 },
       isLoop: true,
-      dialog: false
+      dialog: false,
+      restRoomState: false,
+      websocketNormalTermination: false,
+      websocketAbnormalTermination: false,
+      isFocusThisVideoLineOfSight: null,
     };
   },
 
@@ -287,6 +294,22 @@ export default {
         };
         // ======================================================================== //
 
+        // ======================================================================== //
+        // restRoom function
+        // ======================================================================== //
+        const restRoomRun = (data, myVideoDomName) => {
+          // トイレ起動
+          for (let member in data.members) {
+            if (member == myVideoDomName) {
+              this.$refs.videoComponents.restRoomOperationOnMySelf(data.members[member].isRestRoom);
+              continue;
+            }
+
+            this.$refs.videoComponents.restRoomOperationOthers(member, data.members[member].isRestRoom);
+          }
+        };
+        // ======================================================================== //
+
         const data = JSON.parse(evt.data);
         const myVideoDomName = document.querySelector('#videomy-video').getAttribute('name');
 
@@ -302,14 +325,33 @@ export default {
         // エフェクト
         if (data.event_type == 'SET_EFFECT') effectRun(data, myVideoDomName);
 
-        //スクショ
+        // スクショ
         if (data.event_type == 'SET_SCREEN_SHOT') screenShotRun();
+
+        // トイレ
+        if (data.event_type == 'SET_REST_ROOM') restRoomRun(data, myVideoDomName);
 
         return;
       }.bind(this);
       websocketConn.onclose = function (evt) {
         console.log('websocket connection closed');
-      };
+
+        if (!this.websocketNormalTermination) {
+          // 異常終了
+          this.websocketAbnormalTermination = true;
+
+          console.log('websocketが異常終了したため再接続します');
+
+          setTimeout(() => {
+            console.log('再接続');
+            this.websocketConn = new WebSocket(
+              'wss://f-2205-server-chhumpv4gq-de.a.run.app/ws/' + this.$route.params.id
+            );
+            this.setWebsocketEventListener(this.websocketConn);
+            this.websocketAbnormalTermination = false;
+          }, 5000);
+        }
+      }.bind(this);
       websocketConn.onerror = function (evt) {
         console.log('websocket error: ' + evt);
       };
@@ -380,6 +422,8 @@ export default {
     },
 
     roomLeaving: async function () {
+      this.websocketNormalTermination = true;
+
       //ルーム退出
       console.log('room leaving start');
 
@@ -388,6 +432,9 @@ export default {
 
       //localStorageにあるmember情報を破棄
       localStorage.clear();
+
+      //イベントを削除
+      window.removeEventListener('resize', this.$refs.videoComponents.allResizeRun, false);
 
       //人数チェック処理を解除(Interval)
       clearInterval(this.roomMemberNumCheckIntervalFn);
@@ -461,7 +508,11 @@ export default {
             // TODO: 試験的にカウントを10以上に設定, 後ほど適切な値・実装方法に変える
             if (this.elementUnderGazeCount > 10) {
               console.log('elementUnderGazeCount is 10 count');
+              if (this.isFocusThisVideoLineOfSight) return;
+
               this.focusThisVideoLineOfSight(elementUnderGaze.id);
+              this.elementUnderGazeCount = 0; // カウント制御リセット
+              this.isFocusThisVideoLineOfSight = true // 同じリクエストを送らないようにフラグを立てる
             }
           } else {
             this.focusThisVideoAllLiftCount++;
@@ -469,7 +520,11 @@ export default {
             //フォーカス全外し(この関数を呼ぶことでサーバー側にリクエスト飛ぶ)
             if (this.focusThisVideoAllLiftCount > 10) {
               console.log('focusThisVideoAllLift is 10 count');
+              if (!this.isFocusThisVideoLineOfSight) return;
+
               this.focusThisVideoAllLift();
+              this.focusThisVideoAllLiftCount = 0; // カウント制御リセット
+              this.isFocusThisVideoLineOfSight = false // 同じリクエストを送らないようにフラグを立てる
             }
           }
         })
@@ -664,12 +719,51 @@ export default {
         this.predictionCount += 1;
 
         // 数ミリ秒単位でカウントしているため，数回カウントで制御
-        if (this.predictionCount > 10) {
-          this.effectFn('3');
+        if (this.predictionCount > 100) {
+          // 100設定で4秒程度
+          this.effectFn('4');
           this.drinkingCount += 1; // TODO: 廃止予定
           this.predictionCount = 0;
         }
       }
+    },
+
+    restRoomStart: function () {
+      // トイレ機能開始
+      const data = {
+        type: 'SET_REST_ROOM',
+        info: {
+          rest: {
+            peer_id: `video${this.peer.id}`,
+            is_rest_room: true
+          }
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
+
+      this.videoMute();
+      this.audioMute();
+
+      this.restRoomState = true;
+    },
+
+    restRoomEnd: function () {
+      // トイレ機能終了
+      const data = {
+        type: 'SET_REST_ROOM',
+        info: {
+          rest: {
+            peer_id: `video${this.peer.id}`,
+            is_rest_room: false
+          }
+        }
+      };
+      this.websocketConn.send(JSON.stringify(data));
+
+      this.videoMute();
+      this.audioMute();
+
+      this.restRoomState = false;
     }
   },
 
@@ -720,13 +814,19 @@ export default {
 
     //クリックからフォーカス
     document.body.onclick = (e) => {
+      if (this.websocketAbnormalTermination) return;
+
       const x = e.pageX;
       const y = e.pageY;
 
       const elementUnderMouse = document.elementFromPoint(x, y);
-      if (elementUnderMouse.tagName == 'VIDEO') {
+
+      if (elementUnderMouse.tagName == 'VIDEO' && elementUnderMouse.id != 'videomy-video')
         this.focusThisVideo(elementUnderMouse.id);
-      }
+
+      if (elementUnderMouse.id == 'video-wrap' || elementUnderMouse.id == 'video-box') this.focusThisVideoAllLift();
+
+      if (elementUnderMouse.id == 'video-state') this.$refs.videoComponents.allResizeRun();
     };
 
     window.onpopstate = function () {

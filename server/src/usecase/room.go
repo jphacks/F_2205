@@ -15,12 +15,13 @@ type RoomUsecase struct {
 
 // IRoomUsecaseはRoomのユースケースをまとめたインターフェースです
 type IRoomUsecase interface {
-	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
-	GetMembersOfRoomId(roomId entity.RoomId) entity.Members
-	CheckExistsRoomAndInit(roomId entity.RoomId)
-	DeleteRoomOfRoomId(roomId entity.RoomId)
+	GetRoomOfRoomId(roomId entity.RoomId) (*entity.Room, error)
 	CreateRoomNumber() (*entity.RoomInfo, error)
+	DeleteRoomOfRoomId(roomId entity.RoomId)
 	GetSumOfRoom() int
+	GetMembersOfRoomId(roomId entity.RoomId) entity.Members
+	GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers
+	CheckExistsRoomAndInit(roomId entity.RoomId)
 	SetRoomLatestMemberDataOfRoomId(roomID entity.RoomId, room *entity.Room, e entity.Event)
 }
 
@@ -29,6 +30,15 @@ func NewRoomUsecase(repo repository.IRoomRepository) IRoomUsecase {
 	return &RoomUsecase{
 		repo: repo,
 	}
+}
+
+// GetRoomOfRoomIdは受け取ったroomIdのRoomを取得します
+func (uc *RoomUsecase) GetRoomOfRoomId(roomId entity.RoomId) (*entity.Room, error) {
+	room, found := uc.repo.GetExistsRoomOfRoomId(roomId)
+	if !found {
+		return nil, fmt.Errorf("RoomUsecase.GetRoomOfRoomId Error : room not found (roomId:%s)", (string)(roomId))
+	}
+	return room, nil
 }
 
 // CreateRoomNumberはRoom番号を生成します
@@ -54,9 +64,9 @@ func (uc *RoomUsecase) DeleteRoomOfRoomId(roomId entity.RoomId) {
 	uc.repo.DeleteRoomOfRoomId(roomId)
 }
 
-// GetFocusMembersOfRoomIdは受け取ったIDのRoomのフォーカスメンバーを返します
-func (uc *RoomUsecase) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers {
-	return uc.repo.GetFocusMembersOfRoomId(roomId)
+// GetSumOfRoomは存在するRoomの合計数を返します
+func (uc *RoomUsecase) GetSumOfRoom() int {
+	return uc.repo.GetSumOfRoom()
 }
 
 // GetMembersOfRoomIdは受け取ったIDのRoomのメンバーを返します
@@ -64,15 +74,15 @@ func (uc *RoomUsecase) GetMembersOfRoomId(roomId entity.RoomId) entity.Members {
 	return uc.repo.GetMembersOfRoomId(roomId)
 }
 
+// GetFocusMembersOfRoomIdは受け取ったIDのRoomのフォーカスメンバーを返します
+func (uc *RoomUsecase) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.FocusMembers {
+	return uc.repo.GetFocusMembersOfRoomId(roomId)
+}
+
 // CheckExistsRoomAndInitは受け取ったIDのRoomが登録されているか確認し、
 // 登録されてなかった場合Roomを初期化して用意します
 func (uc *RoomUsecase) CheckExistsRoomAndInit(roomId entity.RoomId) {
 	uc.repo.CheckExistsRoomAndInit(roomId)
-}
-
-// GetSumOfRoomは存在するRoomの合計数を返します
-func (uc *RoomUsecase) GetSumOfRoom() int {
-	return uc.repo.GetSumOfRoom()
 }
 
 func (uc *RoomUsecase) SetRoomLatestMemberDataOfRoomId(roomID entity.RoomId, room *entity.Room, e entity.Event) {

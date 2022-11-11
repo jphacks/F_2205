@@ -1,7 +1,7 @@
 <template>
   <section id="video-wrap" class="video">
     <!-- ビデオレイヤー -->
-    <div class="video-box">
+    <div class="video-box" id="video-box">
       <video id="videomy-video" class="video-individual" autoplay muted playsinline></video>
     </div>
     <!-- ビデオレイヤー -->
@@ -56,6 +56,7 @@ export default {
 
       // resize
       this.videoResize(roomMemberNum);
+      setTimeout(this.effectAllReSize, 3000);
       // reposition
       setTimeout(this.videoNameAllRePosition, 5000);
 
@@ -69,9 +70,14 @@ export default {
       const videoDom = document.getElementById(`video${peerId}`);
       videoDom.remove();
 
+      let tgRef;
       // ビデオネームを削除
-      const tgRef = 'nameComponents' + 'video' + peerId;
+      tgRef = 'nameComponents' + 'video' + peerId;
       this.$refs[tgRef][0].remove();
+
+      // エフェクトを削除
+      tgRef = 'effectComponents' + 'video' + peerId;
+      this.$refs[tgRef][0].thisDomRemove();
 
       // peerIds配列から削除
       const deleteTgIndex = this.peerIds.indexOf(peerId);
@@ -79,6 +85,7 @@ export default {
 
       // resize
       this.videoResize(roomMemberNum);
+      this.effectAllReSize();
       // reposition
       this.videoNameAllRePosition();
     },
@@ -95,6 +102,7 @@ export default {
 
       // 初期化
       document.querySelector('#video-wrap').style.padding = '10px 0';
+      document.querySelector('#video-box').style.maxWidth = '1400px';
       for (let videoDom of videoDoms) {
         videoDom.style.marginTop = '10px';
         videoDom.style.marginBottom = '10px';
@@ -115,16 +123,15 @@ export default {
       if (roomMemberNum >= 16) {
         column = 5;
         margenPx = 10 * (column * 2);
+        decreaseConstant = 50;
 
         //ビデオの幅
-        videoSizeW = (windowSizeW - margenPx) / column;
+        videoSizeW = (windowSizeW - margenPx) / column - decreaseConstant;
 
         document.querySelector('#video-wrap').style.padding = '1px 0';
 
         for (let videoDom of videoDoms) {
           videoDom.style.width = videoSizeW + 'px';
-          videoDom.style.marginTop = '1px';
-          videoDom.style.marginBottom = '1px';
         }
         return;
       }
@@ -147,9 +154,10 @@ export default {
       if (roomMemberNum >= 10) {
         column = 4;
         margenPx = 10 * (column * 2);
+        decreaseConstant = 50;
 
         //ビデオの幅
-        videoSizeW = (windowSizeW - margenPx) / column;
+        videoSizeW = (windowSizeW - margenPx) / column - decreaseConstant;
 
         for (let videoDom of videoDoms) {
           videoDom.style.width = videoSizeW + 'px';
@@ -162,7 +170,7 @@ export default {
       if (roomMemberNum >= 7) {
         line = 3;
         column = 3;
-        decreaseConstant = 20;
+        decreaseConstant = 50;
         margenPxH = 10 * (line * 2);
         margenPxW = 10 * (column * 2);
 
@@ -210,6 +218,8 @@ export default {
         //ビデオの幅
         videoSizeW = Math.round(videoSizeH * 1.3);
 
+        document.querySelector('#video-box').style.maxWidth = '1240px';
+
         for (let videoDom of videoDoms) {
           videoDom.style.width = videoSizeW + 'px';
         }
@@ -256,6 +266,31 @@ export default {
       this.$refs['effectComponentsvideomy-video'][0].start(effectNumber);
     },
 
+    restRoomOperationOthers: function (videoDomId, isRestRoom) {
+      // トイレ機能(自分以外)
+
+      //削除済みpeerIdをはじく
+      const peerId = videoDomId.replace('video', '');
+      if (this.peerIds.indexOf(peerId) == -1) return;
+
+      const tgRef = 'effectComponents' + videoDomId;
+
+      if (isRestRoom) {
+        this.$refs[tgRef][0].restRoomStart();
+      } else {
+        this.$refs[tgRef][0].restRoomEnd();
+      }
+    },
+
+    restRoomOperationOnMySelf: function (isRestRoom) {
+      // トイレ機能(自分)
+      if (isRestRoom) {
+        this.$refs['effectComponentsvideomy-video'][0].restRoomStart();
+      } else {
+        this.$refs['effectComponentsvideomy-video'][0].restRoomEnd();
+      }
+    },
+
     videoNameAllRePositionWaitDisplay: function () {
       let tgRef;
       for (let peerId of this.peerIds) {
@@ -271,12 +306,17 @@ export default {
         tgRef = 'nameComponentsvideo' + peerId;
         this.$refs[tgRef][0].setPosition();
       }
-    }
-  },
+    },
+    effectAllReSize: function () {
+      let tgRef;
+      for (let peerId of this.peerIds) {
+        if (peerId == undefined) continue;
+        tgRef = 'effectComponentsvideo' + peerId;
+        this.$refs[tgRef][0].resize();
+      }
+    },
 
-  mounted: function () {
-    // resizeイベント登録
-    window.addEventListener('resize', () => {
+    allResizeRun: function () {
       console.log('resize');
 
       // videoNameのリサイズ
@@ -284,7 +324,15 @@ export default {
 
       // videoのリサイズ
       this.videoResize(this.roomMemberNum);
-    });
+
+      // effectのリサイズ
+      this.effectAllReSize();
+    }
+  },
+
+  mounted: function () {
+    // resizeイベント登録
+    window.addEventListener('resize', this.allResizeRun);
   }
 };
 </script>

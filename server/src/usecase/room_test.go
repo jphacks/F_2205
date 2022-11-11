@@ -6,6 +6,10 @@ import (
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 )
 
+func TestRoomUsecase_GetRoomOfRoomId(t *testing.T) {
+	t.Skip()
+}
+
 func TestRoomUsecase_CreateRoomNumber(t *testing.T) {
 	t.Parallel()
 
@@ -37,11 +41,11 @@ func TestRoomUsecase_CreateRoomNumber(t *testing.T) {
 	}
 }
 
-func TestEventUsecase_DeleteRoomOfRoomId(t *testing.T) {
+func TestEventUsecase_GetSumOfRoom(t *testing.T) {
 	t.Skip()
 }
 
-func TestEventUsecase_GetFocusMembersOfRoomId(t *testing.T) {
+func TestEventUsecase_DeleteRoomOfRoomId(t *testing.T) {
 	t.Skip()
 }
 
@@ -49,11 +53,11 @@ func TestEventUsecase_GetMembersOfRoomId(t *testing.T) {
 	t.Skip()
 }
 
-func TestEventUsecase_CheckExistsRoomAndInit(t *testing.T) {
+func TestEventUsecase_GetFocusMembersOfRoomId(t *testing.T) {
 	t.Skip()
 }
 
-func TestEventUsecase_GetSumOfRoom(t *testing.T) {
+func TestEventUsecase_CheckExistsRoomAndInit(t *testing.T) {
 	t.Skip()
 }
 

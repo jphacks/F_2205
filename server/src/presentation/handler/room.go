@@ -23,17 +23,26 @@ func NewRoomHandler(uc usecase.IRoomUsecase, hubs *ws.Hubs) *RoomHandler {
 	}
 }
 
-// GetSumOfRoomは存在する部屋の数を返すハンドラーです
-func (h *RoomHandler) GetCountSumOfRoom(ctx *gin.Context) {
-	cnt := h.uc.GetSumOfRoom()
-	cntRoomJson := createCountRoomJson(cnt)
+// GetRoomOfRoomIdは指定したRoomIdにRoomを取得するAPIです
+func (h *RoomHandler) GetRoomOfRoomId(ctx *gin.Context){
+	roomIdString := ctx.Param("room_id")
+	roomId := service.StringToRoomId(roomIdString)
 
+	room, err := h.uc.GetRoomOfRoomId(roomId)
+	if err != nil {
+		ctx.JSON(
+			http.StatusBadRequest,
+			gin.H{"error": err.Error()},
+		)
+		return
+	}
 	ctx.JSON(
 		http.StatusOK,
-		gin.H{"data": cntRoomJson},
+		gin.H{"data": room},
 	)
 }
 
+// CreateRoomは新しいRoomを作成するハンドラーです
 func (h *RoomHandler) CreateRoom(ctx *gin.Context) {
 	roomInfo, err := h.uc.CreateRoomNumber()
 	if err != nil {
@@ -51,6 +60,7 @@ func (h *RoomHandler) CreateRoom(ctx *gin.Context) {
 	)
 }
 
+// DeleteRoomOfRoomIdは受け取ったroom_idのRoomを削除するハンドラーです
 func (h *RoomHandler) DeleteRoomOfRoomId(ctx *gin.Context) {
 	roomIdString := ctx.Param("room_id")
 	roomId := service.StringToRoomId(roomIdString)
@@ -64,6 +74,20 @@ func (h *RoomHandler) DeleteRoomOfRoomId(ctx *gin.Context) {
 		gin.H{"ok": "delete room of roomId successful"},
 	)
 }
+
+// GetSumOfRoomは存在する部屋の数を返すハンドラーです
+func (h *RoomHandler) GetCountSumOfRoom(ctx *gin.Context) {
+	cnt := h.uc.GetSumOfRoom()
+	cntRoomJson := createCountRoomJson(cnt)
+
+	ctx.JSON(
+		http.StatusOK,
+		gin.H{"data": cntRoomJson},
+	)
+}
+
+// TODO roomのjsonも用意すべき
+// https://github.com/jphacks/F_2205/issues/174
 
 type roomInfoJson struct {
 	Id entity.RoomId `json:"id"`

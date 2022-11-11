@@ -1,15 +1,22 @@
 package entity
 
+import "sync"
+
 // RoomIdはRoomに割り当てられるプライマリーキーです
 type RoomId string
 
 // Roomは部屋で起こったイベントの情報やステートを保持します
 type Room struct {
-	EventType    EventType    `json:"event_type"`
-	Members      Members      `json:"members"`
-	FocusMembers FocusMembers `json:"focus_members"`
-	EffectMember EffectMember `json:"effect_member"`
-	Sound        Sound        `json:"sound"`
+	EventType         EventType
+	MembersStore      *MembersStore
+	FocusMembersStore *FocusMembersStore
+	EffectMember      EffectMember
+	Sound             Sound
 }
 
 type Rooms map[RoomId]*Room
+
+type RoomsStore struct {
+	Rooms *Rooms
+	Mu    sync.RWMutex
+}

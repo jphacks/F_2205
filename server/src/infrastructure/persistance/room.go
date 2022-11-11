@@ -2,33 +2,43 @@ package persistance
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 	"github.com/jphacks/F_2205/server/src/domain/repository"
+	"github.com/jphacks/F_2205/server/src/domain/service"
 )
 
 var _ repository.IRoomRepository = &RoomRepository{}
 
 type RoomRepository struct {
-	Rooms *entity.Rooms
+	RoomsStore *entity.RoomsStore
 }
 
+// NewRepositoryはrepository.IRoomRepositoryを満たしたRoomRepository構造体を返します
 func NewRoomRepository(rooms *entity.Rooms) *RoomRepository {
 	return &RoomRepository{
-		Rooms: rooms,
+		RoomsStore: &entity.RoomsStore{
+			Rooms: rooms,
+			Mu:    sync.RWMutex{},
+		},
 	}
 }
 
+// AddNewMemberOfRoomIdは受け取ったRoomIdのRoomに新しくMemberを追加します
 func (r *RoomRepository) AddNewMemberOfRoomId(roomId entity.RoomId, member *entity.Member, peerId entity.PeerId) error {
 	room, found := r.GetExistsRoomOfRoomId(roomId)
 	if !found {
 		return fmt.Errorf("RoomRepository.AddNewMemberOfRoomId Error : room not found")
 	}
-	_, found = room.Members[peerId]
+	room.MembersStore.Mu.Lock()
+	defer room.MembersStore.Mu.Unlock()
+
+	_, found = room.MembersStore.Members[peerId]
 	if found {
 		return fmt.Errorf("RoomRepository.AddNewMemberOfRoomId Error : peer_id already used")
 	}
-	room.Members[peerId] = member
+	room.MembersStore.Members[peerId] = member
 	return nil
 }
 
@@ -42,34 +52,30 @@ func (r *RoomRepository) CheckExistsRoomAndInit(roomId entity.RoomId) {
 
 // InitRoomOfRoomIdはroomIdをkeyにRoomsに新しく空のRoomオブジェクトを登録します
 func (r *RoomRepository) InitRoomOfRoomId(roomId entity.RoomId) {
-	(*r.Rooms)[roomId] = &entity.Room{
-		Members:      entity.Members{},
-		FocusMembers: entity.FocusMembers{},
-	}
+	r.RoomsStore.Mu.Lock()
+	defer r.RoomsStore.Mu.Unlock()
+	(*r.RoomsStore.Rooms)[roomId] = service.NewRoom()
 }
 
 // SetNewRoomOfRoomIdはroomIdをkeyにRoomsに新しくRoomを登録します
 func (r *RoomRepository) SetNewRoomOfRoomId(room *entity.Room, roomId entity.RoomId) {
-	(*r.Rooms)[roomId] = room
+	r.RoomsStore.Mu.Lock()
+	defer r.RoomsStore.Mu.Unlock()
+	(*r.RoomsStore.Rooms)[roomId] = room
 }
 
 // DeleteRoomOfRoomIdは指定したRoomIdをKeyとしているRoomをRoomsから削除します
 func (r *RoomRepository) DeleteRoomOfRoomId(roomId entity.RoomId) {
-	delete(*r.Rooms, roomId)
-}
-
-// GetExistsRoomOfRoomIdはroomIdのRoomが存在するか確認し、存在した場合はRoomを返します
-func (r *RoomRepository) GetExistsRoomOfRoomId(roomId entity.RoomId) (*entity.Room, bool) {
-	room, ok := (*r.Rooms)[roomId]
-	if !ok {
-		return nil, false
-	}
-	return room, true
+	r.RoomsStore.Mu.Lock()
+	defer r.RoomsStore.Mu.Unlock()
+	delete(*r.RoomsStore.Rooms, roomId)
 }
 
 // GetSumOfRoomはサーバーの管理するRoomの数を取得します
 func (r *RoomRepository) GetSumOfRoom() int {
-	return len(*r.Rooms)
+	r.RoomsStore.Mu.RLock()
+	defer r.RoomsStore.Mu.RUnlock()
+	return len(*r.RoomsStore.Rooms)
 }
 
 // GetMembersOfRoomIdは指定したroomIdのRoomのMemberを返します
@@ -80,5 +86,16 @@ func (r *RoomRepository) GetMembersOfRoomId(roomId entity.RoomId) entity.Members
 		// TODO エラーハンドリング
 		return entity.Members{}
 	}
-	return room.Members
+	return room.MembersStore.Members
+}
+
+// GetExistsRoomOfRoomIdはroomIdのRoomが存在するか確認し、存在した場合はRoomを返します
+func (r *RoomRepository) GetExistsRoomOfRoomId(roomId entity.RoomId) (*entity.Room, bool) {
+	r.RoomsStore.Mu.RLock()
+	defer r.RoomsStore.Mu.RUnlock()
+	room, ok := (*r.RoomsStore.Rooms)[roomId]
+	if !ok {
+		return nil, false
+	}
+	return room, true
 }

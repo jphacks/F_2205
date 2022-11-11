@@ -4,8 +4,9 @@ package ws
 
 import (
 	"fmt"
+	"sync"
 
-	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/utils/json"
 )
 
 type Hub struct {
@@ -13,7 +14,7 @@ type Hub struct {
 	Clients map[*Client]bool
 
 	// Inbound messages from the clients.
-	BroadcastRoom chan *entity.Room
+	BroadcastRoom chan *json.RoomJson
 
 	// Register requests from the clients.
 	Register chan *Client
@@ -21,25 +22,41 @@ type Hub struct {
 	// Unregister requests from clients.
 	Unregister chan *Client
 
-	RoomId entity.RoomId
+	RoomId json.RoomIdJson
+
+	// スレッドセーフ
+	Mu sync.RWMutex
 }
 
-type Hubs map[entity.RoomId]*Hub
+type Hubs map[json.RoomIdJson]*Hub
+
+type HubsStore struct {
+	Hubs *Hubs
+	Mu   sync.RWMutex
+}
 
 // NewHubは新しいHubオブジェクトを生成します
-func NewHub(roomId entity.RoomId) *Hub {
+func NewHub(roomId json.RoomIdJson) *Hub {
 	return &Hub{
-		BroadcastRoom: make(chan *entity.Room),
+		BroadcastRoom: make(chan *json.RoomJson),
 		Register:      make(chan *Client),
 		Unregister:    make(chan *Client),
 		Clients:       make(map[*Client]bool),
 		RoomId:        roomId,
+		Mu:            sync.RWMutex{},
 	}
 }
 
 // NewHubsは新たにHubsオブジェクトのポインタを返します
 func NewHubs() *Hubs {
 	return &Hubs{}
+}
+
+func NewHubsStore() *HubsStore {
+	return &HubsStore{
+		Hubs: NewHubs(),
+		Mu:   sync.RWMutex{},
+	}
 }
 
 // RunはHubを起動し、待ち受け状態にします
@@ -68,13 +85,19 @@ func (h *Hub) Run() {
 }
 
 // SetNewHubOfRoomIdはRoomIdをKeyにHubsに新しいHubを登録します
-func (h *Hubs) SetNewHubOfRoomId(hub *Hub, roomId entity.RoomId) {
-	(*h)[roomId] = hub
+func (h *HubsStore) SetNewHubOfRoomId(hub *Hub, roomId json.RoomIdJson) {
+	h.Mu.Lock()
+	defer h.Mu.Unlock()
+
+	(*h.Hubs)[roomId] = hub
 }
 
 // GetExistsHubOfRoomIdはroomIdのHubが存在するか確認し、存在した場合は取得したHubを返します
-func (h *Hubs) GetExistsHubOfRoomId(roomId entity.RoomId) (*Hub, bool) {
-	hub, ok := (*h)[roomId]
+func (h *HubsStore) GetExistsHubOfRoomId(roomId json.RoomIdJson) (*Hub, bool) {
+	h.Mu.RLock()
+	defer h.Mu.RUnlock()
+
+	hub, ok := (*h.Hubs)[roomId]
 	if !ok {
 		return nil, false
 	}
@@ -83,21 +106,28 @@ func (h *Hubs) GetExistsHubOfRoomId(roomId entity.RoomId) (*Hub, bool) {
 
 // CheckAndDeleteHubOfRoomIはroomIdのHubが存在するか確認し
 // 存在した場合は削除し、存在しなかった場合はエラーを返します
-func (h *Hubs) CheckAndDeleteHubOfRoomId(roomId entity.RoomId) error {
-	if _, found := h.GetExistsHubOfRoomId(roomId); !found {
+func (h *HubsStore) CheckAndDeleteHubOfRoomId(roomId json.RoomIdJson) error {
+	_, found := h.GetExistsHubOfRoomId(roomId)
+	if !found {
 		return fmt.Errorf("Hubs.CheckAndDeleteHubOfRoomId Error : roomId not found in Hubs")
 	}
-	delete(*h, roomId)
+	h.Mu.Lock()
+	defer h.Mu.Unlock()
+
+	delete(*h.Hubs, roomId)
 	return nil
 }
 
 // GetConnCountOfRoomIdは受け取ったroomIdのRoomの
 // Hubに接続しているClientsの数を返します
-func (h *Hubs) GetConnCountOfRoomId(roomId entity.RoomId) (int, error) {
+func (h *HubsStore) GetConnCountOfRoomId(roomId json.RoomIdJson) (int, error) {
 	_, found := h.GetExistsHubOfRoomId(roomId)
 	if !found {
 		return 0, fmt.Errorf("hub not found (roomId:%s)", (string)(roomId))
 	}
-	cntConn := len((*h)[roomId].Clients)
+	h.Mu.RLock()
+	defer h.Mu.RUnlock()
+
+	cntConn := len((*h.Hubs)[roomId].Clients)
 	return cntConn, nil
 }

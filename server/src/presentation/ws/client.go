@@ -5,7 +5,7 @@ package ws
 import (
 	"time"
 
-	"github.com/jphacks/F_2205/server/src/domain/entity"
+	"github.com/jphacks/F_2205/server/src/utils/json"
 
 	"github.com/gorilla/websocket"
 )
@@ -14,7 +14,8 @@ import (
 type Client struct {
 	Hub          *Hub
 	Conn         *websocket.Conn
-	SendRoomInfo chan *entity.Room // Buffered channel of outbound messages.
+	SendRoomInfo chan *json.RoomJson // Buffered channel of outbound messages.
+	RoomId       json.RoomIdJson
 }
 
 // setConnectionConfigはClientのコネクション情報に関する設定をします

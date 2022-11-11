@@ -3,6 +3,7 @@ package usecase
 import (
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 	"github.com/jphacks/F_2205/server/src/domain/repository"
+	"github.com/jphacks/F_2205/server/src/domain/service"
 )
 
 var _ IEventUsecase = &EventUsecase{}
@@ -26,7 +27,7 @@ func NewEventUsecase(repoRoom repository.IRoomRepository) *EventUsecase {
 
 // SwitchExecEventByEventTypeはイベントのタイプによって処理を切り替え、それぞれのイベント実行関数を呼び出します
 func (uc *EventUsecase) SwitchExecEventByEventType(e entity.Event, roomId entity.RoomId) (*entity.Room, error) {
-	r := &entity.Room{}
+	r := service.NewRoom()
 	r.EventType = e.Type
 
 	// ScreenShotEventの場合

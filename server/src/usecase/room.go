@@ -86,6 +86,6 @@ func (uc *RoomUsecase) CheckExistsRoomAndInit(roomId entity.RoomId) {
 }
 
 func (uc *RoomUsecase) SetRoomLatestMemberDataOfRoomId(roomID entity.RoomId, room *entity.Room, e entity.Event) {
-	room.FocusMembers = uc.GetFocusMembersOfRoomId(roomID)
-	room.Members = uc.GetMembersOfRoomId(roomID)
+	room.FocusMembersStore.FocusMembers = uc.GetFocusMembersOfRoomId(roomID)
+	room.MembersStore.Members = uc.GetMembersOfRoomId(roomID)
 }

@@ -232,6 +232,7 @@ export default {
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 18px;
+      text-align: center;
     }
   }
 }

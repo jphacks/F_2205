@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     start: function (effectNumber) {
-      if (this.isCurrentEffect) return;
+      if (this.isCurrentEffect && this.effectNumber != 4) return;
 
       this.isCurrentEffect = true;
       this.effectNumber = effectNumber;

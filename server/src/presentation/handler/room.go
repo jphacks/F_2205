@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/jphacks/F_2205/server/src/domain/service"
-	"github.com/jphacks/F_2205/server/src/presentation/ws"
 	"github.com/jphacks/F_2205/server/src/usecase"
 	"github.com/jphacks/F_2205/server/src/utils/json"
 

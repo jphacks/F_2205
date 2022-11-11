@@ -11,7 +11,7 @@ func (r *RoomRepository) SetMemberRestRoomStateOfRoomId(roomId entity.RoomId, pe
 	if !found {
 		return fmt.Errorf("RoomRepository.SetMemberRestRoomStateOfRoomId Error : room not found")
 	}
-	member, found := room.Members[peerId]
+	member, found := room.MembersStore.Members[peerId]
 	if !found {
 		return fmt.Errorf("RoomRepository.SetMemberRestRoomStateOfRoomId Error : peer_id member not found")
 	}

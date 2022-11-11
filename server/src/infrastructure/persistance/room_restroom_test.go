@@ -27,20 +27,24 @@ func TestRoomRepository_SetMemberRestRoomStateOfRoomId(t *testing.T) {
 			isRestRoom: true,
 			rooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: false,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: false,
+							},
 						},
 					},
 				},
 			},
 			wantRooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: true,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: true,
+							},
 						},
 					},
 				},
@@ -54,20 +58,24 @@ func TestRoomRepository_SetMemberRestRoomStateOfRoomId(t *testing.T) {
 			isRestRoom: false,
 			rooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: true,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: true,
+							},
 						},
 					},
 				},
 			},
 			wantRooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: false,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: false,
+							},
 						},
 					},
 				},
@@ -81,20 +89,24 @@ func TestRoomRepository_SetMemberRestRoomStateOfRoomId(t *testing.T) {
 			isRestRoom: true,
 			rooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: true,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: true,
+							},
 						},
 					},
 				},
 			},
 			wantRooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: true,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: true,
+							},
 						},
 					},
 				},
@@ -108,20 +120,24 @@ func TestRoomRepository_SetMemberRestRoomStateOfRoomId(t *testing.T) {
 			isRestRoom: false,
 			rooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: false,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: false,
+							},
 						},
 					},
 				},
 			},
 			wantRooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: false,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: false,
+							},
 						},
 					},
 				},
@@ -135,20 +151,24 @@ func TestRoomRepository_SetMemberRestRoomStateOfRoomId(t *testing.T) {
 			isRestRoom: false,
 			rooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: false,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: false,
+							},
 						},
 					},
 				},
 			},
 			wantRooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: false,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: false,
+							},
 						},
 					},
 				},
@@ -166,8 +186,8 @@ func TestRoomRepository_SetMemberRestRoomStateOfRoomId(t *testing.T) {
 				t.Errorf("TestRoomRepository_SetMemberRestRoomStateOfRoomId Error : want %v, but got %v", tt.wantErr, err)
 			}
 
-			if !reflect.DeepEqual(tt.wantRooms[tt.roomId], (*repoRoom.Rooms)[tt.roomId]) {
-				t.Errorf("TestRoomRepository_SetMemberRestRoomStateOfRoomId Error : want %v, but got %v", tt.wantRooms[tt.roomId], (*repoRoom.Rooms)[tt.roomId])
+			if !reflect.DeepEqual(tt.wantRooms[tt.roomId], (*repoRoom.RoomsStore.Rooms)[tt.roomId]) {
+				t.Errorf("TestRoomRepository_SetMemberRestRoomStateOfRoomId Error : want %v, but got %v", tt.wantRooms[tt.roomId], (*repoRoom.RoomsStore.Rooms)[tt.roomId])
 			}
 		})
 	}

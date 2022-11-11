@@ -19,6 +19,12 @@
       <img src="~/assets/img/gokuImg.svg" class="video-effect-goku-img-3" />
     </section>
 
+    <section class="video-effect-drink-too-much" v-if="effectNumber == '4'">
+      <div class="video-effect-drink-too-much-back"></div>
+      <v-icon color="yellow" size="102" class="video-effect-drink-too-much-icon">mdi-alert </v-icon>
+      <h3 class="video-effect-drink-too-much-ms">飲みすぎ注意！</h3>
+    </section>
+
     <section class="video-effect-rest-room" v-if="isRestRoom">
       <img src="~/assets/img/flowerImg.jpg" class="video-effect-rest-room-img" />
       <h3 class="video-effect-rest-room-ms">～お花を摘んでいます～</h3>
@@ -220,6 +226,33 @@ export default {
     }
   }
 
+  &-drink-too-much {
+    width: 100%;
+    height: 100%;
+    &-icon {
+      padding: 20% 0 5%;
+      width: 100%;
+      position: absolute;
+      animation: drink-too-much-icon linear 1s infinite;
+    }
+
+    &-ms {
+      width: 100%;
+      text-align: center;
+      color: yellow;
+    }
+
+    &-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: orange;
+      opacity: 0.2;
+    }
+  }
+
   &-rest-room {
     &-img {
       width: 130%;
@@ -276,6 +309,27 @@ export default {
 
   100% {
     transform: translateY(0) rotate(10deg);
+  }
+}
+
+@keyframes drink-too-much-icon {
+  0% {
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.1);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  75% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
   }
 }
 </style>

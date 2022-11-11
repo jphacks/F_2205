@@ -123,16 +123,15 @@ export default {
       if (roomMemberNum >= 16) {
         column = 5;
         margenPx = 10 * (column * 2);
+        decreaseConstant = 50;
 
         //ビデオの幅
-        videoSizeW = (windowSizeW - margenPx) / column;
+        videoSizeW = (windowSizeW - margenPx) / column - decreaseConstant;
 
         document.querySelector('#video-wrap').style.padding = '1px 0';
 
         for (let videoDom of videoDoms) {
           videoDom.style.width = videoSizeW + 'px';
-          videoDom.style.marginTop = '1px';
-          videoDom.style.marginBottom = '1px';
         }
         return;
       }
@@ -155,9 +154,10 @@ export default {
       if (roomMemberNum >= 10) {
         column = 4;
         margenPx = 10 * (column * 2);
+        decreaseConstant = 50;
 
         //ビデオの幅
-        videoSizeW = (windowSizeW - margenPx) / column;
+        videoSizeW = (windowSizeW - margenPx) / column - decreaseConstant;
 
         for (let videoDom of videoDoms) {
           videoDom.style.width = videoSizeW + 'px';
@@ -170,7 +170,7 @@ export default {
       if (roomMemberNum >= 7) {
         line = 3;
         column = 3;
-        decreaseConstant = 20;
+        decreaseConstant = 50;
         margenPxH = 10 * (line * 2);
         margenPxW = 10 * (column * 2);
 

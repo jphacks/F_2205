@@ -124,7 +124,8 @@ export default {
       dialog: false,
       restRoomState: false,
       websocketNormalTermination: false,
-      websocketAbnormalTermination: false
+      websocketAbnormalTermination: false,
+      isFocusThisVideoLineOfSight: null,
     };
   },
 
@@ -468,8 +469,11 @@ export default {
             // TODO: 試験的にカウントを10以上に設定, 後ほど適切な値・実装方法に変える
             if (this.elementUnderGazeCount > 10) {
               console.log('elementUnderGazeCount is 10 count');
+              if (this.isFocusThisVideoLineOfSight) return;
+
               this.focusThisVideoLineOfSight(elementUnderGaze.id);
-              this.elementUnderGazeCount = 0;//カウント制御リセット
+              this.elementUnderGazeCount = 0; // カウント制御リセット
+              this.isFocusThisVideoLineOfSight = true // 同じリクエストを送らないようにフラグを立てる
             }
           } else {
             this.focusThisVideoAllLiftCount++;
@@ -477,8 +481,11 @@ export default {
             //フォーカス全外し(この関数を呼ぶことでサーバー側にリクエスト飛ぶ)
             if (this.focusThisVideoAllLiftCount > 10) {
               console.log('focusThisVideoAllLift is 10 count');
+              if (!this.isFocusThisVideoLineOfSight) return;
+
               this.focusThisVideoAllLift();
-              this.focusThisVideoAllLiftCount = 0;//カウント制御リセット
+              this.focusThisVideoAllLiftCount = 0; // カウント制御リセット
+              this.isFocusThisVideoLineOfSight = false // 同じリクエストを送らないようにフラグを立てる
             }
           }
         })

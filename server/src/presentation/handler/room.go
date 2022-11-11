@@ -24,7 +24,7 @@ func NewRoomHandler(uc usecase.IRoomUsecase, hubs *ws.Hubs) *RoomHandler {
 }
 
 // GetRoomOfRoomIdは指定したRoomIdにRoomを取得するAPIです
-func (h *RoomHandler) GetRoomOfRoomId(ctx *gin.Context){
+func (h *RoomHandler) GetRoomOfRoomId(ctx *gin.Context) {
 	roomIdString := ctx.Param("room_id")
 	roomId := service.StringToRoomId(roomIdString)
 

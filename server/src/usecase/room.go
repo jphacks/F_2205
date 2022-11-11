@@ -15,7 +15,7 @@ type RoomUsecase struct {
 
 // IRoomUsecaseはRoomのユースケースをまとめたインターフェースです
 type IRoomUsecase interface {
-	GetRoomOfRoomId(roomId entity.RoomId) (*entity.Room,error) 
+	GetRoomOfRoomId(roomId entity.RoomId) (*entity.Room, error)
 	CreateRoomNumber() (*entity.RoomInfo, error)
 	DeleteRoomOfRoomId(roomId entity.RoomId)
 	GetSumOfRoom() int
@@ -33,12 +33,12 @@ func NewRoomUsecase(repo repository.IRoomRepository) IRoomUsecase {
 }
 
 // GetRoomOfRoomIdは受け取ったroomIdのRoomを取得します
-func (uc *RoomUsecase) GetRoomOfRoomId(roomId entity.RoomId) (*entity.Room,error) {
-	room,found := uc.repo.GetExistsRoomOfRoomId(roomId)
+func (uc *RoomUsecase) GetRoomOfRoomId(roomId entity.RoomId) (*entity.Room, error) {
+	room, found := uc.repo.GetExistsRoomOfRoomId(roomId)
 	if !found {
-		return nil,fmt.Errorf("RoomUsecase.GetRoomOfRoomId Error : room not found (roomId:%s)",(string)(roomId))
+		return nil, fmt.Errorf("RoomUsecase.GetRoomOfRoomId Error : room not found (roomId:%s)", (string)(roomId))
 	}
-	return room,nil
+	return room, nil
 }
 
 // CreateRoomNumberはRoom番号を生成します

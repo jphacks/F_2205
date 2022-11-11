@@ -111,6 +111,9 @@ export default {
       roomLeavingCheckTimeoutFn: null,
       isVisibleLoader: true,
       isConnectionRoom: false,
+      //スクショキャンバスプロパティ
+      canvasHeight: 0,
+      canvasWidth: 0,
       // 飲み動作推定プロパティ
       model: null,
       webcam: null,
@@ -229,12 +232,48 @@ export default {
 
           const audio = new Audio(shutter);
 
+          const currentUsercount = document.querySelectorAll('video').length;
+
+          this.canvasWidth = 0;
+          this.canvasHeight = 0;
+          const video_h = document.getElementById('videomy-video').clientHeight;
+          const video_w = document.getElementById('videomy-video').clientWidth;
+
+          if (6 < currentUsercount) {
+            this.canvasWidth = 3;
+            this.canvasHeight = 1;
+            if (8 < currentUsercount < 13) {
+              this.canvasHeight = 2;
+            } else {
+              this.canvasHeight = 3;
+            }
+          } else if (4 < currentUsercount) {
+            this.canvasWidth = 2;
+            this.canvasHeight = 1;
+          } else {
+            this.canvasWidth = 1;
+            this.canvasHeight = 1;
+          }
+
           const countDown = () => {
             setTimeout(() => {
-              if (this.currentScreenShotCount < 1) {
+              if (this.currentScreenShotCount < 2) {
                 this.isOpenScreenShotDialog = false;
                 audio.play();
-                html2canvas(document.querySelector('#capture')).then((canvas) => {
+
+                html2canvas(document.querySelector('#capture'), {
+                  useCORS: true,
+                  backgroundColor: '#d3be9a',
+                  height: window.innerHeight + video_h * this.canvasHeight,
+                  windowHeight: window.innerHeight + video_h * this.canvasHeight,
+                  width: window.outerWidth + video_w * this.canvasWidth,
+                  windowWidth: window.outerWidth + video_w * this.canvasWidth,
+                  ignoreElements: (elm) => {
+                    if (elm.classList.contains('video-name')) {
+                      return true;
+                    }
+                  }
+                }).then((canvas) => {
                   const link = document.createElement('a');
                   const number = Math.floor(Math.random() * 10000);
                   link.href = canvas.toDataURL();
@@ -243,7 +282,7 @@ export default {
                 });
                 return;
               }
-              if (this.currentScreenShotCount > 0) {
+              if (this.currentScreenShotCount > 1) {
                 this.currentScreenShotCount = this.currentScreenShotCount - 1;
               }
               countDown();

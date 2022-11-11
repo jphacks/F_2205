@@ -360,9 +360,6 @@ export default {
       document.querySelector('body').classList.remove('modal-open');
       this.isVisibleSwitchButton = true;
 
-      //クリックしたときのイベントを設定(フォーカス)
-      this.setClickEvent();
-
       //人数制限チェック
       setTimeout(this.roomMemberNumCheck, 5000);
       this.roomMemberNumCheckIntervalFn = setInterval(this.roomMemberNumCheck, 60000);
@@ -683,20 +680,6 @@ export default {
       }
     },
 
-    setClickEvent: function () {
-      document.body.onclick = (e) => {
-        const x = e.pageX;
-        const y = e.pageY;
-
-        const elementUnderMouse = document.elementFromPoint(x, y);
-
-        if (elementUnderMouse.tagName == 'VIDEO' && elementUnderMouse.id != 'videomy-video')
-          this.focusThisVideo(elementUnderMouse.id);
-
-        if (elementUnderMouse.id == 'video-wrap' || elementUnderMouse.id == 'video-box') this.focusThisVideoAllLift();
-      };
-    },
-
     restRoomStart: function () {
       // トイレ機能開始
       const data = {
@@ -793,9 +776,9 @@ export default {
       if (elementUnderMouse.tagName == 'VIDEO' && elementUnderMouse.id != 'videomy-video')
         this.focusThisVideo(elementUnderMouse.id);
 
-      if (elementUnderMouse.id == 'videomy-video') this.focusThisVideoAllLift();
+      if (elementUnderMouse.id == 'video-wrap' || elementUnderMouse.id == 'video-box') this.focusThisVideoAllLift();
 
-      if (elementUnderMouse.id == 'video-wrap') this.focusThisVideoAllLift();
+      if (elementUnderMouse.id == 'video-state') this.$refs.videoComponents.allResizeRun();
     };
 
     window.onpopstate = function () {

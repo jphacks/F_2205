@@ -1,5 +1,5 @@
 <template>
-  <v-card class="video-state" tile>
+  <v-card class="video-state" id="video-state" tile>
     <div class="video-state-inner pa-2 d-flex align-center">
       <div class="video-state-icon">
         <div class="video-state-icon-wrap">

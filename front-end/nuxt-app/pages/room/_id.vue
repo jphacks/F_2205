@@ -260,7 +260,12 @@ export default {
                   height: window.innerHeight + video_h * this.canvasHeight,
                   windowHeight: window.innerHeight + video_h * this.canvasHeight,
                   width: window.outerWidth + video_w * this.canvasWidth,
-                  windowWidth: window.outerWidth + video_w * this.canvasWidth
+                  windowWidth: window.outerWidth + video_w * this.canvasWidth,
+                  ignoreElements: (elm) => {
+                    if (elm.classList.contains('video-name')) {
+                      return true;
+                    }
+                  }
                 }).then((canvas) => {
                   const link = document.createElement('a');
                   const number = Math.floor(Math.random() * 10000);

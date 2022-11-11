@@ -314,12 +314,9 @@ export default {
         tgRef = 'effectComponentsvideo' + peerId;
         this.$refs[tgRef][0].resize();
       }
-    }
-  },
+    },
 
-  mounted: function () {
-    // resizeイベント登録
-    window.addEventListener('resize', () => {
+    allResizeRun: function () {
       console.log('resize');
 
       // videoNameのリサイズ
@@ -330,7 +327,12 @@ export default {
 
       // effectのリサイズ
       this.effectAllReSize();
-    });
+    }
+  },
+
+  mounted: function () {
+    // resizeイベント登録
+    window.addEventListener('resize', this.allResizeRun);
   }
 };
 </script>

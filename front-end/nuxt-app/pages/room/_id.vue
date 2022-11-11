@@ -397,6 +397,9 @@ export default {
       //localStorageにあるmember情報を破棄
       localStorage.clear();
 
+      //イベントを削除
+      window.removeEventListener('resize', this.$refs.videoComponents.allResizeRun, false);
+
       //人数チェック処理を解除(Interval)
       clearInterval(this.roomMemberNumCheckIntervalFn);
       //強制退出処理を解除(Timeout)
@@ -680,7 +683,8 @@ export default {
         this.predictionCount += 1;
 
         // 数ミリ秒単位でカウントしているため，数回カウントで制御
-        if (this.predictionCount > 100) { // 100設定で4秒程度
+        if (this.predictionCount > 100) {
+          // 100設定で4秒程度
           this.effectFn('4');
           this.drinkingCount += 1; // TODO: 廃止予定
           this.predictionCount = 0;

@@ -102,6 +102,7 @@ export default {
 
       // 初期化
       document.querySelector('#video-wrap').style.padding = '10px 0';
+      document.querySelector('#video-box').style.maxWidth = '1400px';
       for (let videoDom of videoDoms) {
         videoDom.style.marginTop = '10px';
         videoDom.style.marginBottom = '10px';
@@ -216,6 +217,8 @@ export default {
 
         //ビデオの幅
         videoSizeW = Math.round(videoSizeH * 1.3);
+
+        document.querySelector('#video-box').style.maxWidth = '1240px';
 
         for (let videoDom of videoDoms) {
           videoDom.style.width = videoSizeW + 'px';
@@ -355,7 +358,7 @@ export default {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    max-width: 1280px;
+    max-width: 1400px;
     margin: 0 auto;
 
     * {

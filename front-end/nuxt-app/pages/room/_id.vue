@@ -671,9 +671,8 @@ export default {
         this.predictionCount += 1;
 
         // 数ミリ秒単位でカウントしているため，数回カウントで制御
-        if (this.predictionCount > 100) {
-          // 4秒程度
-          this.effectFn('3'); // 後ほど4に変更
+        if (this.predictionCount > 100) { // 100設定で4秒程度
+          this.effectFn('4');
           this.drinkingCount += 1; // TODO: 廃止予定
           this.predictionCount = 0;
         }

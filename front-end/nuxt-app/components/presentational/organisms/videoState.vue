@@ -74,16 +74,13 @@
           class="adjustWebgazer"
         />
       </div>
-
-      <!-- <div>
-        <Btn text="退出" color="red" :clickedfn="leavingFn" />
-      </div> -->
     </div>
 
     <div class="effect-select-box">
       <img src="~/assets/img/waiwaiImg.svg" class="effect-select-box-img" @click="effectFn('1')" />
       <img src="~/assets/img/gogogoImg.svg" class="effect-select-box-img" @click="effectFn('2')" />
       <img src="~/assets/img/gokuImg.svg" class="effect-select-box-img" @click="effectFn('3')" />
+      <img src="~/assets/img/uooImg.svg" class="effect-select-box-img" @click="effectFn('5')" />
     </div>
   </v-card>
 </template>
@@ -199,7 +196,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 400px;
+  width: 500px;
   height: 80px;
   border-radius: 20px !important;
   padding: 0 10px;

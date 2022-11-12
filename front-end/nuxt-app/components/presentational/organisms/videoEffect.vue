@@ -25,6 +25,12 @@
       <h3 class="video-effect-drink-too-much-ms">飲みすぎ注意！</h3>
     </section>
 
+    <section class="video-effect-uoo" v-if="effectNumber == '5'">
+      <img src="~/assets/img/shockImg.svg" class="video-effect-uoo-back" />
+      <img src="~/assets/img/uooImg.svg" class="video-effect-uoo-img-1" />
+      <img src="~/assets/img/uooImg.svg" class="video-effect-uoo-img-2" />
+    </section>
+
     <section class="video-effect-rest-room" v-if="isRestRoom">
       <img src="~/assets/img/flowerImg.jpg" class="video-effect-rest-room-img" />
       <h3 class="video-effect-rest-room-ms">～お花を摘んでいます～</h3>
@@ -253,10 +259,32 @@ export default {
     }
   }
 
+  &-uoo {
+    &-back {
+      width: 100%;
+    }
+
+    &-img-1 {
+      width: 40%;
+      position: absolute;
+      top: 0%;
+      left: 6%;
+      transform: rotate(-20deg);
+      animation: uoo-img-1 linear 0.4s infinite;
+    }
+    &-img-2 {
+      width: 30%;
+      position: absolute;
+      top: 7%;
+      right: 6%;
+      transform: rotate(10deg);
+      animation: uoo-img-2 linear 0.4s infinite;
+    }
+  }
+
   &-rest-room {
     &-img {
       width: 130%;
-      height: 1;
       opacity: 0.7;
     }
     &-ms {
@@ -330,6 +358,34 @@ export default {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes uoo-img-1 {
+  0% {
+    transform: translateY(0) rotate(-20deg);
+  }
+
+  50% {
+    transform: translateY(7px) rotate(-20deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(-20deg);
+  }
+}
+
+@keyframes uoo-img-2 {
+  0% {
+    transform: translateY(0) rotate(20deg);
+  }
+
+  50% {
+    transform: translateY(7px) rotate(20deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(20deg);
   }
 }
 </style>

@@ -405,6 +405,9 @@ export default {
       setTimeout(this.roomMemberNumCheck, 5000);
       this.roomMemberNumCheckIntervalFn = setInterval(this.roomMemberNumCheck, 60000);
 
+      //クリックイベントを追加
+      this.setClick();
+
       //nameを取得
       let name = document.querySelector('#inputName').value;
       if (!name) name = '未設定';
@@ -766,6 +769,25 @@ export default {
       this.audioMute();
 
       this.restRoomState = false;
+    },
+
+    setClick: function () {
+      //クリックからフォーカス
+      document.body.onclick = (e) => {
+        if (this.websocketAbnormalTermination) return;
+
+        const x = e.pageX;
+        const y = e.pageY;
+
+        const elementUnderMouse = document.elementFromPoint(x, y);
+
+        if (elementUnderMouse.tagName == 'VIDEO' && elementUnderMouse.id != 'videomy-video')
+          this.focusThisVideo(elementUnderMouse.id);
+
+        if (elementUnderMouse.id == 'video-wrap' || elementUnderMouse.id == 'video-box') this.focusThisVideoAllLift();
+
+        if (elementUnderMouse.id == 'video-state') this.$refs.videoComponents.allResizeRun();
+      };
     }
   },
 
@@ -813,23 +835,6 @@ export default {
       key: this.APIKey,
       debug: 1
     });
-
-    //クリックからフォーカス
-    document.body.onclick = (e) => {
-      if (this.websocketAbnormalTermination) return;
-
-      const x = e.pageX;
-      const y = e.pageY;
-
-      const elementUnderMouse = document.elementFromPoint(x, y);
-
-      if (elementUnderMouse.tagName == 'VIDEO' && elementUnderMouse.id != 'videomy-video')
-        this.focusThisVideo(elementUnderMouse.id);
-
-      if (elementUnderMouse.id == 'video-wrap' || elementUnderMouse.id == 'video-box') this.focusThisVideoAllLift();
-
-      if (elementUnderMouse.id == 'video-state') this.$refs.videoComponents.allResizeRun();
-    };
 
     window.onpopstate = function () {
       console.log('webgazer is finish beacause browser back');

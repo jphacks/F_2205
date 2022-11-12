@@ -31,6 +31,12 @@
       <img src="~/assets/img/uooImg.svg" class="video-effect-uoo-img-2" />
     </section>
 
+    <section class="video-effect-iine" v-if="effectNumber == '6'">
+      <img src="~/assets/img/onnpuImg.svg" class="video-effect-iine-back" />
+      <img src="~/assets/img/onnpuImg.svg" class="video-effect-iine-back-2" />
+      <img src="~/assets/img/iineImg.svg" class="video-effect-iine-img-1" />
+    </section>
+
     <section class="video-effect-rest-room" v-if="isRestRoom">
       <img src="~/assets/img/flowerImg.jpg" class="video-effect-rest-room-img" />
       <h3 class="video-effect-rest-room-ms">～お花を摘んでいます～</h3>
@@ -282,6 +288,34 @@ export default {
     }
   }
 
+  &-iine {
+    &-back {
+      width: 20%;
+      position: absolute;
+      top: 15%;
+      right: 25%;
+      transform: rotate(20deg);
+      animation: iine-back linear 0.4s infinite;
+    }
+    &-back-2 {
+      width: 15%;
+      position: absolute;
+      top: 5%;
+      right: 5%;
+      transform: rotate(10deg);
+      animation: iine-back-2 linear 0.4s infinite;
+    }
+
+    &-img-1 {
+      width: 42%;
+      position: absolute;
+      top: 0%;
+      left: 6%;
+      transform: rotate(-20deg);
+      animation: iine linear 0.4s infinite;
+    }
+  }
+
   &-rest-room {
     &-img {
       width: 130%;
@@ -386,6 +420,48 @@ export default {
 
   100% {
     transform: translateY(0) rotate(20deg);
+  }
+}
+
+@keyframes iine {
+  0% {
+    transform: translateY(0) rotate(-20deg);
+  }
+
+  50% {
+    transform: translateY(7px) rotate(-20deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(-20deg);
+  }
+}
+
+@keyframes iine-back {
+  0% {
+    transform: translateY(0) rotate(20deg);
+  }
+
+  50% {
+    transform: translateY(7px) rotate(20deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(20deg);
+  }
+}
+
+@keyframes iine-back-2 {
+  0% {
+    transform: translateY(0) rotate(10deg);
+  }
+
+  50% {
+    transform: translateY(7px) rotate(10deg);
+  }
+
+  100% {
+    transform: translateY(0) rotate(10deg);
   }
 }
 </style>

@@ -130,7 +130,24 @@ export default {
 
       effectSelectBoxDom.style.top = y - 100 + 'px';
       effectSelectBoxDom.style.left = x - 30 + 'px';
+    },
+
+    effectBarRePosition: function () {
+      console.log('effect bar resize');
+
+      const tgIconDom = document.querySelector('#effect-icon');
+      const x = tgIconDom.getBoundingClientRect().left;
+      const y = tgIconDom.getBoundingClientRect().top;
+
+      const effectSelectBoxDom = document.querySelector('.effect-select-box');
+      effectSelectBoxDom.style.top = y - 100 + 'px';
+      effectSelectBoxDom.style.left = x - 30 + 'px';
     }
+  },
+
+  mounted: function () {
+    // resizeイベント登録
+    window.addEventListener('resize', this.effectBarRePosition);
   }
 };
 </script>

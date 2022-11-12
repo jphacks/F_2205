@@ -12,6 +12,7 @@
     <!-- ビデオステータスバー -->
     <div class="status-bar">
       <VideoState
+        ref="videoStateComponents"
         :leavingFn="this.roomLeaving"
         :gazeEstimatingFn="this.swtichEstimateGaze"
         :isEnableGazeEstimating="this.isEnableGazeEstimating"
@@ -435,6 +436,7 @@ export default {
 
       //イベントを削除
       window.removeEventListener('resize', this.$refs.videoComponents.allResizeRun, false);
+      window.removeEventListener('resize', this.$refs.videoStateComponents.effectBarRePosition, false);
 
       //人数チェック処理を解除(Interval)
       clearInterval(this.roomMemberNumCheckIntervalFn);

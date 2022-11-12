@@ -119,7 +119,9 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 		h.ucRoom.SetRoomLatestMemberDataOfRoomId(roomId, room, e)
 
 		roomJson := json.RoomEntityToJson(room)
+		c.Hub.Mu.Lock()
 		c.Hub.BroadcastRoom <- roomJson
+		c.Hub.Mu.Unlock()
 	}
 }
 

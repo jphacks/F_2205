@@ -77,6 +77,7 @@
     </div>
 
     <div class="effect-select-box">
+      <img src="~/assets/img/iineImg.svg" class="effect-select-box-img" @click="effectFn('6')" />
       <img src="~/assets/img/waiwaiImg.svg" class="effect-select-box-img" @click="effectFn('1')" />
       <img src="~/assets/img/gogogoImg.svg" class="effect-select-box-img" @click="effectFn('2')" />
       <img src="~/assets/img/gokuImg.svg" class="effect-select-box-img" @click="effectFn('3')" />
@@ -196,7 +197,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 500px;
+  width: 600px;
   height: 80px;
   border-radius: 20px !important;
   padding: 0 10px;

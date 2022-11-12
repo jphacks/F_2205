@@ -121,8 +121,7 @@ export default {
       labelContainer: null,
       maxPredictions: null,
       baseURL: 'https://teachablemachine.withgoogle.com/models/F2AWA0Eay/',
-      drinkingCount: 0, // 飲んだ回数
-      predictionCount: 0, // 推定結果の返却回数
+      drinkingOverCount: 0, // 一気飲みアラートカウント
       accuracy: { drinking: 0, noDrinking: 0 },
       isLoop: true,
       dialog: false,
@@ -721,15 +720,25 @@ export default {
 
       // Drinking class の精度が8割以上の時、カウントを行う
       if (this.accuracy.drinking >= 0.8) {
-        this.predictionCount += 1;
+        this.drinkingOverCount += 1;
 
         // 数ミリ秒単位でカウントしているため，数回カウントで制御
-        if (this.predictionCount > 100) {
+        if (this.drinkingOverCount == 10) {
           // 100設定で4秒程度
-          this.effectFn('4');
-          this.drinkingCount += 1; // TODO: 廃止予定
-          this.predictionCount = 0;
+          this.effectFn('3');
         }
+
+        if (this.drinkingOverCount == 100) {
+          this.effectFn('4');
+        }
+
+        if (this.drinkingOverCount > 220) {
+          this.drinkingOverCount = 0
+        }
+
+      } else {
+        this.drinkingOverCount = 0;
+        console.log("ごくごくカウントリセット");
       }
     },
 

@@ -50,8 +50,8 @@ export default {
       this.effectNumber = effectNumber;
 
       const videoDom = document.querySelector(`#video${this.videoId}`);
-      const width = videoDom.clientWidth;
-      const height = videoDom.clientHeight;
+      const width = videoDom.offsetWidth;
+      const height = videoDom.offsetHeight;
       const x = videoDom.getBoundingClientRect().left;
       const y = videoDom.getBoundingClientRect().top;
 
@@ -73,8 +73,8 @@ export default {
       this.isCurrentEffect = true;
 
       const videoDom = document.querySelector(`#video${this.videoId}`);
-      const width = videoDom.clientWidth;
-      const height = videoDom.clientHeight;
+      const width = videoDom.offsetWidth;
+      const height = videoDom.offsetHeight;
       const x = videoDom.getBoundingClientRect().left;
       const y = videoDom.getBoundingClientRect().top;
 
@@ -95,8 +95,8 @@ export default {
       if (!this.isCurrentEffect) return;
 
       const videoDom = document.querySelector(`#video${this.videoId}`);
-      const width = videoDom.clientWidth;
-      const height = videoDom.clientHeight;
+      const width = videoDom.offsetWidth;
+      const height = videoDom.offsetHeight;
       const x = videoDom.getBoundingClientRect().left;
       const y = videoDom.getBoundingClientRect().top;
 

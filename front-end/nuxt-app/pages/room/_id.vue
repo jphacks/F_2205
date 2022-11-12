@@ -128,7 +128,7 @@ export default {
       restRoomState: false,
       websocketNormalTermination: false,
       websocketAbnormalTermination: false,
-      isFocusThisVideoLineOfSight: null,
+      isFocusThisVideoLineOfSight: null
     };
   },
 
@@ -250,7 +250,7 @@ export default {
           } else if (4 < currentUsercount) {
             this.canvasWidth = 2;
             this.canvasHeight = 1;
-          } else {
+          } else if (2 < currentUsercount) {
             this.canvasWidth = 1;
             this.canvasHeight = 1;
           }
@@ -272,6 +272,9 @@ export default {
                     if (elm.classList.contains('video-name')) {
                       return true;
                     }
+                  },
+                  onclone: function (document) {
+                    document.querySelector('#video-box').style.maxWidth = '1400px';
                   }
                 }).then((canvas) => {
                   const link = document.createElement('a');
@@ -279,6 +282,10 @@ export default {
                   link.href = canvas.toDataURL();
                   link.download = `export_image_${number}.png`;
                   link.click();
+                  setTimeout(() => {
+                    this.$refs.videoComponents.allResizeRun();
+                    return;
+                  }, 1000);
                 });
                 return;
               }
@@ -512,7 +519,7 @@ export default {
 
               this.focusThisVideoLineOfSight(elementUnderGaze.id);
               this.elementUnderGazeCount = 0; // カウント制御リセット
-              this.isFocusThisVideoLineOfSight = true // 同じリクエストを送らないようにフラグを立てる
+              this.isFocusThisVideoLineOfSight = true; // 同じリクエストを送らないようにフラグを立てる
             }
           } else {
             this.focusThisVideoAllLiftCount++;
@@ -524,7 +531,7 @@ export default {
 
               this.focusThisVideoAllLift();
               this.focusThisVideoAllLiftCount = 0; // カウント制御リセット
-              this.isFocusThisVideoLineOfSight = false // 同じリクエストを送らないようにフラグを立てる
+              this.isFocusThisVideoLineOfSight = false; // 同じリクエストを送らないようにフラグを立てる
             }
           }
         })

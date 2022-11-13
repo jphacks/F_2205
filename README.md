@@ -7,12 +7,17 @@
 ## 🎥 作品紹介動画
 
 <!-- TODO -->
-https://youtu.be/JB3t8Gnhozg
+[Youtube 動画](https://youtu.be/JB3t8Gnhozg)
 
 <br>
 
 ## ✨ 作品URL
 https://jphacks-app.herokuapp.com
+
+<br>
+
+## 🖋 スライドURL
+[Google スライド](https://docs.google.com/presentation/d/1ymClbAbEdxkUMlKGfkSrC91aTtMSw-LOrUh6XAYwOCw/edit?usp=sharing)
 
 <br>
 
@@ -239,7 +244,7 @@ https://jphacks-app.herokuapp.com
 </details>
 
 <details>
-<summary>飲みすぎパラメータ</summary>
+<summary>飲みすぎパラメータ(実装済み)</summary>
 
 - お酒を飲む動作をした場合、ゲージが上昇していき、飲みすぎてないか常に確認できる
 - 逆に飲んでない人もわかりますが、アルハラしないように気を付けましょう⚠️
@@ -247,7 +252,7 @@ https://jphacks-app.herokuapp.com
 </details>
 
 <details>
-<summary>一気飲みエフェクト</summary>
+<summary>一気飲み警告エフェクト(実装済み)</summary>
 
 - お酒を飲む動作をした場合、そのユーザーに盛り上がっているエフェクトがつく
   - エフェクトが付きますが、お酒に強くなったわけではありません
@@ -468,3 +473,7 @@ Discordのボットを利用することで、
 ### Miro
 
 この [miro.md](./doc/miro.md) にmiroに書いた設計などをまとめてあります。
+
+### おしまい
+
+![export_image_5029](https://user-images.githubusercontent.com/29572313/201506655-613cec99-0ba0-4138-ac1f-c08d4581645a.png)

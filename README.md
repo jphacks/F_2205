@@ -1,6 +1,6 @@
 # のみぱら 🍺
 
-[![IMAGE ALT TEXT HERE](./doc/image/index/nomipara.png)]()
+[![IMAGE ALT TEXT HERE](./doc/image/index/nomiparaLogo.png)]()
 
 <br>
 

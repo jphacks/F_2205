@@ -2,6 +2,7 @@ package persistance
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
 )
@@ -12,18 +13,21 @@ func (r *RoomRepository) AddNewFocusMemberOfRoomId(roomId entity.RoomId, newPeer
 	if !found {
 		return fmt.Errorf("RoomRepository.AddNewFocusMemberOfRoomId Error : room not found")
 	}
+	room.FocusMembersStore.Mu.Lock()
+	defer room.FocusMembersStore.Mu.Unlock()
 
-	for _, member := range room.FocusMembers {
+	for _, member := range room.FocusMembersStore.FocusMembers {
 		if member.PeerId == newPeerId {
 			return fmt.Errorf("RoomRepository.AddNewFocusMemberOfRoomId Error : new member name already exist")
 		}
 	}
 
-	room.FocusMembers = append(
-		room.FocusMembers,
+	room.FocusMembersStore.FocusMembers = append(
+		room.FocusMembersStore.FocusMembers,
 		&entity.FocusMember{
 			PeerId:   newPeerId,
 			Connects: entity.Connects{},
+			Mu:       sync.RWMutex{},
 		},
 	)
 	return nil
@@ -36,15 +40,18 @@ func (r *RoomRepository) SetMemberFocusOfRoomId(roomId entity.RoomId, from entit
 	if !found {
 		return fmt.Errorf("RoomRepository.SetMemberFocusOfRoomId Error : room not found")
 	}
+	room.FocusMembersStore.Mu.Lock()
+	defer room.FocusMembersStore.Mu.Unlock()
 
-	for _, member := range room.FocusMembers {
+	for _, member := range room.FocusMembersStore.FocusMembers {
+		member.Mu.Lock()
+		defer member.Mu.Unlock()
 		if member.PeerId == from {
 			for _, connect := range member.Connects {
 				if connect != nil && connect.PeerId == to {
 					return fmt.Errorf("RoomRepository.SetFocus Error : already connected")
 				}
 			}
-
 			// FromさんのConnectにToさんを追加
 			member.Connects = append(
 				member.Connects,
@@ -73,7 +80,12 @@ func (r *RoomRepository) DelMemberFocusOfRoomId(roomId entity.RoomId, from entit
 	if !found {
 		return fmt.Errorf("RoomRepository.DelMemberFocusOfRoomId Error : room not found")
 	}
-	for _, member := range room.FocusMembers {
+	room.FocusMembersStore.Mu.Lock()
+	defer room.FocusMembersStore.Mu.Unlock()
+
+	for _, member := range room.FocusMembersStore.FocusMembers {
+		member.Mu.Lock()
+		defer member.Mu.Unlock()
 		if member.PeerId == from {
 			// FromさんのConnectからToさんを削除
 			for i, connect := range member.Connects {
@@ -105,8 +117,12 @@ func (r *RoomRepository) DelAllMemberFocusOfRoomId(roomId entity.RoomId, from en
 	if !found {
 		return fmt.Errorf("RoomRepository.DelAllMemberFocusOfRoomId Error : room not found")
 	}
+	room.FocusMembersStore.Mu.Lock()
+	defer room.FocusMembersStore.Mu.Unlock()
 
-	for _, member := range room.FocusMembers {
+	for _, member := range room.FocusMembersStore.FocusMembers {
+		member.Mu.Lock()
+		defer member.Mu.Unlock()
 		if member.PeerId == from {
 			// fromさんのConnectをリセット
 			member.Connects = []*entity.Connect{}
@@ -135,5 +151,5 @@ func (r *RoomRepository) GetFocusMembersOfRoomId(roomId entity.RoomId) entity.Fo
 		// TODO エラーハンドリング
 		return entity.FocusMembers{}
 	}
-	return room.FocusMembers
+	return room.FocusMembersStore.FocusMembers
 }

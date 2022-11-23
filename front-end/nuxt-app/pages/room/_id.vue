@@ -112,20 +112,23 @@ export default {
       roomLeavingCheckTimeoutFn: null,
       isVisibleLoader: true,
       isConnectionRoom: false,
+      //スクショキャンバスプロパティ
+      canvasHeight: 0,
+      canvasWidth: 0,
       // 飲み動作推定プロパティ
       model: null,
       webcam: null,
       labelContainer: null,
       maxPredictions: null,
       baseURL: 'https://teachablemachine.withgoogle.com/models/F2AWA0Eay/',
-      drinkingCount: 0, // 飲んだ回数
-      predictionCount: 0, // 推定結果の返却回数
+      drinkingOverCount: 0, // 一気飲みアラートカウント
       accuracy: { drinking: 0, noDrinking: 0 },
       isLoop: true,
       dialog: false,
       restRoomState: false,
       websocketNormalTermination: false,
-      websocketAbnormalTermination: false
+      websocketAbnormalTermination: false,
+      isFocusThisVideoLineOfSight: null
     };
   },
 
@@ -229,21 +232,64 @@ export default {
 
           const audio = new Audio(shutter);
 
+          const currentUsercount = document.querySelectorAll('video').length;
+
+          this.canvasWidth = 0;
+          this.canvasHeight = 0;
+          const video_h = document.getElementById('videomy-video').clientHeight;
+          const video_w = document.getElementById('videomy-video').clientWidth;
+
+          if (6 < currentUsercount) {
+            this.canvasWidth = 3;
+            this.canvasHeight = 1;
+            if (8 < currentUsercount < 13) {
+              this.canvasHeight = 2;
+            } else {
+              this.canvasHeight = 3;
+            }
+          } else if (4 < currentUsercount) {
+            this.canvasWidth = 2;
+            this.canvasHeight = 1;
+          } else if (2 < currentUsercount) {
+            this.canvasWidth = 1;
+            this.canvasHeight = 1;
+          }
+
           const countDown = () => {
             setTimeout(() => {
-              if (this.currentScreenShotCount < 1) {
+              if (this.currentScreenShotCount < 2) {
                 this.isOpenScreenShotDialog = false;
                 audio.play();
-                html2canvas(document.querySelector('#capture')).then((canvas) => {
+
+                html2canvas(document.querySelector('#capture'), {
+                  useCORS: true,
+                  backgroundColor: '#d3be9a',
+                  height: window.innerHeight + video_h * this.canvasHeight,
+                  windowHeight: window.innerHeight + video_h * this.canvasHeight,
+                  width: window.outerWidth + video_w * this.canvasWidth,
+                  windowWidth: window.outerWidth + video_w * this.canvasWidth,
+                  ignoreElements: (elm) => {
+                    if (elm.classList.contains('video-name')) {
+                      return true;
+                    }
+                  },
+                  onclone: function (document) {
+                    document.querySelector('#video-box').style.maxWidth = '1400px';
+                  }
+                }).then((canvas) => {
                   const link = document.createElement('a');
                   const number = Math.floor(Math.random() * 10000);
                   link.href = canvas.toDataURL();
                   link.download = `export_image_${number}.png`;
                   link.click();
+                  setTimeout(() => {
+                    this.$refs.videoComponents.allResizeRun();
+                    return;
+                  }, 1000);
                 });
                 return;
               }
-              if (this.currentScreenShotCount > 0) {
+              if (this.currentScreenShotCount > 1) {
                 this.currentScreenShotCount = this.currentScreenShotCount - 1;
               }
               countDown();
@@ -473,7 +519,11 @@ export default {
             // TODO: 試験的にカウントを10以上に設定, 後ほど適切な値・実装方法に変える
             if (this.elementUnderGazeCount > 10) {
               console.log('elementUnderGazeCount is 10 count');
+              if (this.isFocusThisVideoLineOfSight) return;
+
               this.focusThisVideoLineOfSight(elementUnderGaze.id);
+              this.elementUnderGazeCount = 0; // カウント制御リセット
+              this.isFocusThisVideoLineOfSight = true; // 同じリクエストを送らないようにフラグを立てる
             }
           } else {
             this.focusThisVideoAllLiftCount++;
@@ -481,7 +531,11 @@ export default {
             //フォーカス全外し(この関数を呼ぶことでサーバー側にリクエスト飛ぶ)
             if (this.focusThisVideoAllLiftCount > 10) {
               console.log('focusThisVideoAllLift is 10 count');
+              if (!this.isFocusThisVideoLineOfSight) return;
+
               this.focusThisVideoAllLift();
+              this.focusThisVideoAllLiftCount = 0; // カウント制御リセット
+              this.isFocusThisVideoLineOfSight = false; // 同じリクエストを送らないようにフラグを立てる
             }
           }
         })
@@ -673,15 +727,25 @@ export default {
 
       // Drinking class の精度が8割以上の時、カウントを行う
       if (this.accuracy.drinking >= 0.8) {
-        this.predictionCount += 1;
+        this.drinkingOverCount += 1;
 
         // 数ミリ秒単位でカウントしているため，数回カウントで制御
-        if (this.predictionCount > 100) {
+        if (this.drinkingOverCount == 10) {
           // 100設定で4秒程度
-          this.effectFn('4');
-          this.drinkingCount += 1; // TODO: 廃止予定
-          this.predictionCount = 0;
+          this.effectFn('3');
         }
+
+        if (this.drinkingOverCount == 100) {
+          this.effectFn('4');
+        }
+
+        if (this.drinkingOverCount > 220) {
+          this.drinkingOverCount = 0
+        }
+
+      } else {
+        this.drinkingOverCount = 0;
+        console.log("ごくごくカウントリセット");
       }
     },
 

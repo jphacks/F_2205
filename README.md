@@ -18,6 +18,12 @@ https://youtu.be/JB3t8Gnhozg
 
 <br>
 
+## 🖋 スライド URL
+
+[Google スライド](https://docs.google.com/presentation/d/1ymClbAbEdxkUMlKGfkSrC91aTtMSw-LOrUh6XAYwOCw/edit?usp=sharing)
+
+<br>
+
 ## 💪 製品概要
 
 オンライン飲み会に最適化された新しいビデオ通話サービスです！
@@ -237,7 +243,7 @@ https://youtu.be/JB3t8Gnhozg
 </details>
 
 <details>
-<summary>飲みすぎパラメータ</summary>
+<summary>飲みすぎパラメータ(実装済み)</summary>
 
 - お酒を飲む動作をした場合、ゲージが上昇していき、飲みすぎてないか常に確認できる
 - 逆に飲んでない人もわかりますが、アルハラしないように気を付けましょう ⚠️
@@ -245,7 +251,7 @@ https://youtu.be/JB3t8Gnhozg
 </details>
 
 <details>
-<summary>一気飲みエフェクト</summary>
+<summary>一気飲み警告エフェクト(実装済み)</summary>
 
 - お酒を飲む動作をした場合、そのユーザーに盛り上がっているエフェクトがつく
   - エフェクトが付きますが、お酒に強くなったわけではありません

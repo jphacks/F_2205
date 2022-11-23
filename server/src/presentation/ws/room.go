@@ -5,26 +5,26 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jphacks/F_2205/server/src/domain/entity"
 	"github.com/jphacks/F_2205/server/src/domain/service"
 	"github.com/jphacks/F_2205/server/src/usecase"
+	"github.com/jphacks/F_2205/server/src/utils/json"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
 type RoomWsHandler struct {
-	ucRoom  usecase.IRoomUsecase
-	ucEvent usecase.IEventUsecase
-	Hubs    *Hubs
+	ucRoom    usecase.IRoomUsecase
+	ucEvent   usecase.IEventUsecase
+	HubsStore *HubsStore
 }
 
 // NewRoomWsHandlerはusecaseの依存を注入しRoomWsHandler構造体を返します
-func NewRoomWsHandler(ucRoom usecase.IRoomUsecase, ucEvent usecase.IEventUsecase, hubs *Hubs) *RoomWsHandler {
+func NewRoomWsHandler(ucRoom usecase.IRoomUsecase, ucEvent usecase.IEventUsecase, hubsStore *HubsStore) *RoomWsHandler {
 	return &RoomWsHandler{
-		ucRoom:  ucRoom,
-		ucEvent: ucEvent,
-		Hubs:    hubs,
+		ucRoom:    ucRoom,
+		ucEvent:   ucEvent,
+		HubsStore: hubsStore,
 	}
 }
 
@@ -32,28 +32,30 @@ func NewRoomWsHandler(ucRoom usecase.IRoomUsecase, ucEvent usecase.IEventUsecase
 func (h *RoomWsHandler) ConnectWsRoom(ctx *gin.Context) {
 	roomIdString := ctx.Param("room_id")
 	roomId := service.StringToRoomId(roomIdString)
+	roomIdJson := json.RoomIdEntityToJson(roomId)
 
 	var hub *Hub
 	// もしすでにroomIdのHubが存在していた場合hubに入れる
-	hub, found := h.Hubs.GetExistsHubOfRoomId(roomId)
+	hub, found := h.HubsStore.GetExistsHubOfRoomId(roomIdJson)
 
 	// roomIdのHubが存在していなかったら新しく登録し、Hubを起動する
 	if !found {
-		hub = NewHub(roomId)
-		h.Hubs.SetNewHubOfRoomId(hub, roomId)
+		hub = NewHub(roomIdJson)
+		h.HubsStore.SetNewHubOfRoomId(hub, roomIdJson)
 		go hub.Run()
 	}
 	h.ucRoom.CheckExistsRoomAndInit(roomId)
-	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request)
+	h.serveWsConnOfHub(hub, ctx.Writer, ctx.Request, roomIdJson)
 }
 
 func (h *RoomWsHandler) DeleteHubOfRoomId(ctx *gin.Context) {
 	roomIdString := ctx.Param("room_id")
 	roomId := service.StringToRoomId(roomIdString)
+	roomIdJson := json.RoomIdEntityToJson(roomId)
 
-	// TODO 既存のクライアントのコネクションが残っているので直す
+	// TODO 削除時に既存のクライアントのコネクションが残っているので直す
 	// Hubの削除
-	if err := h.Hubs.CheckAndDeleteHubOfRoomId(roomId); err != nil {
+	if err := h.HubsStore.CheckAndDeleteHubOfRoomId(roomIdJson); err != nil {
 		ctx.JSON(
 			http.StatusBadRequest,
 			gin.H{"error": err.Error()},
@@ -69,8 +71,9 @@ func (h *RoomWsHandler) DeleteHubOfRoomId(ctx *gin.Context) {
 func (h *RoomWsHandler) GetConnCountOfRoomId(ctx *gin.Context) {
 	roomIdString := ctx.Param("room_id")
 	roomId := service.StringToRoomId(roomIdString)
+	roomIdJson := json.RoomIdEntityToJson(roomId)
 
-	cnt, err := h.Hubs.GetConnCountOfRoomId(roomId)
+	cnt, err := h.HubsStore.GetConnCountOfRoomId(roomIdJson)
 	if err != nil {
 		ctx.JSON(
 			http.StatusBadRequest,
@@ -79,7 +82,7 @@ func (h *RoomWsHandler) GetConnCountOfRoomId(ctx *gin.Context) {
 		return
 	}
 
-	cntRoomConnJson := createcountRoomConnJson(cnt)
+	cntRoomConnJson := json.CreatecountRoomConnJson(cnt)
 	ctx.JSON(
 		http.StatusOK,
 		gin.H{"data": cntRoomConnJson},
@@ -96,21 +99,29 @@ func (h *RoomWsHandler) receiveEventInfoFromConn(c *Client) {
 	c.setConnectionConfig()
 
 	for {
-		e := entity.Event{}
+		eJson := json.EventJson{}
 		// ここで処理をまつ
-		if err := c.Conn.ReadJSON(&e); err != nil {
+		if err := c.Conn.ReadJSON(&eJson); err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("Error : %v", err)
 			}
 			break
 		}
+
+		e := json.EventJsonToEntity(eJson)
+		roomId := json.RoomIdJsonToEntity(c.RoomId)
+
 		// eventを実行して、最新のroomオブジェクトを返す
-		room, err := h.ucEvent.SwitchExecEventByEventType(e, c.Hub.RoomId)
+		room, err := h.ucEvent.SwitchExecEventByEventType(e, roomId)
 		if err != nil {
 			log.Println("ExecEventOfEventType Error :", err)
 		}
-		h.ucRoom.SetRoomLatestMemberDataOfRoomId(c.Hub.RoomId, room, e)
-		c.Hub.BroadcastRoom <- room
+		h.ucRoom.SetRoomLatestMemberDataOfRoomId(roomId, room, e)
+
+		roomJson := json.RoomEntityToJson(room)
+		c.Hub.Mu.Lock()
+		c.Hub.BroadcastRoom <- roomJson
+		c.Hub.Mu.Unlock()
 	}
 }
 
@@ -147,7 +158,7 @@ func (h *RoomWsHandler) sendRoomInfoToAllClients(c *Client) {
 
 // serveWsConnOfHubはコネクションをwebsocket通信にアップグレードし、
 // Clientオブジェクトを用意してClientを受け取ったHubに登録します
-func (h *RoomWsHandler) serveWsConnOfHub(hub *Hub, w http.ResponseWriter, r *http.Request) {
+func (h *RoomWsHandler) serveWsConnOfHub(hub *Hub, w http.ResponseWriter, r *http.Request, roomId json.RoomIdJson) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println("Error : ", err)
@@ -157,7 +168,8 @@ func (h *RoomWsHandler) serveWsConnOfHub(hub *Hub, w http.ResponseWriter, r *htt
 	client := &Client{
 		Hub:          hub,
 		Conn:         conn,
-		SendRoomInfo: make(chan *entity.Room),
+		SendRoomInfo: make(chan *json.RoomJson),
+		RoomId:       roomId,
 	}
 
 	// HubにClientを登録する
@@ -165,15 +177,4 @@ func (h *RoomWsHandler) serveWsConnOfHub(hub *Hub, w http.ResponseWriter, r *htt
 
 	go h.sendRoomInfoToAllClients(client)
 	go h.receiveEventInfoFromConn(client)
-}
-
-type countRoomConnJson struct {
-	Count int `json:"count"`
-}
-
-// createRoomConnJsonはcountを受け取り、response用のオブジェクトを生成します
-func createcountRoomConnJson(count int) countRoomConnJson {
-	return countRoomConnJson{
-		Count: count,
-	}
 }

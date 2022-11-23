@@ -3,13 +3,10 @@ package entity
 // EventTypeはwebsocket通信の際のEventを管理する構造体です
 type EventType string
 
-// TODO ドメインはjsonに依存すべきではない
 type Event struct {
-	Type EventType `json:"type"`
-	Info Info      `json:"info"`
+	Type EventType
+	Info Info
 }
-
-type Events map[RoomId]*Event
 
 const (
 	// MembmerEvent

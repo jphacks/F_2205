@@ -3,6 +3,7 @@ package persistance
 import (
 	"fmt"
 	"reflect"
+	"sync"
 	"testing"
 
 	"github.com/jphacks/F_2205/server/src/domain/entity"
@@ -30,16 +31,22 @@ func TestRoomRepository_AddNewMemberOfRoomId(t *testing.T) {
 			peerId: entity.PeerId("p1"),
 			rooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{},
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{},
+						Mu:      sync.RWMutex{},
+					},
 				},
 			},
 			wantRooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: false,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: false,
+							},
 						},
+						Mu: sync.RWMutex{},
 					},
 				},
 			},
@@ -55,21 +62,27 @@ func TestRoomRepository_AddNewMemberOfRoomId(t *testing.T) {
 			peerId: entity.PeerId("p1"),
 			rooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: false,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: false,
+							},
 						},
+						Mu: sync.RWMutex{},
 					},
 				},
 			},
 			wantRooms: entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{
-							Name:       entity.Name("hoge"),
-							IsRestRoom: false,
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{
+								Name:       entity.Name("hoge"),
+								IsRestRoom: false,
+							},
 						},
+						Mu: sync.RWMutex{},
 					},
 				},
 			},
@@ -86,8 +99,8 @@ func TestRoomRepository_AddNewMemberOfRoomId(t *testing.T) {
 				t.Errorf("TestRoomRepository_AddNewMemberOfRoomId Error : want %v, but got %v", tt.wantErr, err)
 			}
 
-			if !reflect.DeepEqual(tt.wantRooms[tt.roomId], (*repoRoom.Rooms)[tt.roomId]) {
-				t.Errorf("TestRoomRepository_AddNewMemberOfRoomId Error : want %v, but got %v", tt.wantRooms[tt.roomId], (*repoRoom.Rooms)[tt.roomId])
+			if !reflect.DeepEqual(tt.wantRooms[tt.roomId], (*repoRoom.RoomsStore.Rooms)[tt.roomId]) {
+				t.Errorf("TestRoomRepository_AddNewMemberOfRoomId Error : want %v, but got %v", tt.wantRooms[tt.roomId], (*repoRoom.RoomsStore.Rooms)[tt.roomId])
 			}
 		})
 	}
@@ -109,8 +122,14 @@ func TestRoomRepository_InitRoomOfRoomId(t *testing.T) {
 			name:   "正常に動いている場合、指定されたRoomIdの部屋を生成する",
 			roomId: entity.RoomId("1234"),
 			wantRoom: &entity.Room{
-				Members:      entity.Members{},
-				FocusMembers: entity.FocusMembers{},
+				MembersStore: &entity.MembersStore{
+					Members: entity.Members{},
+					Mu:      sync.RWMutex{},
+				},
+				FocusMembersStore: &entity.FocusMembersStore{
+					FocusMembers: entity.FocusMembers{},
+					Mu:           sync.RWMutex{},
+				},
 			},
 		},
 	}
@@ -121,8 +140,8 @@ func TestRoomRepository_InitRoomOfRoomId(t *testing.T) {
 			roomMock := &entity.Rooms{}
 			repoRoom := NewRoomRepository(roomMock)
 			repoRoom.InitRoomOfRoomId(tt.roomId)
-			if !reflect.DeepEqual(tt.wantRoom, (*repoRoom.Rooms)[tt.roomId]) {
-				t.Errorf("TestRoomRepository_InitRoomOfRoomId Error : want %v, but got %v", tt.wantRoom, (*repoRoom.Rooms)[tt.roomId])
+			if !reflect.DeepEqual(tt.wantRoom, (*repoRoom.RoomsStore.Rooms)[tt.roomId]) {
+				t.Errorf("TestRoomRepository_InitRoomOfRoomId Error : want %v, but got %v", tt.wantRoom, (*repoRoom.RoomsStore.Rooms)[tt.roomId])
 			}
 		})
 	}
@@ -150,8 +169,8 @@ func TestRoomRepository_SetNewRoomOfRoomId(t *testing.T) {
 			roomMock := &entity.Rooms{}
 			repoRoom := NewRoomRepository(roomMock)
 			repoRoom.SetNewRoomOfRoomId(tt.room, tt.roomId)
-			if !reflect.DeepEqual(tt.wantRoom, (*repoRoom.Rooms)[tt.roomId]) {
-				t.Errorf("TestRoomRepository_SetNewRoomOfRoomId Error : want %v, but got %v", tt.wantRoom, (*repoRoom.Rooms)[tt.roomId])
+			if !reflect.DeepEqual(tt.wantRoom, (*repoRoom.RoomsStore.Rooms)[tt.roomId]) {
+				t.Errorf("TestRoomRepository_SetNewRoomOfRoomId Error : want %v, but got %v", tt.wantRoom, (*repoRoom.RoomsStore.Rooms)[tt.roomId])
 			}
 		})
 	}
@@ -181,8 +200,8 @@ func TestRoomRepository_DeleteRoomOfRoomId(t *testing.T) {
 			roomMock := tt.rooms
 			repoRoom := NewRoomRepository(roomMock)
 			repoRoom.DeleteRoomOfRoomId(tt.roomId)
-			if !reflect.DeepEqual(tt.wantRooms, repoRoom.Rooms) {
-				t.Errorf("TestRoomRepository_DeleteRoomOfRoomId Error : want %v, but got %v", tt.wantRooms, repoRoom.Rooms)
+			if !reflect.DeepEqual(tt.wantRooms, repoRoom.RoomsStore.Rooms) {
+				t.Errorf("TestRoomRepository_DeleteRoomOfRoomId Error : want %v, but got %v", tt.wantRooms, repoRoom.RoomsStore.Rooms)
 			}
 		})
 	}
@@ -281,9 +300,11 @@ func TestRoomRepository_GetMembersOfRoomId(t *testing.T) {
 			roomId: entity.RoomId("1234"),
 			rooms: &entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{},
-						entity.PeerId("p2"): &entity.Member{},
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{},
+							entity.PeerId("p2"): &entity.Member{},
+						},
 					},
 				},
 			},
@@ -297,9 +318,11 @@ func TestRoomRepository_GetMembersOfRoomId(t *testing.T) {
 			roomId: entity.RoomId("4321"),
 			rooms: &entity.Rooms{
 				entity.RoomId("1234"): &entity.Room{
-					Members: entity.Members{
-						entity.PeerId("p1"): &entity.Member{},
-						entity.PeerId("p2"): &entity.Member{},
+					MembersStore: &entity.MembersStore{
+						Members: entity.Members{
+							entity.PeerId("p1"): &entity.Member{},
+							entity.PeerId("p2"): &entity.Member{},
+						},
 					},
 				},
 			},

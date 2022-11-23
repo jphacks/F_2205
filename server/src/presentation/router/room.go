@@ -10,14 +10,14 @@ import (
 
 // InitRoomRouterはroomAPIのハンドラーを用意します
 func (r Router) InitRoomRouter() {
-	hubs := ws.NewHubs()
+	hubsStore := ws.NewHubsStore()
 	rooms := service.NewRooms()
 
 	repo := persistance.NewRoomRepository(rooms)
 	ucRoom := usecase.NewRoomUsecase(repo)
 	ucEvent := usecase.NewEventUsecase(repo)
-	h := handler.NewRoomHandler(ucRoom, hubs)
-	hWs := ws.NewRoomWsHandler(ucRoom, ucEvent, hubs)
+	h := handler.NewRoomHandler(ucRoom)
+	hWs := ws.NewRoomWsHandler(ucRoom, ucEvent, hubsStore)
 
 	// Room API
 	r.Engine.GET("/room/:room_id", h.GetRoomOfRoomId)
